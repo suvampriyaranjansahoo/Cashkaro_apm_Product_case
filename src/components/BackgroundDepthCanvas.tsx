@@ -1,211 +1,482 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
+import { ThemeMode } from '../types';
 
-/**
- * BackgroundDepthCanvas:
- * Clean, architectural 3D depth background with custom designer color harmonies:
- * 
- * 1. LIGHT MODE: "The Cream Bunny With Rose" Color Scheme:
- *    - Neo Pearl (#F7F6ED) -> Primary base foundation canvas
- *    - Charming Cream (#F0EAD5) -> Upper volumetric dome lighting (40% opacity)
- *    - Pink Aura (#F0D6DE) -> Soft central radiant aura (35% opacity)
- *    - Alayah (#DEB6C5) -> Peripheral rose diffusion & geometry frames (22% opacity)
- *    - Viola (#D190AC) -> 3D Isometric perspective grid lines & focal accents (13% opacity)
- * 
- * 2. DARK MODE: "The Aquatic Blue" Color Scheme:
- *    - Abyss Base (#050E1A) -> Deep oceanic contrast canvas
- *    - Cerulean (#0080AB) -> Lower volumetric light foundation (24% opacity)
- *    - Cerulean (Xona) (#00AFD3) -> Atmospheric dome light (22% opacity)
- *    - Neon Aqua Blue (#25C3FF) -> 3D perspective coordinate floor & orbital glow (16% opacity)
- *    - Blue Ball (#099AD9) -> Peripheral structural wireframe prisms (30% opacity)
- *    - Aqua (#02FEFF) -> High-energy focal light points & coordinate indicator (35% opacity)
- */
-export const BackgroundDepthCanvas: React.FC = () => {
-  const [mousePos, setMousePos] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
-  const containerRef = useRef<HTMLDivElement | null>(null);
+interface Petal {
+  x: number;
+  y: number;
+  size: number;
+  rotation: number;
+  rotationSpeed: number;
+  swing: number;
+  swingSpeed: number;
+  vx: number;
+  vy: number;
+  color: string;
+  petalType: 'petal' | 'blossom' | 'pollen' | 'bud';
+  opacity: number;
+}
+
+interface RainParticle {
+  x: number;
+  y: number;
+  len: number;
+  speed: number;
+  alpha: number;
+  width: number;
+}
+
+interface LightningBolt {
+  segments: { x1: number; y1: number; x2: number; y2: number }[];
+  alpha: number;
+  decay: number;
+}
+
+interface BackgroundDepthCanvasProps {
+  themeMode?: ThemeMode;
+}
+
+export const BackgroundDepthCanvas: React.FC<BackgroundDepthCanvasProps> = ({ themeMode }) => {
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
     let animationFrameId: number;
-    let targetX = 0;
-    let targetY = 0;
-    let currentX = 0;
-    let currentY = 0;
+    let width = (canvas.width = window.innerWidth);
+    let height = (canvas.height = window.innerHeight);
 
-    const handleMouseMove = (e: MouseEvent) => {
-      // Normalize mouse from -1 to 1 relative to window center
-      targetX = (e.clientX / window.innerWidth - 0.5) * 2;
-      targetY = (e.clientY / window.innerHeight - 0.5) * 2;
+    const handleResize = () => {
+      if (!canvas) return;
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+      initLightModeFlora();
+      initDarkModeStorm();
     };
 
-    const updateParallax = () => {
-      // Smooth lerp for buttery 60fps movement
-      currentX += (targetX - currentX) * 0.05;
-      currentY += (targetY - currentY) * 0.05;
-      setMousePos({ x: currentX, y: currentY });
-      animationFrameId = requestAnimationFrame(updateParallax);
+    window.addEventListener('resize', handleResize);
+
+    // ==========================================
+    // 1. LIGHT MODE: Flowery Blossom Engine
+    // ==========================================
+    const petalColors = [
+      'rgba(209, 144, 172, 0.50)', // Rose Viola (#D190AC)
+      'rgba(222, 182, 197, 0.55)', // Soft Alayah (#DEB6C5)
+      'rgba(240, 214, 222, 0.45)', // Pink Aura (#F0D6DE)
+      'rgba(143, 55, 96, 0.38)',   // Deep Alayah Rose (#8F3760)
+      'rgba(240, 234, 213, 0.60)', // Charming Cream (#F0EAD5)
+      'rgba(255, 235, 242, 0.50)'  // Gentle Sakura Mist
+    ];
+
+    const petals: Petal[] = [];
+    const petalCount = 42;
+
+    const initLightModeFlora = () => {
+      petals.length = 0;
+      for (let i = 0; i < petalCount; i++) {
+        const typeRand = Math.random();
+        const petalType: Petal['petalType'] = 
+          typeRand < 0.25 ? 'pollen' : 
+          typeRand < 0.45 ? 'blossom' : 
+          typeRand < 0.60 ? 'bud' : 'petal';
+
+        petals.push({
+          x: Math.random() * width,
+          y: Math.random() * height,
+          size: petalType === 'pollen' 
+            ? Math.random() * 2.2 + 1.2 
+            : petalType === 'blossom' 
+            ? Math.random() * 9 + 8 
+            : petalType === 'bud'
+            ? Math.random() * 4 + 4
+            : Math.random() * 6 + 5,
+          rotation: Math.random() * Math.PI * 2,
+          rotationSpeed: (Math.random() - 0.5) * 0.02,
+          swing: Math.random() * Math.PI * 2,
+          swingSpeed: Math.random() * 0.015 + 0.008,
+          vx: Math.random() * 0.45 + 0.15,
+          vy: Math.random() * 0.55 + 0.35,
+          color: petalColors[Math.floor(Math.random() * petalColors.length)],
+          petalType,
+          opacity: Math.random() * 0.4 + 0.35
+        });
+      }
     };
 
-    window.addEventListener('mousemove', handleMouseMove, { passive: true });
-    animationFrameId = requestAnimationFrame(updateParallax);
+    // ==========================================
+    // 2. DARK MODE: Storm & Lightning Engine
+    // ==========================================
+    const rainParticles: RainParticle[] = [];
+    const rainCount = 65;
+    let lightning: LightningBolt | null = null;
+    let lightningFlash = 0;
+    let nextLightningTime = Math.random() * 260 + 160;
+
+    const initDarkModeStorm = () => {
+      rainParticles.length = 0;
+      for (let i = 0; i < rainCount; i++) {
+        rainParticles.push({
+          x: Math.random() * width,
+          y: Math.random() * height,
+          len: Math.random() * 28 + 18,
+          speed: Math.random() * 9 + 13,
+          alpha: Math.random() * 0.28 + 0.12,
+          width: Math.random() * 1.3 + 0.6
+        });
+      }
+    };
+
+    const triggerLightning = () => {
+      const startX = width * (0.2 + Math.random() * 0.6);
+      const segments: { x1: number; y1: number; x2: number; y2: number }[] = [];
+      let curX = startX;
+      let curY = 0;
+      const targetY = height * (0.4 + Math.random() * 0.4);
+
+      while (curY < targetY) {
+        const nextX = curX + (Math.random() - 0.5) * 55;
+        const nextY = curY + Math.random() * 28 + 16;
+        segments.push({ x1: curX, y1: curY, x2: nextX, y2: nextY });
+
+        // Branching lightning forks
+        if (Math.random() > 0.62) {
+          let bX = nextX;
+          let bY = nextY;
+          for (let b = 0; b < 3; b++) {
+            const nbX = bX + (Math.random() - 0.4) * 38;
+            const nbY = bY + Math.random() * 22 + 12;
+            segments.push({ x1: bX, y1: bY, x2: nbX, y2: nbY });
+            bX = nbX;
+            bY = nbY;
+          }
+        }
+
+        curX = nextX;
+        curY = nextY;
+      }
+
+      lightning = {
+        segments,
+        alpha: 0.95,
+        decay: 0.042
+      };
+
+      lightningFlash = 0.4; // Sky illumination burst
+      nextLightningTime = Math.random() * 400 + 220;
+    };
+
+    initLightModeFlora();
+    initDarkModeStorm();
+
+    let time = 0;
+    let frameCounter = 0;
+
+    // Helper: draw single delicate curved flower petal
+    const drawPetal = (x: number, y: number, size: number, angle: number, color: string, alpha: number) => {
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.rotate(angle);
+      ctx.globalAlpha = alpha;
+      ctx.fillStyle = color;
+
+      ctx.beginPath();
+      ctx.moveTo(0, -size);
+      ctx.bezierCurveTo(size * 0.65, -size * 0.7, size * 0.8, size * 0.4, 0, size);
+      ctx.bezierCurveTo(-size * 0.8, size * 0.4, -size * 0.65, -size * 0.7, 0, -size);
+      ctx.fill();
+
+      // Subtle petal vein
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.45)';
+      ctx.lineWidth = 0.6;
+      ctx.beginPath();
+      ctx.moveTo(0, -size * 0.7);
+      ctx.lineTo(0, size * 0.6);
+      ctx.stroke();
+
+      ctx.restore();
+    };
+
+    // Helper: draw 5-petal sakura blossom
+    const drawBlossom = (x: number, y: number, size: number, angle: number, alpha: number) => {
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.rotate(angle);
+      ctx.globalAlpha = alpha;
+
+      for (let p = 0; p < 5; p++) {
+        ctx.save();
+        ctx.rotate((p * Math.PI * 2) / 5);
+        ctx.fillStyle = 'rgba(222, 182, 197, 0.38)';
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.bezierCurveTo(size * 0.4, -size * 0.6, size * 0.7, -size * 0.9, 0, -size);
+        ctx.bezierCurveTo(-size * 0.7, -size * 0.9, -size * 0.4, -size * 0.6, 0, 0);
+        ctx.fill();
+        ctx.restore();
+      }
+
+      // Blossom center pistil glow
+      ctx.fillStyle = 'rgba(143, 55, 96, 0.65)';
+      ctx.beginPath();
+      ctx.arc(0, 0, size * 0.18, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.restore();
+    };
+
+    // Helper: draw small floating floral bud / calyx
+    const drawBud = (x: number, y: number, size: number, angle: number, alpha: number) => {
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.rotate(angle);
+      ctx.globalAlpha = alpha;
+
+      ctx.fillStyle = 'rgba(209, 144, 172, 0.45)';
+      ctx.beginPath();
+      ctx.arc(0, 0, size, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.fillStyle = 'rgba(240, 214, 222, 0.6)';
+      ctx.beginPath();
+      ctx.arc(size * 0.25, -size * 0.25, size * 0.45, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.restore();
+    };
+
+    const render = () => {
+      time += 0.01;
+      frameCounter++;
+      ctx.clearRect(0, 0, width, height);
+
+      const isDark = document.documentElement.classList.contains('dark');
+
+      // =========================================================
+      // A. LIGHT MODE: Flowery Vibe (Sakura / Botanical Ambient)
+      // =========================================================
+      if (!isDark) {
+        // 1. Soft Warm Floral Ambient Radial Halos
+        const floralGlow1 = ctx.createRadialGradient(
+          width * 0.82 + Math.sin(time * 0.3) * 45,
+          height * 0.18 + Math.cos(time * 0.2) * 35,
+          30,
+          width * 0.82,
+          height * 0.18,
+          width * 0.65
+        );
+        floralGlow1.addColorStop(0, 'rgba(240, 214, 222, 0.35)'); // Pink Aura
+        floralGlow1.addColorStop(0.45, 'rgba(222, 182, 197, 0.16)'); // Alayah
+        floralGlow1.addColorStop(0.8, 'rgba(240, 234, 213, 0.08)'); // Charming Cream
+        floralGlow1.addColorStop(1, 'rgba(247, 246, 237, 0)');
+
+        ctx.fillStyle = floralGlow1;
+        ctx.fillRect(0, 0, width, height);
+
+        const floralGlow2 = ctx.createRadialGradient(
+          width * 0.15 + Math.cos(time * 0.35) * 40,
+          height * 0.78 + Math.sin(time * 0.3) * 35,
+          40,
+          width * 0.15,
+          height * 0.78,
+          width * 0.58
+        );
+        floralGlow2.addColorStop(0, 'rgba(209, 144, 172, 0.25)'); // Viola
+        floralGlow2.addColorStop(0.55, 'rgba(240, 214, 222, 0.12)');
+        floralGlow2.addColorStop(1, 'rgba(247, 246, 237, 0)');
+
+        ctx.fillStyle = floralGlow2;
+        ctx.fillRect(0, 0, width, height);
+
+        // 2. Gentle Perspective Spatial Lattice
+        const fov = 420;
+        ctx.lineWidth = 0.8;
+        ctx.strokeStyle = 'rgba(209, 144, 172, 0.06)';
+
+        for (let x = -width; x <= width * 2; x += 150) {
+          ctx.beginPath();
+          const x1 = (x - width / 2) * (fov / 220) + width / 2;
+          const y1 = height * 0.68;
+          const x2 = (x - width / 2) * (fov / 800) + width / 2;
+          const y2 = height;
+          ctx.moveTo(x1, y1);
+          ctx.lineTo(x2, y2);
+          ctx.stroke();
+        }
+
+        // 3. Render Floating Petals & Floral Drift
+        petals.forEach((p) => {
+          p.swing += p.swingSpeed;
+          p.rotation += p.rotationSpeed;
+          p.x += Math.sin(p.swing) * 0.85 + p.vx;
+          p.y += p.vy;
+
+          // Wrap edges
+          if (p.y > height + 40) {
+            p.y = -30;
+            p.x = Math.random() * width;
+          }
+          if (p.x > width + 40) p.x = -30;
+          if (p.x < -40) p.x = width + 30;
+
+          if (p.petalType === 'pollen') {
+            // Golden rose dew / pollen shimmer
+            const shimmer = Math.sin(p.swing * 2) * 0.25 + 0.45;
+            ctx.fillStyle = `rgba(209, 144, 172, ${shimmer * p.opacity})`;
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.fillStyle = `rgba(255, 240, 245, ${shimmer * 0.85})`;
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.size * 0.4, 0, Math.PI * 2);
+            ctx.fill();
+          } else if (p.petalType === 'blossom') {
+            drawBlossom(p.x, p.y, p.size, p.rotation, p.opacity * 0.75);
+          } else if (p.petalType === 'bud') {
+            drawBud(p.x, p.y, p.size, p.rotation, p.opacity * 0.65);
+          } else {
+            drawPetal(p.x, p.y, p.size, p.rotation, p.color, p.opacity);
+          }
+        });
+      }
+
+      // =========================================================
+      // B. DARK MODE: Storm Vibe (Thunder, Tempest Clouds & Lightning)
+      // =========================================================
+      if (isDark) {
+        // 1. Churning Thunderhead Ambient Gradients with Lightning Glow
+        const cloudX1 = width * 0.65 + Math.sin(time * 0.2) * 80;
+        const cloudY1 = height * 0.2 + Math.cos(time * 0.15) * 50;
+
+        const stormGlow1 = ctx.createRadialGradient(
+          cloudX1,
+          cloudY1,
+          40,
+          cloudX1,
+          cloudY1,
+          width * 0.75
+        );
+        stormGlow1.addColorStop(0, `rgba(0, 175, 211, ${0.14 + lightningFlash * 0.35})`); // Cerulean Xona
+        stormGlow1.addColorStop(0.35, `rgba(37, 195, 255, ${0.08 + lightningFlash * 0.25})`); // Neon Aqua Blue
+        stormGlow1.addColorStop(0.7, 'rgba(9, 154, 217, 0.05)'); // Blue Ball
+        stormGlow1.addColorStop(1, 'rgba(5, 14, 26, 0)');
+
+        ctx.fillStyle = stormGlow1;
+        ctx.fillRect(0, 0, width, height);
+
+        // Secondary deep tempest cloud bottom left
+        const cloudX2 = width * 0.2 + Math.cos(time * 0.25) * 60;
+        const cloudY2 = height * 0.8 + Math.sin(time * 0.2) * 45;
+        const stormGlow2 = ctx.createRadialGradient(
+          cloudX2,
+          cloudY2,
+          50,
+          cloudX2,
+          cloudY2,
+          width * 0.65
+        );
+        stormGlow2.addColorStop(0, `rgba(0, 128, 171, ${0.12 + lightningFlash * 0.20})`); // Cerulean
+        stormGlow2.addColorStop(0.5, 'rgba(2, 254, 255, 0.04)'); // Aqua
+        stormGlow2.addColorStop(1, 'rgba(5, 14, 26, 0)');
+
+        ctx.fillStyle = stormGlow2;
+        ctx.fillRect(0, 0, width, height);
+
+        // 2. Tempest Perspective Cyber Horizon
+        const fov = 400;
+        ctx.lineWidth = 1;
+        ctx.strokeStyle = `rgba(0, 175, 211, ${0.05 + lightningFlash * 0.06})`;
+
+        for (let x = -width; x <= width * 2; x += 130) {
+          ctx.beginPath();
+          const x1 = (x - width / 2) * (fov / 200) + width / 2;
+          const y1 = height * 0.65;
+          const x2 = (x - width / 2) * (fov / 800) + width / 2;
+          const y2 = height;
+          ctx.moveTo(x1, y1);
+          ctx.lineTo(x2, y2);
+          ctx.stroke();
+        }
+
+        // 3. Fast Diagonal Storm Rain / Ion Particles
+        rainParticles.forEach((r) => {
+          r.x += 1.8;
+          r.y += r.speed;
+
+          if (r.y > height + 30) {
+            r.y = -20;
+            r.x = Math.random() * width;
+          }
+          if (r.x > width + 20) r.x = -20;
+
+          ctx.lineWidth = r.width;
+          ctx.strokeStyle = `rgba(37, 195, 255, ${r.alpha + lightningFlash * 0.25})`;
+          ctx.beginPath();
+          ctx.moveTo(r.x, r.y);
+          ctx.lineTo(r.x + 3.5, r.y + r.len);
+          ctx.stroke();
+        });
+
+        // 4. Electric Lightning Strikes & Branching
+        if (frameCounter >= nextLightningTime && !lightning) {
+          triggerLightning();
+        }
+
+        if (lightning) {
+          ctx.save();
+          // Lightning outer electric cyan halo
+          ctx.strokeStyle = `rgba(0, 175, 211, ${lightning.alpha * 0.45})`;
+          ctx.lineWidth = 4.8;
+          ctx.beginPath();
+          lightning.segments.forEach((seg) => {
+            ctx.moveTo(seg.x1, seg.y1);
+            ctx.lineTo(seg.x2, seg.y2);
+          });
+          ctx.stroke();
+
+          // Lightning core high-voltage pure white / cyan filament
+          ctx.strokeStyle = `rgba(2, 254, 255, ${lightning.alpha * 0.95})`;
+          ctx.lineWidth = 1.8;
+          ctx.beginPath();
+          lightning.segments.forEach((seg) => {
+            ctx.moveTo(seg.x1, seg.y1);
+            ctx.lineTo(seg.x2, seg.y2);
+          });
+          ctx.stroke();
+
+          ctx.restore();
+
+          lightning.alpha -= lightning.decay;
+          if (lightning.alpha <= 0) {
+            lightning = null;
+          }
+        }
+
+        // Decay lightning sky illumination
+        if (lightningFlash > 0) {
+          lightningFlash = Math.max(0, lightningFlash - 0.025);
+        }
+      }
+
+      animationFrameId = requestAnimationFrame(render);
+    };
+
+    render();
 
     return () => {
-      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('resize', handleResize);
       cancelAnimationFrame(animationFrameId);
     };
-  }, []);
-
-  // Parallax transform equations
-  const gridTransform = `translate3d(${mousePos.x * 14}px, ${mousePos.y * 14}px, 0) rotateX(${16 - mousePos.y * 6}deg) rotateY(${mousePos.x * 6}deg)`;
-  const floatDomeTransform = `translate3d(${mousePos.x * -28}px, ${mousePos.y * -28}px, 0)`;
-  const floatPeripheralTransform = `translate3d(${mousePos.x * 22}px, ${mousePos.y * 22}px, 0)`;
-  const cube1Transform = `translate3d(${mousePos.x * 16}px, ${mousePos.y * 16}px, 0) rotateX(${25 + mousePos.y * 14}deg) rotateY(${35 + mousePos.x * 18}deg) rotateZ(10deg)`;
-  const cube2Transform = `translate3d(${mousePos.x * -20}px, ${mousePos.y * -20}px, 0) rotateX(${40 - mousePos.y * 14}deg) rotateY(${-25 - mousePos.x * 18}deg) rotateZ(-15deg)`;
+  }, [themeMode]);
 
   return (
-    <div 
-      ref={containerRef}
-      className="fixed inset-0 pointer-events-none z-0 overflow-hidden select-none no-print transition-colors duration-500"
-      aria-hidden="true"
-    >
-      {/* 1. TOP VOLUMETRIC AMBIENT 3D LIGHT DOME */}
-      {/* Light Mode: Charming Cream (#F0EAD5) + Pink Aura (#F0D6DE) | Dark Mode: Cerulean (#0080AB) + Cerulean Xona (#00AFD3) */}
-      <div 
-        className="absolute -top-36 left-1/2 -translate-x-1/2 w-[980px] h-[580px] rounded-full blur-[130px] transition-transform duration-700 ease-out opacity-90 dark:opacity-60"
-        style={{
-          transform: floatDomeTransform,
-          background: 'var(--volumetric-dome-bg, radial-gradient(circle at 50% 30%, rgba(240, 234, 213, 0.55) 0%, rgba(240, 214, 222, 0.40) 45%, rgba(222, 182, 197, 0.15) 70%, transparent 85%))'
-        }}
-      />
-      {/* Dark Mode Specific Volumetric Cone overlay */}
-      <div 
-        className="hidden dark:block absolute -top-40 left-1/2 -translate-x-1/2 w-[980px] h-[580px] rounded-full blur-[130px] transition-transform duration-700 ease-out opacity-50"
-        style={{
-          transform: floatDomeTransform,
-          background: 'radial-gradient(circle at 50% 30%, rgba(0, 128, 171, 0.35) 0%, rgba(0, 175, 211, 0.22) 50%, rgba(37, 195, 255, 0.08) 75%, transparent 90%)'
-        }}
-      />
-
-      {/* 2. SECONDARY PERIPHERAL RADIANCE FIELD */}
-      {/* Light Mode: Alayah (#DEB6C5) + Viola (#D190AC) | Dark Mode: Aqua (#02FEFF) + Neon Aqua Blue (#25C3FF) */}
-      <div 
-        className="absolute top-1/3 -right-36 w-[700px] h-[700px] rounded-full blur-[140px] transition-transform duration-700 ease-out opacity-75 dark:hidden"
-        style={{
-          transform: floatPeripheralTransform,
-          background: 'radial-gradient(circle, rgba(222, 182, 197, 0.35) 0%, rgba(209, 144, 172, 0.20) 45%, rgba(240, 214, 222, 0.10) 70%, transparent 85%)'
-        }}
-      />
-      <div 
-        className="hidden dark:block absolute top-1/3 -right-36 w-[700px] h-[700px] rounded-full blur-[140px] transition-transform duration-700 ease-out opacity-45"
-        style={{
-          transform: floatPeripheralTransform,
-          background: 'radial-gradient(circle, rgba(2, 254, 255, 0.20) 0%, rgba(37, 195, 255, 0.15) 45%, rgba(9, 154, 217, 0.08) 70%, transparent 85%)'
-        }}
-      />
-
-      {/* Left Peripheral Glow (Light: Pink Aura / Dark: Blue Ball) */}
-      <div 
-        className="absolute top-[60%] -left-36 w-[550px] h-[550px] rounded-full blur-[130px] transition-transform duration-700 ease-out opacity-60 dark:hidden"
-        style={{
-          transform: floatDomeTransform,
-          background: 'radial-gradient(circle, rgba(240, 214, 222, 0.30) 0%, rgba(240, 234, 213, 0.15) 50%, transparent 80%)'
-        }}
-      />
-      <div 
-        className="hidden dark:block absolute top-[60%] -left-36 w-[550px] h-[550px] rounded-full blur-[130px] transition-transform duration-700 ease-out opacity-35"
-        style={{
-          transform: floatDomeTransform,
-          background: 'radial-gradient(circle, rgba(9, 154, 217, 0.25) 0%, rgba(0, 128, 171, 0.12) 50%, transparent 80%)'
-        }}
-      />
-
-      {/* 3. 3D PERSPECTIVE ISOMETRIC FLOOR & GRID PLANE */}
-      <div 
-        className="absolute inset-0 flex items-center justify-center"
-        style={{
-          perspective: '1200px',
-          perspectiveOrigin: '50% 25%',
-        }}
-      >
-        <div 
-          className="w-[160%] h-[160%] -top-[30%] absolute transition-transform duration-300 ease-out opacity-[0.55] dark:opacity-[0.45]"
-          style={{
-            transform: gridTransform,
-            transformStyle: 'preserve-3d',
-            backgroundImage: `
-              radial-gradient(circle at 50% 50%, currentColor 0.85px, transparent 0.85px),
-              linear-gradient(to right, currentColor 0.5px, transparent 0.5px),
-              linear-gradient(to bottom, currentColor 0.5px, transparent 0.5px)
-            `,
-            backgroundSize: '48px 48px, 96px 96px, 96px 96px',
-            color: 'var(--bg-grid-color)',
-            maskImage: 'radial-gradient(ellipse 75% 65% at 50% 35%, black 25%, rgba(0,0,0,0.5) 65%, transparent 88%)',
-            WebkitMaskImage: 'radial-gradient(ellipse 75% 65% at 50% 35%, black 25%, rgba(0,0,0,0.5) 65%, transparent 88%)',
-          }}
-        />
-      </div>
-
-      {/* 4. FLOATING 3D ARCHITECTURAL WIREFRAME CUBES (Peripherals) */}
-      
-      {/* Top Right Architectural Cube */}
-      <div 
-        className="hidden lg:block absolute top-28 right-[4%] w-24 h-24 transition-transform duration-500 ease-out opacity-50 dark:opacity-40"
-        style={{
-          perspective: '800px',
-          transformStyle: 'preserve-3d',
-        }}
-      >
-        <div 
-          className="relative w-full h-full transition-transform duration-300 ease-out"
-          style={{
-            transform: cube1Transform,
-            transformStyle: 'preserve-3d',
-          }}
-        >
-          {/* Light Mode: Viola / Alayah | Dark Mode: Neon Aqua Blue / Aqua */}
-          <div className="absolute inset-0 border border-[#D190AC]/40 dark:border-[#25C3FF]/40 rounded-lg bg-[#F0D6DE]/15 dark:bg-[#0080AB]/15 backdrop-blur-[2px] shadow-sm transform translate-z-8" />
-          <div className="absolute inset-0 border border-dashed border-[#DEB6C5]/30 dark:border-[#099AD9]/30 rounded-lg transform -translate-z-8" />
-          <div className="absolute inset-0 flex items-center justify-center">
-            <div className="w-1.5 h-1.5 rounded-full bg-[#D190AC] dark:bg-[#02FEFF] shadow-[0_0_10px_rgba(209,144,172,0.8)] dark:shadow-[0_0_10px_rgba(2,254,255,0.8)]" />
-          </div>
-        </div>
-      </div>
-
-      {/* Middle Left Architectural Cube */}
-      <div 
-        className="hidden xl:block absolute top-[55%] left-[3%] w-20 h-20 transition-transform duration-500 ease-out opacity-45 dark:opacity-35"
-        style={{
-          perspective: '800px',
-          transformStyle: 'preserve-3d',
-        }}
-      >
-        <div 
-          className="relative w-full h-full transition-transform duration-300 ease-out"
-          style={{
-            transform: cube2Transform,
-            transformStyle: 'preserve-3d',
-          }}
-        >
-          {/* Light: Alayah / Pink Aura | Dark: Cerulean Xona / Aqua */}
-          <div className="absolute inset-0 border border-[#DEB6C5]/40 dark:border-[#00AFD3]/40 rounded-lg bg-[#F0EAD5]/20 dark:bg-[#00AFD3]/10 backdrop-blur-[2px] shadow-sm transform translate-z-6" />
-          <div className="absolute inset-0 border border-dashed border-[#F0D6DE]/40 dark:border-[#0080AB]/30 rounded-lg transform -translate-z-6" />
-          <div className="absolute inset-0 flex items-center justify-center">
-            <div className="w-1 h-1 rounded-full bg-[#DEB6C5] dark:bg-[#25C3FF] shadow-[0_0_8px_rgba(222,182,197,0.8)] dark:shadow-[0_0_8px_rgba(37,195,255,0.8)]" />
-          </div>
-        </div>
-      </div>
-
-      {/* 5. 3D AXIS COORDINATE COMPASS WATERMARK */}
-      <div className="hidden md:flex absolute bottom-8 right-8 items-center gap-2 px-3 py-1.5 rounded-xl bg-[#F7F6ED]/70 dark:bg-[#050E1A]/70 border border-[#DEB6C5]/30 dark:border-[#0080AB]/30 backdrop-blur-md opacity-60 dark:opacity-50 text-[9px] font-mono text-[#D190AC] dark:text-[#25C3FF]">
-        <span className="w-1.5 h-1.5 rounded-full bg-[#D190AC] dark:bg-[#02FEFF] animate-pulse" />
-        <span>3D COORD • X:{(mousePos.x * 10).toFixed(1)} Y:{(mousePos.y * 10).toFixed(1)}</span>
-      </div>
-
-      {/* 6. SOFT VIGNETTE DEPTH EDGES */}
-      <div 
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          background: 'radial-gradient(circle at 50% 40%, transparent 60%, var(--bg-vignette-color) 100%)',
-        }}
-      />
-    </div>
+    <canvas
+      ref={canvasRef}
+      className="fixed inset-0 pointer-events-none z-0 opacity-90 transition-opacity duration-500"
+      style={{ willChange: 'transform' }}
+    />
   );
 };

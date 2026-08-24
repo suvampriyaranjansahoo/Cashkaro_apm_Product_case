@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ReadingDepth } from '../types';
+import { ReadingDepth, ThemeMode } from '../types';
 import { 
   ArrowRight, 
   Database, 
@@ -16,15 +16,18 @@ import {
   Clock
 } from 'lucide-react';
 import { SectionHeader } from './SectionHeader';
+import { StrategyCanvas } from './StrategyCanvas';
 
 interface ArchitectureSectionProps {
   readingDepth: ReadingDepth;
+  themeMode?: ThemeMode;
   isHighlighted?: boolean;
   onToggleHighlight?: (id: string) => void;
 }
 
 export const ArchitectureSection: React.FC<ArchitectureSectionProps> = ({ 
   readingDepth,
+  themeMode = 'light',
   isHighlighted,
   onToggleHighlight
 }) => {
@@ -188,6 +191,9 @@ export const ArchitectureSection: React.FC<ArchitectureSectionProps> = ({
             </div>
           )}
         </div>
+
+        {/* D3-Powered Interactive Strategy Canvas Flow Visualization */}
+        <StrategyCanvas themeMode={themeMode} />
 
         {/* 4 Cross-Functional Architecture Safeguards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-xs">

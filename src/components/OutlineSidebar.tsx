@@ -24,7 +24,14 @@ import {
   Filter,
   Eye,
   ChevronDown,
-  Hourglass
+  Hourglass,
+  Compass,
+  AlertTriangle,
+  RotateCcw,
+  Smartphone,
+  Network,
+  TrendingUp,
+  type LucideIcon
 } from 'lucide-react';
 
 interface OutlineSidebarProps {
@@ -43,16 +50,16 @@ interface OutlineSidebarProps {
 type OutlineCategoryFilter = 'all' | 'strategic' | 'technical' | 'economics' | 'saved';
 
 // Category mapping with icons and baseline character counts for initial render
-const SECTION_METAS: Record<string, { category: 'strategic' | 'technical' | 'economics'; baselineChars: number; icon: any }> = {
-  'hero': { category: 'strategic', baselineChars: 1400, icon: Award },
-  'problem': { category: 'strategic', baselineChars: 2100, icon: HelpCircle },
+const SECTION_METAS: Record<string, { category: 'strategic' | 'technical' | 'economics'; baselineChars: number; icon: LucideIcon }> = {
+  'hero': { category: 'strategic', baselineChars: 1400, icon: Compass },
+  'problem': { category: 'strategic', baselineChars: 2100, icon: AlertTriangle },
   'hypotheses': { category: 'strategic', baselineChars: 2400, icon: GitBranch },
   'prioritization': { category: 'strategic', baselineChars: 2200, icon: Sliders },
   'validation': { category: 'strategic', baselineChars: 2600, icon: ShieldCheck },
-  'mind-change': { category: 'strategic', baselineChars: 1500, icon: HelpCircle },
-  'intent-router': { category: 'technical', baselineChars: 2300, icon: Sparkles },
+  'mind-change': { category: 'strategic', baselineChars: 1500, icon: RotateCcw },
+  'intent-router': { category: 'technical', baselineChars: 2300, icon: Smartphone },
   'product-spec': { category: 'technical', baselineChars: 3600, icon: FileText },
-  'architecture': { category: 'technical', baselineChars: 2500, icon: GitBranch },
+  'architecture': { category: 'technical', baselineChars: 2500, icon: Network },
   'measurement': { category: 'economics', baselineChars: 2400, icon: BarChart3 },
   'simulator': { category: 'economics', baselineChars: 2300, icon: Calculator },
   'operating-model': { category: 'technical', baselineChars: 2400, icon: Users },
@@ -471,6 +478,7 @@ export const OutlineSidebar: React.FC<OutlineSidebarProps> = ({
               const isCurrent = sec.id === activeSection;
               const isMarked = highlightedSections.includes(sec.id);
               const meta = SECTION_METAS[sec.id] || { category: 'strategic', baselineChars: 2000, icon: FileText };
+              const SectionIcon = meta.icon;
               const charCount = sectionCharCounts[sec.id] || meta.baselineChars;
               const readTimeInfo = calculateReadingTimeFromChars(charCount);
 
@@ -488,19 +496,23 @@ export const OutlineSidebar: React.FC<OutlineSidebarProps> = ({
                     onClick={() => handleSelectSection(sec.id)}
                     className="w-full text-left p-2.5 pr-8 flex items-start gap-2.5 cursor-pointer"
                   >
-                    {/* Number Tag */}
-                    <div className={`w-6 h-6 rounded-md flex items-center justify-center font-mono text-[10px] font-bold shrink-0 transition-colors ${
+                    {/* Relevant Section Lucide Icon & Number */}
+                    <div className={`w-7 h-7 rounded-lg flex items-center justify-center shrink-0 transition-all ${
                       isCurrent
-                        ? 'bg-[#D190AC] dark:bg-[#0080AB] text-white shadow-xs'
-                        : 'bg-[#F0EAD5]/70 dark:bg-slate-800 text-slate-700 dark:text-slate-400 group-hover:bg-[#F0EAD5] dark:group-hover:bg-slate-700 group-hover:text-[#8F3760]'
+                        ? 'bg-gradient-to-br from-[#D190AC] to-[#8F3760] dark:from-[#0080AB] dark:to-[#00AFD3] text-white shadow-xs'
+                        : 'bg-[#F0EAD5]/80 dark:bg-slate-800 text-[#8F3760] dark:text-slate-300 group-hover:bg-[#F0EAD5] dark:group-hover:bg-slate-700 group-hover:text-[#8F3760]'
                     }`}>
-                      {sec.num}
+                      <SectionIcon className="w-3.5 h-3.5" />
                     </div>
 
                     {/* Section Information */}
                     <div className="flex-1 min-w-0">
-                      <div className="flex items-center justify-between gap-1 mb-0.5">
-                        <span className={`text-xs font-bold truncate ${
+                      <div className="flex items-center gap-1.5 mb-0.5">
+                        <span className="font-mono text-[10px] font-bold text-slate-500 dark:text-slate-400 shrink-0">
+                          {sec.num}
+                        </span>
+                        <span className="text-slate-300 dark:text-slate-700 text-[10px]">•</span>
+                        <span className={`text-xs font-bold truncate flex-1 ${
                           isCurrent 
                             ? 'text-[#0B1F3A] dark:text-white font-display' 
                             : 'text-slate-800 dark:text-slate-200 group-hover:text-[#8F3760] dark:group-hover:text-blue-400'

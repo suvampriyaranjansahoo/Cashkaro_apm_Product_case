@@ -61,45 +61,45 @@ export const HypothesesSection: React.FC<HypothesesSectionProps> = ({
               <button
                 key={hypo.id}
                 onClick={() => setSelectedHypothesis(hypo.id)}
-                className={`text-left p-5 rounded-2xl border transition-all duration-200 relative overflow-hidden flex flex-col justify-between cursor-pointer ${
+                className={`text-left p-5 sm:p-6 rounded-2xl border transition-all duration-200 relative overflow-hidden flex flex-col justify-between cursor-pointer card-surface ${
                   isSelected
                     ? hypo.id === 'routing'
-                      ? 'bg-blue-50/80 dark:bg-blue-950/50 border-[#316BEA] dark:border-blue-500 shadow-md ring-2 ring-[#316BEA]/20'
+                      ? 'bg-blue-50/90 dark:bg-blue-950/60 border-[#316BEA] dark:border-blue-500 shadow-md ring-2 ring-[#316BEA]/30 scale-[1.01]'
                       : hypo.id === 'trust'
-                      ? 'bg-amber-50/80 dark:bg-amber-950/50 border-[#C27A14] dark:border-amber-600 shadow-md ring-2 ring-[#C27A14]/20'
-                      : 'bg-slate-100 dark:bg-slate-800/80 border-slate-400 dark:border-slate-600 shadow-md'
-                    : 'bg-white dark:bg-[#0E1726] border-[#DCE4EE] dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 hover:shadow-xs'
+                      ? 'bg-amber-50/90 dark:bg-amber-950/60 border-[#C27A14] dark:border-amber-600 shadow-md ring-2 ring-[#C27A14]/30 scale-[1.01]'
+                      : 'bg-slate-100/90 dark:bg-slate-800/90 border-slate-400 dark:border-slate-600 shadow-md ring-2 ring-slate-400/20 scale-[1.01]'
+                    : 'hover:border-slate-300 dark:hover:border-slate-700'
                 }`}
               >
                 <div>
                   <div className="flex items-center justify-between gap-2 mb-3">
-                    <span className={`text-[10px] font-mono font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full ${
+                    <span className={`text-[10px] font-mono font-bold uppercase tracking-wider px-2.5 py-1 rounded-full ${
                       hypo.tagColor === 'blue'
-                        ? 'bg-[#316BEA] text-white'
+                        ? 'bg-[#316BEA] text-white shadow-xs'
                         : hypo.tagColor === 'amber'
-                        ? 'bg-amber-100 dark:bg-amber-950/80 text-amber-900 dark:text-amber-200'
+                        ? 'bg-amber-100 dark:bg-amber-950/80 text-amber-900 dark:text-amber-200 border border-amber-300/40 dark:border-amber-700/40'
                         : 'bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300'
                     }`}>
                       {hypo.tag}
                     </span>
                     {isSelected && (
-                      <span className="text-xs font-semibold text-[#316BEA] dark:text-blue-400 flex items-center gap-1">
+                      <span className="text-xs font-semibold text-[#316BEA] dark:text-cyan-400 flex items-center gap-1 font-mono">
                         Active Card
                       </span>
                     )}
                   </div>
 
-                  <h3 className="text-lg font-bold text-slate-900 dark:text-white font-display">
+                  <h3 className="text-lg font-bold text-slate-900 dark:text-white font-display tracking-tight">
                     {hypo.name}
                   </h3>
-                  <p className="text-xs font-medium text-slate-600 dark:text-slate-300 mt-1">
+                  <p className="text-xs font-medium text-slate-600 dark:text-slate-300 mt-1 leading-relaxed">
                     "{hypo.subtitle}"
                   </p>
                 </div>
 
-                <div className="mt-4 pt-3 border-t border-slate-200/70 dark:border-slate-800 text-[11px] text-[#316BEA] dark:text-blue-400 font-semibold flex items-center gap-1">
+                <div className="mt-4 pt-3 border-t border-slate-200/70 dark:border-slate-800 text-[11px] text-[#316BEA] dark:text-cyan-400 font-semibold flex items-center gap-1">
                   <span>Explore hypothesis logic</span>
-                  <ArrowRight className="w-3 h-3" />
+                  <ArrowRight className="w-3.5 h-3.5" />
                 </div>
               </button>
             );

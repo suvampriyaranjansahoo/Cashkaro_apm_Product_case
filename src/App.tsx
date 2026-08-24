@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
 import { ReadingDepth, ThemeMode } from './types';
 import { Navigation } from './components/Navigation';
 import { HeroSection } from './components/HeroSection';
@@ -111,10 +112,97 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F7F6ED] dark:bg-[#050E1A] text-[#0B1F3A] dark:text-slate-100 flex flex-col selection:bg-[#316BEA]/15 selection:text-[#316BEA] pb-20 transition-colors relative overflow-x-hidden">
-      
-      {/* 3D Depth Architectural Background with Perspective Plane & Volumetric Light Cones */}
-      <BackgroundDepthCanvas />
+    <motion.div 
+      layout
+      animate={{
+        backgroundColor: themeMode === 'dark' ? '#050E1A' : '#F7F6ED'
+      }}
+      transition={{
+        duration: 0.65,
+        ease: [0.22, 1, 0.36, 1]
+      }}
+      className="min-h-screen text-[#0B1F3A] dark:text-slate-100 flex flex-col selection:bg-[#316BEA]/15 selection:text-[#316BEA] pb-28 sm:pb-32 relative overflow-x-hidden"
+    >
+      {/* Animated Organic Ambient Theme Layer with Framer Motion */}
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={themeMode}
+          initial={{ opacity: 0, scale: 0.98 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 1.02 }}
+          transition={{ duration: 0.75, ease: 'easeInOut' }}
+          className="fixed inset-0 pointer-events-none z-0 overflow-hidden"
+        >
+          {themeMode === 'light' ? (
+            /* Flowery Vibe: Soft Rose & Blossom Ambient Auras */
+            <>
+              <motion.div 
+                animate={{
+                  scale: [1, 1.08, 1],
+                  opacity: [0.35, 0.48, 0.35],
+                  x: [0, 20, 0],
+                  y: [0, -15, 0]
+                }}
+                transition={{ duration: 12, repeat: Infinity, ease: 'easeInOut' }}
+                className="absolute -top-24 right-[-5%] w-[650px] h-[650px] rounded-full bg-radial from-[#F0D6DE]/60 via-[#DEB6C5]/30 to-transparent blur-[100px]" 
+              />
+              <motion.div 
+                animate={{
+                  scale: [1, 1.12, 1],
+                  opacity: [0.3, 0.42, 0.3],
+                  x: [0, -25, 0],
+                  y: [0, 20, 0]
+                }}
+                transition={{ duration: 15, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
+                className="absolute top-[40%] left-[-10%] w-[700px] h-[700px] rounded-full bg-radial from-[#D190AC]/30 via-[#F0EAD5]/40 to-transparent blur-[120px]" 
+              />
+              <motion.div 
+                animate={{
+                  scale: [1, 1.06, 1],
+                  opacity: [0.25, 0.38, 0.25]
+                }}
+                transition={{ duration: 18, repeat: Infinity, ease: 'easeInOut', delay: 2 }}
+                className="absolute bottom-10 right-[15%] w-[550px] h-[550px] rounded-full bg-radial from-[#F0D6DE]/45 via-[#DEB6C5]/20 to-transparent blur-[110px]" 
+              />
+            </>
+          ) : (
+            /* Stormy Vibe: Tempest Dark, Deep Ocean & Ion Cyan Surges */
+            <>
+              <motion.div 
+                animate={{
+                  scale: [1, 1.15, 1],
+                  opacity: [0.22, 0.38, 0.22],
+                  x: [0, -30, 0],
+                  y: [0, 25, 0]
+                }}
+                transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
+                className="absolute -top-32 left-[10%] w-[800px] h-[600px] rounded-full bg-radial from-[#00AFD3]/30 via-[#0080AB]/20 to-transparent blur-[120px]" 
+              />
+              <motion.div 
+                animate={{
+                  scale: [1, 1.1, 1],
+                  opacity: [0.2, 0.32, 0.2],
+                  x: [0, 35, 0],
+                  y: [0, -20, 0]
+                }}
+                transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut', delay: 0.5 }}
+                className="absolute top-[45%] right-[-8%] w-[750px] h-[750px] rounded-full bg-radial from-[#25C3FF]/25 via-[#099AD9]/15 to-transparent blur-[130px]" 
+              />
+              <motion.div 
+                animate={{
+                  scale: [1, 1.2, 1],
+                  opacity: [0.15, 0.28, 0.15]
+                }}
+                transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
+                className="absolute bottom-0 left-[20%] w-[600px] h-[600px] rounded-full bg-radial from-[#02FEFF]/20 via-[#0080AB]/15 to-transparent blur-[110px]" 
+              />
+            </>
+          )}
+        </motion.div>
+      </AnimatePresence>
+
+      {/* 3D Depth Canvas with Sakura Floral Drift (Light) & Tempest Storm/Lightning (Dark) */}
+      <BackgroundDepthCanvas themeMode={themeMode} />
 
       {/* Sticky Navigation Bar */}
       <Navigation
@@ -212,6 +300,7 @@ export default function App() {
         />
         <ArchitectureSection 
           readingDepth={readingDepth} 
+          themeMode={themeMode}
           isHighlighted={highlightedSections.includes('architecture')}
           onToggleHighlight={toggleHighlight}
         />
@@ -335,6 +424,6 @@ export default function App() {
         </div>
       </footer>
 
-    </div>
+    </motion.div>
   );
 }

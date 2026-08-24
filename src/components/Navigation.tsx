@@ -21,6 +21,7 @@ import {
   Eye,
   ListOrdered
 } from 'lucide-react';
+import { motion, AnimatePresence } from 'motion/react';
 import { ExecutiveSummaryModal } from './ExecutiveSummaryModal';
 
 interface NavigationProps {
@@ -277,29 +278,85 @@ export const Navigation: React.FC<NavigationProps> = ({
               </button>
             </div>
 
-            {/* Theme Toggle Button (Light / Dark Mode) */}
-            <button
+            {/* Theme Toggle Button with Smooth Sun-to-Moon Transition */}
+            <motion.button
+              whileHover={{ scale: 1.04 }}
+              whileTap={{ scale: 0.94 }}
               onClick={toggleTheme}
-              className="px-2.5 py-1.5 text-slate-300 hover:text-white bg-slate-900/90 hover:bg-slate-800 border border-slate-700/80 rounded-lg transition-all cursor-pointer flex items-center gap-1.5 group shadow-xs"
+              className="relative px-2.5 py-1.5 text-slate-300 hover:text-white bg-slate-900/90 dark:bg-slate-950/90 hover:bg-slate-800 border border-slate-700/80 rounded-lg transition-colors cursor-pointer flex items-center gap-2 group shadow-xs overflow-hidden"
               title={getThemeTitle()}
               aria-label={getThemeTitle()}
             >
-              {themeMode === 'light' ? (
-                <>
-                  <Sun className="w-4 h-4 text-amber-400 group-hover:rotate-45 transition-transform duration-300" />
-                  <span className="text-[11px] font-semibold text-slate-300 group-hover:text-amber-300 hidden sm:inline">
-                    Light
-                  </span>
-                </>
-              ) : (
-                <>
-                  <Moon className="w-4 h-4 text-[#25C3FF] group-hover:-rotate-12 transition-transform duration-300" />
-                  <span className="text-[11px] font-semibold text-slate-300 group-hover:text-cyan-300 hidden sm:inline">
-                    Dark
-                  </span>
-                </>
-              )}
-            </button>
+              {/* Dynamic Theme Glow Underlay */}
+              <motion.div
+                className="absolute inset-0 pointer-events-none opacity-20 group-hover:opacity-40 transition-opacity"
+                animate={{
+                  background: themeMode === 'light'
+                    ? 'radial-gradient(circle at center, rgba(251, 191, 36, 0.35) 0%, transparent 70%)'
+                    : 'radial-gradient(circle at center, rgba(37, 195, 255, 0.35) 0%, transparent 70%)'
+                }}
+                transition={{ duration: 0.4 }}
+              />
+
+              {/* Animated Sun / Moon Icon Container */}
+              <div className="relative w-4 h-4 flex items-center justify-center">
+                <AnimatePresence mode="wait" initial={false}>
+                  {themeMode === 'light' ? (
+                    <motion.div
+                      key="theme-sun"
+                      initial={{ rotate: -90, scale: 0.3, opacity: 0 }}
+                      animate={{ rotate: 0, scale: 1, opacity: 1 }}
+                      exit={{ rotate: 90, scale: 0.3, opacity: 0 }}
+                      transition={{
+                        type: 'spring',
+                        stiffness: 380,
+                        damping: 22,
+                        mass: 0.6
+                      }}
+                      className="absolute inset-0 flex items-center justify-center text-amber-400"
+                    >
+                      <Sun className="w-4 h-4 drop-shadow-[0_0_6px_rgba(251,191,36,0.5)]" />
+                    </motion.div>
+                  ) : (
+                    <motion.div
+                      key="theme-moon"
+                      initial={{ rotate: 90, scale: 0.3, opacity: 0 }}
+                      animate={{ rotate: 0, scale: 1, opacity: 1 }}
+                      exit={{ rotate: -90, scale: 0.3, opacity: 0 }}
+                      transition={{
+                        type: 'spring',
+                        stiffness: 380,
+                        damping: 22,
+                        mass: 0.6
+                      }}
+                      className="absolute inset-0 flex items-center justify-center text-[#25C3FF]"
+                    >
+                      <Moon className="w-4 h-4 drop-shadow-[0_0_6px_rgba(37,195,255,0.6)]" />
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+
+              {/* Animated Label */}
+              <div className="relative overflow-hidden hidden sm:block h-4 w-9 text-left">
+                <AnimatePresence mode="wait" initial={false}>
+                  <motion.span
+                    key={themeMode}
+                    initial={{ y: themeMode === 'light' ? -14 : 14, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    exit={{ y: themeMode === 'light' ? 14 : -14, opacity: 0 }}
+                    transition={{ duration: 0.22, ease: 'easeOut' }}
+                    className={`block text-[11px] font-semibold tracking-wide ${
+                      themeMode === 'light' 
+                        ? 'text-amber-300 group-hover:text-amber-200' 
+                        : 'text-cyan-300 group-hover:text-cyan-200'
+                    }`}
+                  >
+                    {themeMode === 'light' ? 'Light' : 'Dark'}
+                  </motion.span>
+                </AnimatePresence>
+              </div>
+            </motion.button>
 
             {/* Quick Search Button */}
             <button
