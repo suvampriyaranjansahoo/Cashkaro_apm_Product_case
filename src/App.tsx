@@ -119,7 +119,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F7F9FC] dark:bg-[#070D18] text-[#0B1F3A] dark:text-slate-100 flex flex-col selection:bg-[#316BEA]/15 selection:text-[#316BEA] pb-16 transition-colors">
+    <div className="min-h-screen bg-[#F7F9FC] dark:bg-[#070D18] text-[#0B1F3A] dark:text-slate-100 flex flex-col selection:bg-[#316BEA]/15 selection:text-[#316BEA] pb-20 transition-colors">
       
       {/* Sticky Navigation Bar */}
       <Navigation
@@ -243,7 +243,7 @@ export default function App() {
         />
       </main>
 
-      {/* Floating Recruiter & Hiring Manager Action Bar */}
+      {/* Floating Recruiter & Hiring Manager Action Bar with Minimize Effect */}
       <RecruiterStickyBar
         onOpenRecruiterHub={() => setRecruiterHubOpen(true)}
         onOpen1Pager={() => setExecSummaryOpen(true)}
@@ -341,4 +341,3 @@ export default function App() {
     </div>
   );
 }
-

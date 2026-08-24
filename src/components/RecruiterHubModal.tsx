@@ -19,8 +19,12 @@ import {
   ArrowUpRight,
   Download,
   Star,
-  FileDown
+  FileDown,
+  BookOpen,
+  Eye,
+  Loader2
 } from 'lucide-react';
+import { generateExact14PageCasePdf } from '../utils/exactDocExport';
 
 interface RecruiterHubModalProps {
   isOpen: boolean;
@@ -39,6 +43,7 @@ export const RecruiterHubModal: React.FC<RecruiterHubModalProps> = ({
 }) => {
   const [copiedNote, setCopiedNote] = useState(false);
   const [selectedPillar, setSelectedPillar] = useState<number>(0);
+  const [isDownloadingExact, setIsDownloadingExact] = useState(false);
 
   if (!isOpen) return null;
 
@@ -118,6 +123,17 @@ export const RecruiterHubModal: React.FC<RecruiterHubModalProps> = ({
     },
   ];
 
+  const handleDownloadExactPdf = async () => {
+    setIsDownloadingExact(true);
+    try {
+      await generateExact14PageCasePdf();
+    } catch (e) {
+      console.error('Download error:', e);
+    } finally {
+      setIsDownloadingExact(false);
+    }
+  };
+
   const handleCopyRecruiterNote = () => {
     const note = `APM CANDIDATE EVALUATION BRIEF:
 Candidate: ${candidateInfo.name}
@@ -126,7 +142,7 @@ Email: ${candidateInfo.email}
 Case Study: ${candidateInfo.caseTitle}
 
 KEY COMPETENCY HIGHLIGHTS:
-1. Product Diagnosis: Identifies late-stage recall & restart friction as true leakage root cause.
+1. Problem Diagnosis: Identifies late-stage recall & restart friction as true leakage root cause.
 2. Strategy Discipline: Rejects bloated extensions in favor of a 1-tap allowlisted Intent Router.
 3. Experimentation: Designs 50/50 ITT holdout preventing vanity / survivorship bias.
 4. Technical Sense: Specifies S2S Postbacks, SubID session security, and Attribution Precedence Guard.
@@ -168,9 +184,29 @@ Recommendation: Advance to final APM/PM rounds.`;
           </div>
 
           <div className="flex items-center gap-2 shrink-0">
+            {/* Primary Direct Download Exact File Button */}
+            <button
+              onClick={handleDownloadExactPdf}
+              disabled={isDownloadingExact}
+              className="px-4 py-2 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white transition-all text-xs font-bold flex items-center gap-1.5 shadow-md hover:scale-[1.02] cursor-pointer disabled:opacity-50"
+              title="Download the exact 14-page official submission PDF"
+            >
+              {isDownloadingExact ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin text-white" />
+                  <span>Generating 14-Page PDF...</span>
+                </>
+              ) : (
+                <>
+                  <Download className="w-4 h-4 text-emerald-200" />
+                  <span>Download Exact 14-Page Case</span>
+                </>
+              )}
+            </button>
+
             <button
               onClick={handleCopyRecruiterNote}
-              className="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 hover:text-white transition-all text-xs font-semibold flex items-center gap-1.5 border border-slate-700 shadow-sm"
+              className="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 hover:text-white transition-all text-xs font-semibold flex items-center gap-1.5 border border-slate-700 shadow-sm cursor-pointer"
               title="Copy candidate feedback note"
             >
               {copiedNote ? (
@@ -181,14 +217,14 @@ Recommendation: Advance to final APM/PM rounds.`;
               ) : (
                 <>
                   <Copy className="w-4 h-4 text-blue-400" />
-                  <span>Copy Evaluation Brief</span>
+                  <span>Copy Brief</span>
                 </>
               )}
             </button>
 
             <button
               onClick={onClose}
-              className="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white transition-colors"
+              className="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white transition-colors cursor-pointer"
             >
               <X className="w-5 h-5" />
             </button>
@@ -214,19 +250,59 @@ Recommendation: Advance to final APM/PM rounds.`;
             <div className="flex sm:flex-col gap-2 shrink-0">
               <button
                 onClick={() => { onClose(); onNavigateSection('intent-router'); }}
-                className="px-4 py-2 rounded-xl bg-[#316BEA] hover:bg-blue-700 text-white font-bold text-xs flex items-center justify-center gap-1.5 transition-all shadow-sm"
+                className="px-4 py-2 rounded-xl bg-[#316BEA] hover:bg-blue-700 text-white font-bold text-xs flex items-center justify-center gap-1.5 transition-all shadow-sm cursor-pointer"
               >
                 <span>Interactive Prototype</span>
                 <ChevronRight className="w-3.5 h-3.5" />
               </button>
               <button
                 onClick={() => { onClose(); onNavigateSection('simulator'); }}
-                className="px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs flex items-center justify-center gap-1.5 transition-all shadow-sm"
+                className="px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs flex items-center justify-center gap-1.5 transition-all shadow-sm cursor-pointer"
               >
                 <span>Sensitivity Simulator</span>
                 <ChevronRight className="w-3.5 h-3.5" />
               </button>
             </div>
+          </div>
+
+          {/* Exact 14-Page File Download Card for Hiring Committee */}
+          <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-emerald-50 via-teal-50 to-slate-50 border border-emerald-300 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="flex items-start gap-3.5">
+              <div className="w-10 h-10 rounded-xl bg-emerald-600 text-white flex items-center justify-center font-bold text-lg shrink-0 shadow-sm">
+                <BookOpen className="w-5 h-5" />
+              </div>
+              <div>
+                <div className="flex items-center gap-2">
+                  <span className="font-display font-bold text-sm text-slate-900">
+                    Official 14-Page CashKaro APM Submission File
+                  </span>
+                  <span className="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-mono text-[10px] font-bold border border-emerald-300">
+                    Exact Dossier PDF
+                  </span>
+                </div>
+                <p className="text-xs text-slate-600 mt-1 leading-snug">
+                  Download the complete, unabridged assignment document containing all 14 structured pages, candidate problem framing, G1–G4 gates, S2S architecture flows, break-even unit economics, and executive sign-off.
+                </p>
+              </div>
+            </div>
+
+            <button
+              onClick={handleDownloadExactPdf}
+              disabled={isDownloadingExact}
+              className="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center justify-center gap-2 transition-all shadow-md shrink-0 cursor-pointer self-start sm:self-auto hover:scale-[1.02] disabled:opacity-50"
+            >
+              {isDownloadingExact ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin text-white" />
+                  <span>Generating PDF...</span>
+                </>
+              ) : (
+                <>
+                  <Download className="w-4 h-4" />
+                  <span>Download Exact PDF (14 Pages)</span>
+                </>
+              )}
+            </button>
           </div>
 
           {/* 5-Competency APM Evaluation Framework */}
@@ -245,7 +321,7 @@ Recommendation: Advance to final APM/PM rounds.`;
                 <button
                   key={comp.id}
                   onClick={() => setSelectedPillar(idx)}
-                  className={`p-2.5 rounded-xl text-left transition-all border ${
+                  className={`p-2.5 rounded-xl text-left transition-all border cursor-pointer ${
                     selectedPillar === idx
                       ? 'bg-[#0B1728] text-white border-slate-900 shadow-md scale-[1.02]'
                       : 'bg-slate-50 hover:bg-slate-100 text-slate-700 border-slate-200'
@@ -337,7 +413,7 @@ Recommendation: Advance to final APM/PM rounds.`;
             <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-1.5">
               <span className="text-[10px] font-mono uppercase font-bold text-slate-400">Interview Artifacts</span>
               <div className="font-bold text-slate-900 text-sm">Full Investment Memo</div>
-              <div className="text-xs text-slate-500">12 Interactive Technical Modules</div>
+              <div className="text-xs text-slate-500">14 Structured Exact Pages</div>
             </div>
 
             <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-1.5">
@@ -376,7 +452,7 @@ Recommendation: Advance to final APM/PM rounds.`;
                 className="px-4 py-2 rounded-xl bg-blue-50 text-[#316BEA] hover:bg-blue-100 border border-blue-200 font-bold text-xs flex items-center gap-1.5 transition-colors cursor-pointer"
               >
                 <FileDown className="w-4 h-4" />
-                <span>Export PDF Dossier</span>
+                <span>Export PDF Options</span>
               </button>
             )}
             <button

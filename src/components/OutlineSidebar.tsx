@@ -234,10 +234,10 @@ export const OutlineSidebar: React.FC<OutlineSidebarProps> = ({
             <button
               onClick={() => setIsOpen(false)}
               className="p-1.5 text-slate-400 hover:text-slate-700 dark:hover:text-white hover:bg-slate-200/60 dark:hover:bg-slate-800 rounded-lg transition-colors cursor-pointer"
-              title="Collapse Outline Sidebar (Esc)"
-              aria-label="Collapse Outline"
+              title="Close Outline Sidebar (Esc)"
+              aria-label="Close Outline"
             >
-              <ChevronLeft className="w-5 h-5" />
+              <X className="w-4 h-4" />
             </button>
           </div>
         </div>

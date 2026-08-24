@@ -1,26 +1,24 @@
 import React, { useState } from 'react';
 import { 
-  FileDown, 
   X, 
-  CheckCircle2, 
-  Sparkles, 
+  FileText, 
+  Download, 
   Layers, 
   Bookmark, 
-  FileText, 
+  CheckCircle2, 
+  Eye, 
   Printer, 
   Loader2, 
   ShieldCheck, 
-  Download,
-  Check,
-  AlertCircle,
-  Eye
+  Check, 
+  AlertCircle, 
+  FileDown, 
+  Sparkles,
+  Award,
+  BookOpen
 } from 'lucide-react';
-import { 
-  generateExecutiveSummaryPdf, 
-  generateFullDossierPdf, 
-  waitForDomAndAssetsReadiness, 
-  PdfExportOptions 
-} from '../utils/pdfExport';
+import { generateExact14PageCasePdf } from '../utils/exactDocExport';
+import { generateExecutiveSummaryPdf, generateFullDossierPdf, waitForDomAndAssetsReadiness } from '../utils/pdfExport';
 import { ReadingDepth } from '../types';
 
 interface PdfExportModalProps {
@@ -38,7 +36,7 @@ export const PdfExportModal: React.FC<PdfExportModalProps> = ({
   markedSectionIds,
   onOpenPrintPreview,
 }) => {
-  const [selectedFormat, setSelectedFormat] = useState<'executive' | 'full' | 'saved'>('executive');
+  const [selectedFormat, setSelectedFormat] = useState<'exact-doc' | 'executive' | 'full' | 'saved'>('exact-doc');
   const [inkFriendly, setInkFriendly] = useState<boolean>(true);
   const [isGenerating, setIsGenerating] = useState<boolean>(false);
   const [progress, setProgress] = useState<number>(0);
@@ -51,18 +49,20 @@ export const PdfExportModal: React.FC<PdfExportModalProps> = ({
   const handleExport = async () => {
     setIsGenerating(true);
     setProgress(5);
-    setStatusText('Preparing export configuration & environment...');
+    setStatusText('Preparing export configuration...');
     setSuccessNotice(null);
     setErrorNotice(null);
 
     try {
-      // Step 1: Explicitly wait for dynamic images, charts, and web fonts to complete rendering
-      await waitForDomAndAssetsReadiness((pct, msg) => {
-        setProgress(pct);
-        setStatusText(msg);
-      });
-
-      if (selectedFormat === 'executive') {
+      if (selectedFormat === 'exact-doc') {
+        await generateExact14PageCasePdf({
+          onProgress: (p, text) => {
+            setProgress(p);
+            setStatusText(text);
+          }
+        });
+        setSuccessNotice('Official 14-Page CashKaro APM Assignment PDF downloaded successfully!');
+      } else if (selectedFormat === 'executive') {
         setProgress(50);
         setStatusText('Composing Executive 1-Pager layout...');
         await generateExecutiveSummaryPdf({
@@ -75,6 +75,10 @@ export const PdfExportModal: React.FC<PdfExportModalProps> = ({
         setStatusText('Executive 1-Pager exported successfully!');
         setSuccessNotice('Executive Brief PDF has been downloaded.');
       } else if (selectedFormat === 'full') {
+        await waitForDomAndAssetsReadiness((pct, msg) => {
+          setProgress(pct);
+          setStatusText(msg);
+        });
         await generateFullDossierPdf({
           mode: 'full-dossier',
           candidateName: 'SUVAM PRIYARANJAN SAHOO',
@@ -86,13 +90,17 @@ export const PdfExportModal: React.FC<PdfExportModalProps> = ({
             setStatusText(text);
           },
         });
-        setSuccessNotice('Full Strategy Dossier PDF has been downloaded.');
+        setSuccessNotice('Live App HTML-Rendered Dossier PDF has been downloaded.');
       } else if (selectedFormat === 'saved') {
         if (markedSectionIds.length === 0) {
           setErrorNotice('No sections have been bookmarked yet. Please bookmark insights first or export the full dossier.');
           setIsGenerating(false);
           return;
         }
+        await waitForDomAndAssetsReadiness((pct, msg) => {
+          setProgress(pct);
+          setStatusText(msg);
+        });
         await generateFullDossierPdf({
           mode: 'saved-insights',
           markedSectionIds,
@@ -109,7 +117,7 @@ export const PdfExportModal: React.FC<PdfExportModalProps> = ({
       }
     } catch (err) {
       console.error('PDF export error:', err);
-      setErrorNotice('PDF generation encountered an error. Please try standard print / 1-pager view.');
+      setErrorNotice('PDF generation encountered an error. Please try another format or browser print.');
     } finally {
       setIsGenerating(false);
     }
@@ -149,7 +157,7 @@ export const PdfExportModal: React.FC<PdfExportModalProps> = ({
                   Export Strategy Case as PDF
                 </h2>
                 <span className="text-[10px] font-mono uppercase bg-blue-500/20 text-blue-300 px-2 py-0.5 rounded border border-blue-400/30">
-                  Offline Review
+                  Offline Dossier
                 </span>
               </div>
               <p className="text-xs text-slate-400 mt-0.5">
@@ -176,9 +184,42 @@ export const PdfExportModal: React.FC<PdfExportModalProps> = ({
               Select Export Format:
             </label>
             
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               
-              {/* Option 1: Executive 1-Pager Brief */}
+              {/* Option 1: EXACT 14-PAGE CASE STUDY (FEATURED / DEFAULT) */}
+              <button
+                onClick={() => setSelectedFormat('exact-doc')}
+                className={`p-3.5 rounded-xl border text-left transition-all cursor-pointer flex flex-col justify-between relative overflow-hidden ${
+                  selectedFormat === 'exact-doc'
+                    ? 'border-[#316BEA] bg-blue-50/90 dark:bg-blue-950/60 ring-2 ring-[#316BEA]/40 shadow-sm'
+                    : 'border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/60 hover:bg-slate-100 dark:hover:bg-slate-800'
+                }`}
+              >
+                <div className="absolute top-0 right-0 bg-[#316BEA] text-white text-[9px] font-mono font-bold px-2 py-0.5 rounded-bl-lg">
+                  RECOMMENDED
+                </div>
+                <div>
+                  <div className="flex items-center justify-between">
+                    <div className="w-8 h-8 rounded-lg bg-blue-600/10 text-[#316BEA] dark:text-blue-400 flex items-center justify-center font-bold">
+                      <BookOpen className="w-4 h-4" />
+                    </div>
+                    {selectedFormat === 'exact-doc' && (
+                      <CheckCircle2 className="w-4 h-4 text-[#316BEA] dark:text-blue-400" />
+                    )}
+                  </div>
+                  <div className="font-bold text-slate-900 dark:text-white mt-2 text-xs sm:text-sm">
+                    Exact 14-Page Assignment PDF
+                  </div>
+                  <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1 leading-snug">
+                    The complete official APM case submission with exact tables, G1-G4 gates, sensitivity math, and operating model.
+                  </p>
+                </div>
+                <div className="mt-2.5 text-[10px] font-mono text-blue-700 dark:text-blue-300 font-semibold flex items-center gap-1">
+                  <span>📄 Exact 14 Pages • Full Assignment</span>
+                </div>
+              </button>
+
+              {/* Option 2: Executive 1-Pager Brief */}
               <button
                 onClick={() => setSelectedFormat('executive')}
                 className={`p-3.5 rounded-xl border text-left transition-all cursor-pointer flex flex-col justify-between ${
@@ -189,7 +230,7 @@ export const PdfExportModal: React.FC<PdfExportModalProps> = ({
               >
                 <div>
                   <div className="flex items-center justify-between">
-                    <div className="w-7 h-7 rounded-lg bg-blue-600/10 text-[#316BEA] dark:text-blue-400 flex items-center justify-center font-bold">
+                    <div className="w-8 h-8 rounded-lg bg-emerald-600/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center font-bold">
                       <FileText className="w-4 h-4" />
                     </div>
                     {selectedFormat === 'executive' && (
@@ -197,18 +238,18 @@ export const PdfExportModal: React.FC<PdfExportModalProps> = ({
                     )}
                   </div>
                   <div className="font-bold text-slate-900 dark:text-white mt-2 text-xs sm:text-sm">
-                    Executive 1-Pager
+                    Executive 1-Pager Brief
                   </div>
                   <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1 leading-snug">
-                    Instant, vector-crisp single A4 page for rapid hiring committee brief.
+                    Single-page executive decision summary designed for quick 60-second review by hiring managers.
                   </p>
                 </div>
                 <div className="mt-2.5 text-[10px] font-mono text-emerald-600 dark:text-emerald-400 font-semibold">
-                  ⚡ Instant Download (&lt;1s)
+                  ⚡ 1-Page Summary • Instant Download
                 </div>
               </button>
 
-              {/* Option 2: Full Strategy Dossier */}
+              {/* Option 3: Full Live App Capture */}
               <button
                 onClick={() => setSelectedFormat('full')}
                 className={`p-3.5 rounded-xl border text-left transition-all cursor-pointer flex flex-col justify-between ${
@@ -219,7 +260,7 @@ export const PdfExportModal: React.FC<PdfExportModalProps> = ({
               >
                 <div>
                   <div className="flex items-center justify-between">
-                    <div className="w-7 h-7 rounded-lg bg-indigo-600/10 text-indigo-600 dark:text-indigo-400 flex items-center justify-center font-bold">
+                    <div className="w-8 h-8 rounded-lg bg-indigo-600/10 text-indigo-600 dark:text-indigo-400 flex items-center justify-center font-bold">
                       <Layers className="w-4 h-4" />
                     </div>
                     {selectedFormat === 'full' && (
@@ -227,18 +268,18 @@ export const PdfExportModal: React.FC<PdfExportModalProps> = ({
                     )}
                   </div>
                   <div className="font-bold text-slate-900 dark:text-white mt-2 text-xs sm:text-sm">
-                    Complete Dossier
+                    Live UI Capture Dossier
                   </div>
                   <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1 leading-snug">
-                    Multi-page capture of all 12 sections, tables, math specs, & architecture.
+                    DOM-rendered capture of the live interactive web app modules.
                   </p>
                 </div>
                 <div className="mt-2.5 text-[10px] font-mono text-indigo-600 dark:text-indigo-400 font-semibold">
-                  📄 Full 12-Section Case
+                  🌐 Live Web Modules Capture
                 </div>
               </button>
 
-              {/* Option 3: Recruiter Marked Insights */}
+              {/* Option 4: Recruiter Marked Insights */}
               <button
                 onClick={() => setSelectedFormat('saved')}
                 className={`p-3.5 rounded-xl border text-left transition-all cursor-pointer flex flex-col justify-between ${
@@ -249,7 +290,7 @@ export const PdfExportModal: React.FC<PdfExportModalProps> = ({
               >
                 <div>
                   <div className="flex items-center justify-between">
-                    <div className="w-7 h-7 rounded-lg bg-amber-600/10 text-amber-600 dark:text-amber-400 flex items-center justify-center font-bold">
+                    <div className="w-8 h-8 rounded-lg bg-amber-600/10 text-amber-600 dark:text-amber-400 flex items-center justify-center font-bold">
                       <Bookmark className="w-4 h-4" />
                     </div>
                     {selectedFormat === 'saved' && (
@@ -257,7 +298,7 @@ export const PdfExportModal: React.FC<PdfExportModalProps> = ({
                     )}
                   </div>
                   <div className="font-bold text-slate-900 dark:text-white mt-2 text-xs sm:text-sm">
-                    Saved Insights Only
+                    Saved Bookmarked Insights
                   </div>
                   <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1 leading-snug">
                     Curated custom PDF with only your bookmarked sections.
@@ -380,7 +421,7 @@ export const PdfExportModal: React.FC<PdfExportModalProps> = ({
               ) : (
                 <>
                   <Download className="w-3.5 h-3.5" />
-                  <span>Download PDF</span>
+                  <span>Download Case Study PDF</span>
                 </>
               )}
             </button>
