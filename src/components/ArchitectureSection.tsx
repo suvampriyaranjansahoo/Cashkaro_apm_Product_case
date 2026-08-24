@@ -15,12 +15,19 @@ import {
   HelpCircle,
   Clock
 } from 'lucide-react';
+import { SectionHeader } from './SectionHeader';
 
 interface ArchitectureSectionProps {
   readingDepth: ReadingDepth;
+  isHighlighted?: boolean;
+  onToggleHighlight?: (id: string) => void;
 }
 
-export const ArchitectureSection: React.FC<ArchitectureSectionProps> = ({ readingDepth }) => {
+export const ArchitectureSection: React.FC<ArchitectureSectionProps> = ({ 
+  readingDepth,
+  isHighlighted,
+  onToggleHighlight
+}) => {
   const [selectedFlow, setSelectedFlow] = useState<'user' | 'decision' | 'data'>('user');
   const [activeNode, setActiveNode] = useState<string | null>('user-3');
 
@@ -50,33 +57,38 @@ export const ArchitectureSection: React.FC<ArchitectureSectionProps> = ({ readin
   ];
 
   return (
-    <section id="architecture" className="py-12 sm:py-16 border-b border-[#DCE4EE]">
+    <section 
+      id="architecture" 
+      className={`py-12 sm:py-16 border-b border-[#DCE4EE] dark:border-slate-800 transition-colors ${
+        isHighlighted ? 'section-highlighted' : ''
+      }`}
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
-        {/* Section Header */}
-        <div className="max-w-3xl mb-8">
-          <div className="inline-flex items-center gap-2 text-xs font-mono font-semibold uppercase text-[#316BEA] tracking-wider mb-2">
-            <span>09</span>
-            <span>/</span>
-            <span>System Design</span>
-          </div>
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-display font-extrabold text-[#0B1F3A] tracking-tight">
-            Decoupled technical architecture & data flows.
-          </h2>
-          <p className="mt-3 text-sm sm:text-base text-slate-600 leading-relaxed">
-            The system architecture enforces a clean separation of concerns between client rendering, server-side policy evaluation, and asynchronous affiliate reconciliation.
-          </p>
-        </div>
+        {/* Section Header with Copy Link & Highlight */}
+        <SectionHeader
+          num="09"
+          category="System Design"
+          sectionId="architecture"
+          isHighlighted={isHighlighted}
+          onToggleHighlight={onToggleHighlight}
+          title={<span>Decoupled technical architecture & data flows.</span>}
+          description={
+            <span>
+              The system architecture enforces a clean separation of concerns between client rendering, server-side policy evaluation, and asynchronous affiliate reconciliation.
+            </span>
+          }
+        />
 
         {/* Interactive Architecture Workspace */}
-        <div className="bg-[#0B1728] text-white border border-slate-800 rounded-2xl p-6 sm:p-8 shadow-xl mb-8">
+        <div className="bg-[#0B1728] dark:bg-slate-950 text-white border border-slate-800 rounded-2xl p-6 sm:p-8 shadow-xl mb-8">
           
           {/* Stream Selector Buttons */}
           <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-800 pb-5 mb-8">
             <div className="flex items-center gap-2">
               <button
                 onClick={() => setSelectedFlow('user')}
-                className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 ${
+                className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
                   selectedFlow === 'user'
                     ? 'bg-[#316BEA] text-white shadow-md'
                     : 'bg-slate-900 text-slate-400 hover:text-white'
@@ -87,7 +99,7 @@ export const ArchitectureSection: React.FC<ArchitectureSectionProps> = ({ readin
               </button>
               <button
                 onClick={() => setSelectedFlow('decision')}
-                className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 ${
+                className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
                   selectedFlow === 'decision'
                     ? 'bg-[#316BEA] text-white shadow-md'
                     : 'bg-slate-900 text-slate-400 hover:text-white'
@@ -98,7 +110,7 @@ export const ArchitectureSection: React.FC<ArchitectureSectionProps> = ({ readin
               </button>
               <button
                 onClick={() => setSelectedFlow('data')}
-                className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 ${
+                className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
                   selectedFlow === 'data'
                     ? 'bg-[#316BEA] text-white shadow-md'
                     : 'bg-slate-900 text-slate-400 hover:text-white'
@@ -130,7 +142,7 @@ export const ArchitectureSection: React.FC<ArchitectureSectionProps> = ({ readin
                   <div key={node.id} className="relative group">
                     <button
                       onClick={() => setActiveNode(node.id)}
-                      className={`w-full text-left p-3.5 rounded-xl border transition-all h-full flex flex-col justify-between ${
+                      className={`w-full text-left p-3.5 rounded-xl border transition-all h-full flex flex-col justify-between cursor-pointer ${
                         isSelected
                           ? 'bg-[#316BEA] border-blue-400 text-white shadow-lg ring-2 ring-[#316BEA]/40'
                           : 'bg-slate-900 border-slate-800 text-slate-300 hover:bg-slate-800/80 hover:border-slate-700'
@@ -165,7 +177,7 @@ export const ArchitectureSection: React.FC<ArchitectureSectionProps> = ({ readin
 
           {/* Active Node Detail Card */}
           {activeNode && (
-            <div className="p-4 rounded-xl bg-slate-900 border border-slate-700/80 text-xs">
+            <div className="p-4 rounded-xl bg-slate-900 dark:bg-slate-900/90 border border-slate-700/80 text-xs">
               <div className="flex items-center justify-between mb-1 text-slate-400 font-mono text-[10px]">
                 <span>ARCHITECTURE NODE SPECIFICATION</span>
                 <span className="text-[#316BEA] font-bold">Fail-Closed Guarantee</span>
@@ -179,30 +191,30 @@ export const ArchitectureSection: React.FC<ArchitectureSectionProps> = ({ readin
 
         {/* 4 Cross-Functional Architecture Safeguards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-xs">
-          <div className="p-4 rounded-xl bg-white border border-[#DCE4EE] shadow-xs space-y-1.5">
-            <span className="font-mono text-[10px] font-bold uppercase text-[#316BEA] block">1. Attribution Safety</span>
-            <p className="text-slate-600 leading-relaxed">
+          <div className="p-4 rounded-xl bg-white dark:bg-[#0E1726] border border-[#DCE4EE] dark:border-slate-800 shadow-xs space-y-1.5">
+            <span className="font-mono text-[10px] font-bold uppercase text-[#316BEA] dark:text-blue-400 block">1. Attribution Safety</span>
+            <p className="text-slate-600 dark:text-slate-300 leading-relaxed">
               Existing creator/network referral detected? <strong>YES → Suppress router.</strong> Router never overwrites active third-party commissions.
             </p>
           </div>
 
-          <div className="p-4 rounded-xl bg-white border border-[#DCE4EE] shadow-xs space-y-1.5">
-            <span className="font-mono text-[10px] font-bold uppercase text-[#316BEA] block">2. Reconciliation Timeout</span>
-            <p className="text-slate-600 leading-relaxed">
+          <div className="p-4 rounded-xl bg-white dark:bg-[#0E1726] border border-[#DCE4EE] dark:border-slate-800 shadow-xs space-y-1.5">
+            <span className="font-mono text-[10px] font-bold uppercase text-[#316BEA] dark:text-blue-400 block">2. Reconciliation Timeout</span>
+            <p className="text-slate-600 dark:text-slate-300 leading-relaxed">
               Unreconciled Click IDs enter a holding maturity bucket and are excluded from primary ITT outcome until finalized.
             </p>
           </div>
 
-          <div className="p-4 rounded-xl bg-white border border-[#DCE4EE] shadow-xs space-y-1.5">
-            <span className="font-mono text-[10px] font-bold uppercase text-[#316BEA] block">3. Config Rollback</span>
-            <p className="text-slate-600 leading-relaxed">
+          <div className="p-4 rounded-xl bg-white dark:bg-[#0E1726] border border-[#DCE4EE] dark:border-slate-800 shadow-xs space-y-1.5">
+            <span className="font-mono text-[10px] font-bold uppercase text-[#316BEA] dark:text-blue-400 block">3. Config Rollback</span>
+            <p className="text-slate-600 dark:text-slate-300 leading-relaxed">
               Partner-specific allowlists can be instantly disabled server-side without requiring Chrome Web Store releases.
             </p>
           </div>
 
-          <div className="p-4 rounded-xl bg-white border border-[#DCE4EE] shadow-xs space-y-1.5">
-            <span className="font-mono text-[10px] font-bold uppercase text-[#316BEA] block">4. Opaque Security</span>
-            <p className="text-slate-600 leading-relaxed">
+          <div className="p-4 rounded-xl bg-white dark:bg-[#0E1726] border border-[#DCE4EE] dark:border-slate-800 shadow-xs space-y-1.5">
+            <span className="font-mono text-[10px] font-bold uppercase text-[#316BEA] dark:text-blue-400 block">4. Opaque Security</span>
+            <p className="text-slate-600 dark:text-slate-300 leading-relaxed">
               The client receives only an opaque boolean eligibility token. No raw purchase history or personal data is passed to the extension.
             </p>
           </div>
@@ -212,3 +224,4 @@ export const ArchitectureSection: React.FC<ArchitectureSectionProps> = ({ readin
     </section>
   );
 };
+

@@ -17,9 +17,10 @@ import { ColorLegend } from './ColorLegend';
 
 interface HeroSectionProps {
   readingDepth: ReadingDepth;
+  onOpenRecruiterHub?: () => void;
 }
 
-export const HeroSection: React.FC<HeroSectionProps> = ({ readingDepth }) => {
+export const HeroSection: React.FC<HeroSectionProps> = ({ readingDepth, onOpenRecruiterHub }) => {
   const [activeDecisionStep, setActiveDecisionStep] = useState<number>(3);
 
   const decisionSteps = [
@@ -82,20 +83,20 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ readingDepth }) => {
   ];
 
   return (
-    <section id="hero" className="pt-4 pb-12 sm:pb-16 border-b border-[#DCE4EE]">
+    <section id="hero" className="pt-4 pb-12 sm:pb-16 border-b border-[#DCE4EE] dark:border-slate-800 transition-colors">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Top Header Eyebrow */}
         <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-900 text-slate-200 text-xs font-semibold tracking-wider uppercase">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-900 dark:bg-slate-800 text-slate-200 text-xs font-semibold tracking-wider uppercase border border-slate-700/50">
             <span className="w-2 h-2 rounded-full bg-[#316BEA] animate-pulse"></span>
             CashKaro / APM Product Strategy Case
           </div>
           
-          <div className="flex items-center gap-2 text-xs text-slate-500 font-mono">
-            <span>Author: <strong className="text-slate-800 font-semibold">SUVAM PRIYARANJAN SAHOO</strong></span>
+          <div className="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400 font-mono">
+            <span>Author: <strong className="text-slate-800 dark:text-slate-200 font-semibold">SUVAM PRIYARANJAN SAHOO</strong></span>
             <span>•</span>
-            <span>Status: <strong className="text-[#159A68] font-semibold">Validated Strategy</strong></span>
+            <span>Status: <strong className="text-[#159A68] dark:text-emerald-400 font-semibold">Validated Strategy</strong></span>
           </div>
         </div>
 
@@ -106,55 +107,87 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ readingDepth }) => {
           <div className="lg:col-span-7 space-y-6">
             
             <div>
-              <h1 className="text-3xl sm:text-4xl md:text-5xl font-display font-extrabold tracking-tight text-[#0B1F3A] leading-[1.15]">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl font-display font-extrabold tracking-tight text-[#0B1F3A] dark:text-white leading-[1.15]">
                 Making CashKaro part of the shopping habit.
               </h1>
-              <p className="mt-4 text-base sm:text-lg text-slate-600 leading-relaxed">
-                A hypothesis-led product strategy to convert <span className="font-semibold text-slate-900">existing-user leakage</span> into <span className="font-semibold text-[#316BEA]">incremental tracked orders</span> through an intention-routed, friction-free mechanism.
+              <p className="mt-4 text-base sm:text-lg text-slate-600 dark:text-slate-300 leading-relaxed">
+                A hypothesis-led product strategy to convert <span className="font-semibold text-slate-900 dark:text-white">existing-user leakage</span> into <span className="font-semibold text-[#316BEA] dark:text-blue-400">incremental tracked orders</span> through an intention-routed, friction-free mechanism.
               </p>
             </div>
 
             {/* Senior PM Triad Chips */}
             <div className="flex flex-wrap items-center gap-2 pt-1">
-              <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white border border-[#DCE4EE] text-xs font-bold text-[#0B1F3A] shadow-xs">
+              <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white dark:bg-[#0E1726] border border-[#DCE4EE] dark:border-slate-800 text-xs font-bold text-[#0B1F3A] dark:text-slate-200 shadow-xs">
                 <Target className="w-3.5 h-3.5 text-[#316BEA]" />
                 <span>USER VALUE</span>
-                <span className="text-slate-400 font-normal ml-1">Zero-restart routing</span>
+                <span className="text-slate-400 dark:text-slate-500 font-normal ml-1">Zero-restart routing</span>
               </div>
-              <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white border border-[#DCE4EE] text-xs font-bold text-[#0B1F3A] shadow-xs">
+              <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white dark:bg-[#0E1726] border border-[#DCE4EE] dark:border-slate-800 text-xs font-bold text-[#0B1F3A] dark:text-slate-200 shadow-xs">
                 <ShieldCheck className="w-3.5 h-3.5 text-[#159A68]" />
                 <span>CAUSALITY</span>
-                <span className="text-slate-400 font-normal ml-1">Persistent 50/50 ITT</span>
+                <span className="text-slate-400 dark:text-slate-500 font-normal ml-1">Persistent 50/50 ITT</span>
               </div>
-              <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white border border-[#DCE4EE] text-xs font-bold text-[#0B1F3A] shadow-xs">
+              <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white dark:bg-[#0E1726] border border-[#DCE4EE] dark:border-slate-800 text-xs font-bold text-[#0B1F3A] dark:text-slate-200 shadow-xs">
                 <TrendingUp className="w-3.5 h-3.5 text-[#316BEA]" />
                 <span>ECONOMICS</span>
-                <span className="text-slate-400 font-normal ml-1">Break-even ΔO model</span>
+                <span className="text-slate-400 dark:text-slate-500 font-normal ml-1">Break-even ΔO model</span>
               </div>
             </div>
 
             {/* Recommendation Box */}
-            <div className="p-4 sm:p-5 rounded-xl bg-gradient-to-br from-[#EBF2FE] to-white border border-[#C6DCFD] shadow-xs">
+            <div className="p-4 sm:p-5 rounded-xl bg-gradient-to-br from-[#EBF2FE] to-white dark:from-blue-950/40 dark:to-slate-900 border border-[#C6DCFD] dark:border-blue-900/50 shadow-xs">
               <div className="flex items-start gap-3">
                 <div className="w-6 h-6 rounded-md bg-[#316BEA] text-white flex items-center justify-center shrink-0 mt-0.5 text-xs font-bold font-mono">
                   REC
                 </div>
                 <div className="space-y-1">
-                  <h2 className="text-xs font-bold tracking-wider uppercase text-[#316BEA]">
+                  <h2 className="text-xs font-bold tracking-wider uppercase text-[#316BEA] dark:text-blue-300">
                     Primary Executive Recommendation
                   </h2>
-                  <p className="text-sm text-slate-800 leading-snug">
+                  <p className="text-sm text-slate-800 dark:text-slate-200 leading-snug">
                     Validate routing friction among high-frequency leakage users before writing code (<strong>G1 ≥ 60%</strong>). If the evidence holds, launch a narrow, desktop-first <strong>Intent Router</strong> on 3–5 eligible retailers. Treat mobile recovery as V1.5 and trust as a launch guardrail — <em>never an untested assumption</em>.
                   </p>
                 </div>
               </div>
             </div>
 
+            {/* Recruiter & Hiring Manager Evaluation Banner */}
+            {onOpenRecruiterHub && (
+              <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-[#0B1728] via-[#132845] to-[#0B1728] text-white border border-slate-700/80 shadow-md flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div className="flex items-start gap-3.5">
+                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center text-slate-950 font-black text-sm shrink-0 shadow-sm mt-0.5">
+                    APM
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <span className="font-display font-bold text-sm text-white">
+                        Hiring Manager / Recruiter Fast-Track
+                      </span>
+                      <span className="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 font-mono text-[9px] font-bold border border-emerald-500/30">
+                        5/5 Rubric
+                      </span>
+                    </div>
+                    <p className="text-xs text-slate-300 mt-1 leading-snug">
+                      Candidate: <strong>Suvam Priyaranjan Sahoo</strong> • Evaluated across Product Sense, Causality, System Design, and Break-Even Unit Economics.
+                    </p>
+                  </div>
+                </div>
+
+                <button
+                  onClick={onOpenRecruiterHub}
+                  className="px-4 py-2 rounded-xl bg-gradient-to-r from-[#316BEA] to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-bold text-xs flex items-center justify-center gap-1.5 transition-all shadow-sm shrink-0 cursor-pointer self-start sm:self-auto"
+                >
+                  <span>Open Evaluation Hub</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </button>
+              </div>
+            )}
+
             {/* Evidence Boundary Callout */}
-            <div className="p-3.5 rounded-lg bg-slate-100/90 border border-slate-200 text-xs text-slate-600 flex items-start gap-2.5">
+            <div className="p-3.5 rounded-lg bg-slate-100/90 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs text-slate-600 dark:text-slate-400 flex items-start gap-2.5">
               <ShieldCheck className="w-4 h-4 text-slate-400 shrink-0 mt-0.5" />
               <div>
-                <strong className="text-slate-800">Evidence Boundary & Integrity:</strong> No synthetic segment size, interview result, baseline conversion rate, or financial forecast is presented as CashKaro fact. The case articulates what must be proven before capital and engineering are deployed.
+                <strong className="text-slate-800 dark:text-slate-200">Evidence Boundary & Integrity:</strong> No synthetic segment size, interview result, baseline conversion rate, or financial forecast is presented as CashKaro fact. The case articulates what must be proven before capital and engineering are deployed.
               </div>
             </div>
           </div>
@@ -179,7 +212,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ readingDepth }) => {
                   <button
                     key={step.num}
                     onClick={() => setActiveDecisionStep(idx)}
-                    className={`w-full text-left p-2.5 rounded-lg transition-all flex items-center justify-between group ${
+                    className={`w-full text-left p-2.5 rounded-lg transition-all flex items-center justify-between group cursor-pointer ${
                       isCurrent
                         ? 'bg-[#316BEA] text-white shadow-md'
                         : 'bg-slate-900/80 hover:bg-slate-800/90 text-slate-300'
@@ -231,3 +264,4 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ readingDepth }) => {
     </section>
   );
 };
+

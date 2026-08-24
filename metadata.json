@@ -1,6 +1,6 @@
 {
   "name": "CashKaro APM Product Case - Intent Router",
-  "description": "An interactive product-investment memo and strategic APM case study by Suvam Priya Ranjan Sahoo on converting existing-user leakage into incremental tracked orders.",
+  "description": "An interactive product-investment memo and strategic APM case study by Suvam Priyaranjan Sahoo on converting existing-user leakage into incremental tracked orders.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

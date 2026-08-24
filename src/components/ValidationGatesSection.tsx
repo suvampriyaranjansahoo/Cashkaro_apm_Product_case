@@ -13,12 +13,19 @@ import {
   HelpCircle,
   Play
 } from 'lucide-react';
+import { SectionHeader } from './SectionHeader';
 
 interface ValidationGatesSectionProps {
   readingDepth: ReadingDepth;
+  isHighlighted?: boolean;
+  onToggleHighlight?: (id: string) => void;
 }
 
-export const ValidationGatesSection: React.FC<ValidationGatesSectionProps> = ({ readingDepth }) => {
+export const ValidationGatesSection: React.FC<ValidationGatesSectionProps> = ({ 
+  readingDepth,
+  isHighlighted,
+  onToggleHighlight
+}) => {
   const [activeGate, setActiveGate] = useState<string>('g1');
   const [simulatedG1, setSimulatedG1] = useState<'pass' | 'gray' | 'fail'>('pass');
   const [simulatedG2, setSimulatedG2] = useState<'pass' | 'fail'>('pass');
@@ -74,34 +81,39 @@ export const ValidationGatesSection: React.FC<ValidationGatesSectionProps> = ({ 
   const simResult = getSimulatedResolution();
 
   return (
-    <section id="validation" className="py-12 sm:py-16 border-b border-[#DCE4EE]">
+    <section 
+      id="validation" 
+      className={`py-12 sm:py-16 border-b border-[#DCE4EE] dark:border-slate-800 transition-colors ${
+        isHighlighted ? 'section-highlighted' : ''
+      }`}
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
-        {/* Section Header */}
-        <div className="max-w-3xl mb-8">
-          <div className="inline-flex items-center gap-2 text-xs font-mono font-semibold uppercase text-[#316BEA] tracking-wider mb-2">
-            <span>05</span>
-            <span>/</span>
-            <span>Validation Gates</span>
-          </div>
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-display font-extrabold text-[#0B1F3A] tracking-tight">
-            Validation before engineering.
-          </h2>
-          <p className="mt-3 text-sm sm:text-base text-slate-600 leading-relaxed">
-            Each gate has a real organizational cost. The purpose of this framework is to <strong>stop spending partner, engineering, and research capacity</strong> on a mechanism before preceding behavioral uncertainties are systematically reduced.
-          </p>
-        </div>
+        {/* Section Header with Copy Link & Highlight */}
+        <SectionHeader
+          num="05"
+          category="Validation Gates"
+          sectionId="validation"
+          isHighlighted={isHighlighted}
+          onToggleHighlight={onToggleHighlight}
+          title={<span>Validation before engineering.</span>}
+          description={
+            <span>
+              Each gate has a real organizational cost. The purpose of this framework is to <strong>stop spending partner, engineering, and research capacity</strong> on a mechanism before preceding behavioral uncertainties are systematically reduced.
+            </span>
+          }
+        />
 
         {/* Validation Gameboard: Interactive 4-Gate Track */}
-        <div className="bg-white border border-[#DCE4EE] rounded-2xl p-6 sm:p-8 shadow-sm mb-8">
-          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 pb-4 mb-6">
+        <div className="bg-white dark:bg-[#0E1726] border border-[#DCE4EE] dark:border-slate-800 rounded-2xl p-6 sm:p-8 shadow-sm mb-8">
+          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 dark:border-slate-800 pb-4 mb-6">
             <div>
               <span className="text-[10px] font-mono uppercase tracking-wider text-slate-400 font-semibold">Sequential Gating Pipeline</span>
-              <h3 className="text-base font-bold text-slate-900">Click any gate to inspect methodology and exit conditions</h3>
+              <h3 className="text-base font-bold text-slate-900 dark:text-white">Click any gate to inspect methodology and exit conditions</h3>
             </div>
             <div className="flex items-center gap-2 text-xs font-mono">
               <span className="w-2 h-2 rounded-full bg-[#159A68]"></span>
-              <span className="text-slate-600">G1 → G2 → G3 → G4</span>
+              <span className="text-slate-600 dark:text-slate-400">G1 → G2 → G3 → G4</span>
             </div>
           </div>
 
@@ -113,15 +125,15 @@ export const ValidationGatesSection: React.FC<ValidationGatesSectionProps> = ({ 
                 <button
                   key={gate.id}
                   onClick={() => setActiveGate(gate.id)}
-                  className={`text-left p-4 rounded-xl border transition-all duration-200 relative ${
+                  className={`text-left p-4 rounded-xl border transition-all duration-200 relative cursor-pointer ${
                     isSelected
-                      ? 'bg-blue-50/80 border-[#316BEA] shadow-md ring-2 ring-[#316BEA]/20'
-                      : 'bg-slate-50/70 border-slate-200 hover:bg-white hover:border-slate-300'
+                      ? 'bg-blue-50/80 dark:bg-blue-950/50 border-[#316BEA] dark:border-blue-500 shadow-md ring-2 ring-[#316BEA]/20'
+                      : 'bg-slate-50/70 dark:bg-slate-900/60 border-slate-200 dark:border-slate-800 hover:bg-white dark:hover:bg-slate-800 hover:border-slate-300'
                   }`}
                 >
                   <div className="flex items-center justify-between mb-2">
                     <span className={`w-7 h-7 rounded-lg flex items-center justify-center font-mono text-xs font-bold ${
-                      isSelected ? 'bg-[#316BEA] text-white' : 'bg-slate-200 text-slate-700'
+                      isSelected ? 'bg-[#316BEA] text-white' : 'bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300'
                     }`}>
                       {gate.gate}
                     </span>
@@ -129,8 +141,8 @@ export const ValidationGatesSection: React.FC<ValidationGatesSectionProps> = ({ 
                       Step {index + 1}/4
                     </span>
                   </div>
-                  <h4 className="font-bold text-xs sm:text-sm text-slate-900">{gate.title}</h4>
-                  <div className="mt-2 text-[11px] font-mono text-[#316BEA] font-semibold truncate">
+                  <h4 className="font-bold text-xs sm:text-sm text-slate-900 dark:text-white">{gate.title}</h4>
+                  <div className="mt-2 text-[11px] font-mono text-[#316BEA] dark:text-blue-400 font-semibold truncate">
                     {gate.metricTarget}
                   </div>
                 </button>
@@ -139,7 +151,7 @@ export const ValidationGatesSection: React.FC<ValidationGatesSectionProps> = ({ 
           </div>
 
           {/* Active Gate Deep Dive Card */}
-          <div className="p-5 sm:p-6 rounded-xl bg-slate-900 text-white border border-slate-800">
+          <div className="p-5 sm:p-6 rounded-xl bg-slate-900 dark:bg-slate-950 text-white border border-slate-800">
             <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-800 pb-3 mb-4">
               <div className="flex items-center gap-2">
                 <span className="text-xs font-mono font-bold px-2.5 py-0.5 rounded bg-[#316BEA] text-white">
@@ -176,15 +188,15 @@ export const ValidationGatesSection: React.FC<ValidationGatesSectionProps> = ({ 
         </div>
 
         {/* Interactive Validation Decision Tree Simulator */}
-        <div className="bg-white border border-[#DCE4EE] rounded-2xl p-6 sm:p-7 shadow-sm">
-          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 pb-4 mb-5">
+        <div className="bg-white dark:bg-[#0E1726] border border-[#DCE4EE] dark:border-slate-800 rounded-2xl p-6 sm:p-7 shadow-sm">
+          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 dark:border-slate-800 pb-4 mb-5">
             <div className="flex items-center gap-2">
               <GitBranch className="w-4 h-4 text-[#316BEA]" />
-              <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider font-mono">
+              <h3 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider font-mono">
                 Interactive Validation Decision Tree Simulator
               </h3>
             </div>
-            <span className="text-xs text-slate-500">Test different gate outcomes to view organizational decisions</span>
+            <span className="text-xs text-slate-500 dark:text-slate-400">Test different gate outcomes to view organizational decisions</span>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
@@ -193,12 +205,12 @@ export const ValidationGatesSection: React.FC<ValidationGatesSectionProps> = ({ 
             <div className="lg:col-span-6 grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
               
               {/* G1 Toggle */}
-              <div className="p-3 rounded-lg bg-slate-50 border border-slate-200 space-y-1.5">
-                <span className="font-mono font-bold text-[10px] text-slate-500 block">G1 Discovery</span>
+              <div className="p-3 rounded-lg bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 space-y-1.5">
+                <span className="font-mono font-bold text-[10px] text-slate-500 dark:text-slate-400 block">G1 Discovery</span>
                 <select
                   value={simulatedG1}
                   onChange={(e) => setSimulatedG1(e.target.value as any)}
-                  className="w-full text-xs font-semibold p-1.5 rounded bg-white border border-slate-300 text-slate-800 focus:outline-none focus:ring-1 focus:ring-[#316BEA]"
+                  className="w-full text-xs font-semibold p-1.5 rounded bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-white focus:outline-none focus:ring-1 focus:ring-[#316BEA]"
                 >
                   <option value="pass">PASS (≥60%)</option>
                   <option value="gray">GRAY (50–59%)</option>
@@ -207,12 +219,12 @@ export const ValidationGatesSection: React.FC<ValidationGatesSectionProps> = ({ 
               </div>
 
               {/* G2 Toggle */}
-              <div className="p-3 rounded-lg bg-slate-50 border border-slate-200 space-y-1.5">
-                <span className="font-mono font-bold text-[10px] text-slate-500 block">G2 Addressability</span>
+              <div className="p-3 rounded-lg bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 space-y-1.5">
+                <span className="font-mono font-bold text-[10px] text-slate-500 dark:text-slate-400 block">G2 Addressability</span>
                 <select
                   value={simulatedG2}
                   onChange={(e) => setSimulatedG2(e.target.value as any)}
-                  className="w-full text-xs font-semibold p-1.5 rounded bg-white border border-slate-300 text-slate-800 focus:outline-none focus:ring-1 focus:ring-[#316BEA]"
+                  className="w-full text-xs font-semibold p-1.5 rounded bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-white focus:outline-none focus:ring-1 focus:ring-[#316BEA]"
                 >
                   <option value="pass">PASS (Powered)</option>
                   <option value="fail">FAIL (Low reach)</option>
@@ -220,12 +232,12 @@ export const ValidationGatesSection: React.FC<ValidationGatesSectionProps> = ({ 
               </div>
 
               {/* G3 Toggle */}
-              <div className="p-3 rounded-lg bg-slate-50 border border-slate-200 space-y-1.5">
-                <span className="font-mono font-bold text-[10px] text-slate-500 block">G3 Spikes</span>
+              <div className="p-3 rounded-lg bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 space-y-1.5">
+                <span className="font-mono font-bold text-[10px] text-slate-500 dark:text-slate-400 block">G3 Spikes</span>
                 <select
                   value={simulatedG3}
                   onChange={(e) => setSimulatedG3(e.target.value as any)}
-                  className="w-full text-xs font-semibold p-1.5 rounded bg-white border border-slate-300 text-slate-800 focus:outline-none focus:ring-1 focus:ring-[#316BEA]"
+                  className="w-full text-xs font-semibold p-1.5 rounded bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-white focus:outline-none focus:ring-1 focus:ring-[#316BEA]"
                 >
                   <option value="pass">PASS (Joined)</option>
                   <option value="fail">FAIL (Conflict)</option>
@@ -233,12 +245,12 @@ export const ValidationGatesSection: React.FC<ValidationGatesSectionProps> = ({ 
               </div>
 
               {/* G4 Toggle */}
-              <div className="p-3 rounded-lg bg-slate-50 border border-slate-200 space-y-1.5">
-                <span className="font-mono font-bold text-[10px] text-slate-500 block">G4 ITT Lift</span>
+              <div className="p-3 rounded-lg bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 space-y-1.5">
+                <span className="font-mono font-bold text-[10px] text-slate-500 dark:text-slate-400 block">G4 ITT Lift</span>
                 <select
                   value={simulatedG4}
                   onChange={(e) => setSimulatedG4(e.target.value as any)}
-                  className="w-full text-xs font-semibold p-1.5 rounded bg-white border border-slate-300 text-slate-800 focus:outline-none focus:ring-1 focus:ring-[#316BEA]"
+                  className="w-full text-xs font-semibold p-1.5 rounded bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-white focus:outline-none focus:ring-1 focus:ring-[#316BEA]"
                 >
                   <option value="pass">PASS (+ Lift)</option>
                   <option value="fail">FAIL (No lift)</option>
@@ -250,10 +262,10 @@ export const ValidationGatesSection: React.FC<ValidationGatesSectionProps> = ({ 
             {/* Resolution Display Card */}
             <div className={`lg:col-span-6 p-4 rounded-xl border text-xs sm:text-sm ${
               simResult.status === 'pass'
-                ? 'bg-emerald-50 border-emerald-300 text-emerald-950'
+                ? 'bg-emerald-50 dark:bg-emerald-950/40 border-emerald-300 dark:border-emerald-800/70 text-emerald-950 dark:text-emerald-200'
                 : simResult.status === 'gray'
-                ? 'bg-amber-50 border-amber-300 text-amber-950'
-                : 'bg-rose-50 border-rose-300 text-rose-950'
+                ? 'bg-amber-50 dark:bg-amber-950/40 border-amber-300 dark:border-amber-800/70 text-amber-950 dark:text-amber-200'
+                : 'bg-rose-50 dark:bg-rose-950/40 border-rose-300 dark:border-rose-800/70 text-rose-950 dark:text-rose-200'
             }`}>
               <div className="flex items-center justify-between mb-1.5">
                 <span className="font-mono text-[10px] font-bold uppercase tracking-wider">
@@ -261,10 +273,10 @@ export const ValidationGatesSection: React.FC<ValidationGatesSectionProps> = ({ 
                 </span>
                 <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase ${
                   simResult.status === 'pass'
-                    ? 'bg-emerald-200 text-emerald-900'
+                    ? 'bg-emerald-200 dark:bg-emerald-900 text-emerald-900 dark:text-emerald-100'
                     : simResult.status === 'gray'
-                    ? 'bg-amber-200 text-amber-900'
-                    : 'bg-rose-200 text-rose-900'
+                    ? 'bg-amber-200 dark:bg-amber-900 text-amber-900 dark:text-amber-100'
+                    : 'bg-rose-200 dark:bg-rose-900 text-rose-900 dark:text-rose-100'
                 }`}>
                   {simResult.stage}
                 </span>
@@ -281,3 +293,4 @@ export const ValidationGatesSection: React.FC<ValidationGatesSectionProps> = ({ 
     </section>
   );
 };
+

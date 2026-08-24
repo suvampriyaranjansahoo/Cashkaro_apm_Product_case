@@ -11,35 +11,47 @@ import {
   XOctagon,
   HelpCircle
 } from 'lucide-react';
+import { SectionHeader } from './SectionHeader';
 
 interface MindChangeSectionProps {
   readingDepth: ReadingDepth;
+  isHighlighted?: boolean;
+  onToggleHighlight?: (id: string) => void;
 }
 
-export const MindChangeSection: React.FC<MindChangeSectionProps> = ({ readingDepth }) => {
+export const MindChangeSection: React.FC<MindChangeSectionProps> = ({ 
+  readingDepth,
+  isHighlighted,
+  onToggleHighlight
+}) => {
   const [selectedScenarioId, setSelectedScenarioId] = useState<string>('no-routing');
 
   const selectedScenario = 
     MIND_CHANGE_SCENARIOS.find((s) => s.id === selectedScenarioId) || MIND_CHANGE_SCENARIOS[0];
 
   return (
-    <section id="mind-change" className="py-12 sm:py-16 bg-[#0B1728] text-white border-b border-slate-800">
+    <section 
+      id="mind-change" 
+      className={`py-12 sm:py-16 bg-[#0B1728] dark:bg-slate-950 text-white border-b border-slate-800 transition-colors ${
+        isHighlighted ? 'section-highlighted' : ''
+      }`}
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
-        {/* Section Header */}
-        <div className="max-w-3xl mb-8">
-          <div className="inline-flex items-center gap-2 text-xs font-mono font-semibold uppercase text-[#316BEA] tracking-wider mb-2">
-            <span>06</span>
-            <span>/</span>
-            <span>Senior PM Rigor & Falsifiability</span>
-          </div>
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-display font-extrabold text-white tracking-tight">
-            WHAT WOULD CHANGE MY MIND?
-          </h2>
-          <p className="mt-3 text-sm sm:text-base text-slate-300 leading-relaxed">
-            A hypothesis is only as good as its falsifiability. True product leadership means defining the exact triggers that will cause us to <strong>pivot or kill the initiative</strong> rather than optimizing a bad premise forever.
-          </p>
-        </div>
+        {/* Section Header with Copy Link & Highlight */}
+        <SectionHeader
+          num="06"
+          category="Senior PM Rigor & Falsifiability"
+          sectionId="mind-change"
+          isHighlighted={isHighlighted}
+          onToggleHighlight={onToggleHighlight}
+          title={<span>WHAT WOULD CHANGE MY MIND?</span>}
+          description={
+            <span>
+              A hypothesis is only as good as its falsifiability. True product leadership means defining the exact triggers that will cause us to <strong>pivot or kill the initiative</strong> rather than optimizing a bad premise forever.
+            </span>
+          }
+        />
 
         {/* 6 Clickable Pills Grid */}
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5 mb-8">
@@ -49,7 +61,7 @@ export const MindChangeSection: React.FC<MindChangeSectionProps> = ({ readingDep
               <button
                 key={scenario.id}
                 onClick={() => setSelectedScenarioId(scenario.id)}
-                className={`p-3 rounded-xl text-left border transition-all flex flex-col justify-between group ${
+                className={`p-3 rounded-xl text-left border transition-all flex flex-col justify-between group cursor-pointer ${
                   isSelected
                     ? 'bg-[#316BEA] text-white border-blue-400 shadow-lg ring-2 ring-[#316BEA]/40'
                     : 'bg-slate-900/90 text-slate-300 border-slate-800 hover:bg-slate-800 hover:text-white hover:border-slate-700'
@@ -77,7 +89,7 @@ export const MindChangeSection: React.FC<MindChangeSectionProps> = ({ readingDep
         </div>
 
         {/* Interactive Scenario Consequence Card */}
-        <div className="bg-slate-900/95 border border-slate-700/80 rounded-2xl p-6 sm:p-8 shadow-2xl relative overflow-hidden">
+        <div className="bg-slate-900/95 dark:bg-slate-900 border border-slate-700/80 dark:border-slate-800 rounded-2xl p-6 sm:p-8 shadow-2xl relative overflow-hidden">
           <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-800 pb-4 mb-6">
             <div className="flex items-center gap-2.5">
               <div className="w-8 h-8 rounded-lg bg-rose-500/20 border border-rose-500/40 text-rose-400 flex items-center justify-center font-mono text-xs font-bold">
@@ -143,3 +155,4 @@ export const MindChangeSection: React.FC<MindChangeSectionProps> = ({ readingDep
     </section>
   );
 };
+

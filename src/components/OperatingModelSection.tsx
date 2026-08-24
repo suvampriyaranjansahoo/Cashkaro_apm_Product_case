@@ -12,12 +12,19 @@ import {
   FileCheck2,
   ExternalLink
 } from 'lucide-react';
+import { SectionHeader } from './SectionHeader';
 
 interface OperatingModelSectionProps {
   readingDepth: ReadingDepth;
+  isHighlighted?: boolean;
+  onToggleHighlight?: (id: string) => void;
 }
 
-export const OperatingModelSection: React.FC<OperatingModelSectionProps> = ({ readingDepth }) => {
+export const OperatingModelSection: React.FC<OperatingModelSectionProps> = ({ 
+  readingDepth,
+  isHighlighted,
+  onToggleHighlight
+}) => {
   const phases = [
     {
       phase: 'Discover',
@@ -95,56 +102,61 @@ export const OperatingModelSection: React.FC<OperatingModelSectionProps> = ({ re
   ];
 
   return (
-    <section id="operating-model" className="py-12 sm:py-16 border-b border-[#DCE4EE]">
+    <section 
+      id="operating-model" 
+      className={`py-12 sm:py-16 border-b border-[#DCE4EE] dark:border-slate-800 transition-colors ${
+        isHighlighted ? 'section-highlighted' : ''
+      }`}
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
-        {/* Section Header */}
-        <div className="max-w-3xl mb-8">
-          <div className="inline-flex items-center gap-2 text-xs font-mono font-semibold uppercase text-[#316BEA] tracking-wider mb-2">
-            <span>12</span>
-            <span>/</span>
-            <span>Operating Model & Risk Management</span>
-          </div>
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-display font-extrabold text-[#0B1F3A] tracking-tight">
-            Execution: cross-functional RACI & risk cadences.
-          </h2>
-          <p className="mt-3 text-sm sm:text-base text-slate-600 leading-relaxed">
-            Strategy requires operational ownership. We define distinct deliverables for each phase alongside a comprehensive risk matrix with <strong>named owners and recurring review cadences</strong>.
-          </p>
-        </div>
+        {/* Section Header with Copy Link & Highlight */}
+        <SectionHeader
+          num="12"
+          category="Operating Model & Risk Management"
+          sectionId="operating-model"
+          isHighlighted={isHighlighted}
+          onToggleHighlight={onToggleHighlight}
+          title={<span>Execution: cross-functional RACI & risk cadences.</span>}
+          description={
+            <span>
+              Strategy requires operational ownership. We define distinct deliverables for each phase alongside a comprehensive risk matrix with <strong>named owners and recurring review cadences</strong>.
+            </span>
+          }
+        />
 
         {/* 5-Phase Horizontal Operating Track */}
-        <div className="bg-white border border-[#DCE4EE] rounded-2xl p-6 shadow-sm mb-8">
-          <div className="flex items-center justify-between border-b border-slate-100 pb-4 mb-6">
+        <div className="bg-white dark:bg-[#0E1726] border border-[#DCE4EE] dark:border-slate-800 rounded-2xl p-6 shadow-sm mb-8">
+          <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-4 mb-6">
             <div>
               <span className="text-[10px] font-mono uppercase tracking-wider text-slate-400 font-semibold">Phased Execution Pipeline</span>
-              <h3 className="text-base font-bold text-slate-900">Discover → De-Risk → Build/Pilot → Experiment → Scale</h3>
+              <h3 className="text-base font-bold text-slate-900 dark:text-white">Discover → De-Risk → Build/Pilot → Experiment → Scale</h3>
             </div>
-            <span className="text-xs font-mono text-slate-500">Stage Gate Governance</span>
+            <span className="text-xs font-mono text-slate-500 dark:text-slate-400">Stage Gate Governance</span>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-5 gap-3">
             {phases.map((p) => (
-              <div key={p.phase} className="p-4 rounded-xl bg-slate-50 border border-slate-200 flex flex-col justify-between space-y-3">
+              <div key={p.phase} className="p-4 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 flex flex-col justify-between space-y-3">
                 <div>
                   <div className="flex items-center justify-between text-[11px] font-mono text-slate-400 mb-1">
                     <span>Phase {p.step}</span>
                     <span className="w-2 h-2 rounded-full bg-[#316BEA]"></span>
                   </div>
-                  <h4 className="font-display font-bold text-sm text-slate-900">{p.phase}</h4>
+                  <h4 className="font-display font-bold text-sm text-slate-900 dark:text-white">{p.phase}</h4>
                   
                   <div className="mt-2 text-[11px] space-y-1">
                     <span className="text-[10px] font-mono uppercase text-slate-400 font-semibold block">Owner:</span>
-                    <span className="font-medium text-slate-700 block">{p.owner}</span>
+                    <span className="font-medium text-slate-700 dark:text-slate-300 block">{p.owner}</span>
                   </div>
 
                   <div className="mt-2 text-[11px] space-y-1">
                     <span className="text-[10px] font-mono uppercase text-slate-400 font-semibold block">Deliverable:</span>
-                    <p className="text-slate-600 leading-snug">{p.deliverable}</p>
+                    <p className="text-slate-600 dark:text-slate-400 leading-snug">{p.deliverable}</p>
                   </div>
                 </div>
 
-                <div className="pt-2 border-t border-slate-200/80 text-[10px] font-mono font-bold text-[#159A68]">
+                <div className="pt-2 border-t border-slate-200/80 dark:border-slate-800 text-[10px] font-mono font-bold text-[#159A68]">
                   Exit: {p.exit}
                 </div>
               </div>
@@ -153,8 +165,8 @@ export const OperatingModelSection: React.FC<OperatingModelSectionProps> = ({ re
         </div>
 
         {/* Risk & Mitigation Matrix with Named Owners */}
-        <div className="bg-white border border-[#DCE4EE] rounded-2xl overflow-hidden shadow-sm mb-8">
-          <div className="p-4 sm:p-5 bg-slate-900 text-white flex flex-wrap items-center justify-between gap-3">
+        <div className="bg-white dark:bg-[#0E1726] border border-[#DCE4EE] dark:border-slate-800 rounded-2xl overflow-hidden shadow-sm mb-8">
+          <div className="p-4 sm:p-5 bg-slate-900 dark:bg-slate-950 text-white flex flex-wrap items-center justify-between gap-3">
             <div className="flex items-center gap-2">
               <ShieldAlert className="w-4 h-4 text-amber-400" />
               <h3 className="text-sm font-bold text-white font-mono uppercase tracking-wider">
@@ -166,7 +178,7 @@ export const OperatingModelSection: React.FC<OperatingModelSectionProps> = ({ re
 
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
-              <thead className="bg-slate-50 border-b border-slate-200 font-mono text-[11px] text-slate-500 uppercase">
+              <thead className="bg-slate-50 dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 font-mono text-[11px] text-slate-500 uppercase">
                 <tr>
                   <th className="p-3.5 sm:px-4">Risk Category</th>
                   <th className="p-3.5 sm:px-4">Mitigation & Trigger</th>
@@ -175,24 +187,24 @@ export const OperatingModelSection: React.FC<OperatingModelSectionProps> = ({ re
                   <th className="p-3.5 sm:px-4 text-center">Severity</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100 text-slate-700">
+              <tbody className="divide-y divide-slate-100 dark:divide-slate-800 text-slate-700 dark:text-slate-300">
                 {risks.map((r) => (
-                  <tr key={r.risk} className="hover:bg-slate-50/80">
-                    <td className="p-3.5 sm:px-4 font-bold text-slate-900">
+                  <tr key={r.risk} className="hover:bg-slate-50/80 dark:hover:bg-slate-900/50">
+                    <td className="p-3.5 sm:px-4 font-bold text-slate-900 dark:text-white">
                       {r.risk}
                     </td>
-                    <td className="p-3.5 sm:px-4 text-slate-600 leading-relaxed max-w-sm">
+                    <td className="p-3.5 sm:px-4 text-slate-600 dark:text-slate-400 leading-relaxed max-w-sm">
                       {r.mitigation}
                     </td>
-                    <td className="p-3.5 sm:px-4 font-semibold text-slate-800">
+                    <td className="p-3.5 sm:px-4 font-semibold text-slate-800 dark:text-slate-200">
                       {r.owner}
                     </td>
-                    <td className="p-3.5 sm:px-4 font-mono text-[11px] text-slate-600">
+                    <td className="p-3.5 sm:px-4 font-mono text-[11px] text-slate-600 dark:text-slate-400">
                       {r.cadence}
                     </td>
                     <td className="p-3.5 sm:px-4 text-center">
                       <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase font-mono ${
-                        r.severity === 'Critical' ? 'bg-rose-100 text-rose-800' : r.severity === 'High' ? 'bg-amber-100 text-amber-800' : 'bg-slate-100 text-slate-700'
+                        r.severity === 'Critical' ? 'bg-rose-100 dark:bg-rose-950/60 text-rose-800 dark:text-rose-300' : r.severity === 'High' ? 'bg-amber-100 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300' : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300'
                       }`}>
                         {r.severity}
                       </span>
@@ -205,9 +217,9 @@ export const OperatingModelSection: React.FC<OperatingModelSectionProps> = ({ re
         </div>
 
         {/* Partner Readiness Check Protocol */}
-        <div className="p-4 sm:p-5 rounded-xl bg-amber-50/80 border border-amber-300/80 text-xs text-amber-950">
-          <div className="flex items-center gap-2 font-bold mb-1 font-mono uppercase tracking-wider text-amber-900">
-            <CheckCircle2 className="w-4 h-4 text-amber-700" />
+        <div className="p-4 sm:p-5 rounded-xl bg-amber-50/80 dark:bg-amber-950/30 border border-amber-300/80 dark:border-amber-900/60 text-xs text-amber-950 dark:text-amber-200">
+          <div className="flex items-center gap-2 font-bold mb-1 font-mono uppercase tracking-wider text-amber-900 dark:text-amber-300">
+            <CheckCircle2 className="w-4 h-4 text-amber-700 dark:text-amber-400" />
             <span>Partner Readiness Check (Hard Gate Before Retailer Launch)</span>
           </div>
           <p className="leading-relaxed">
@@ -219,3 +231,4 @@ export const OperatingModelSection: React.FC<OperatingModelSectionProps> = ({ re
     </section>
   );
 };
+
