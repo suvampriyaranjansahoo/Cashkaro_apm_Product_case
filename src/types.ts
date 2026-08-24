@@ -1,5 +1,5 @@
 export type ReadingDepth = '30s' | '2m' | '7m';
-export type ThemeMode = 'system' | 'dark' | 'light';
+export type ThemeMode = 'dark' | 'light';
 
 export interface SectionMeta {
   id: string;

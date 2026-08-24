@@ -81,17 +81,17 @@ export const ArchitectureSection: React.FC<ArchitectureSectionProps> = ({
         />
 
         {/* Interactive Architecture Workspace */}
-        <div className="bg-[#0B1728] dark:bg-slate-950 text-white border border-slate-800 rounded-2xl p-6 sm:p-8 shadow-xl mb-8">
+        <div className="bg-[#F0EAD5] dark:bg-slate-950 text-slate-900 dark:text-white border border-[#DEB6C5]/80 dark:border-slate-800 rounded-2xl p-6 sm:p-8 shadow-sm mb-8 transition-colors">
           
           {/* Stream Selector Buttons */}
-          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-800 pb-5 mb-8">
+          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#DEB6C5]/60 dark:border-slate-800 pb-5 mb-8">
             <div className="flex items-center gap-2">
               <button
                 onClick={() => setSelectedFlow('user')}
                 className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
                   selectedFlow === 'user'
-                    ? 'bg-[#316BEA] text-white shadow-md'
-                    : 'bg-slate-900 text-slate-400 hover:text-white'
+                    ? 'bg-[#D190AC] dark:bg-[#0080AB] text-white shadow-xs'
+                    : 'bg-[#F7F6ED] dark:bg-slate-900 text-slate-700 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white border border-[#DEB6C5]/40 dark:border-transparent'
                 }`}
               >
                 <Monitor className="w-3.5 h-3.5" />
@@ -101,8 +101,8 @@ export const ArchitectureSection: React.FC<ArchitectureSectionProps> = ({
                 onClick={() => setSelectedFlow('decision')}
                 className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
                   selectedFlow === 'decision'
-                    ? 'bg-[#316BEA] text-white shadow-md'
-                    : 'bg-slate-900 text-slate-400 hover:text-white'
+                    ? 'bg-[#D190AC] dark:bg-[#0080AB] text-white shadow-xs'
+                    : 'bg-[#F7F6ED] dark:bg-slate-900 text-slate-700 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white border border-[#DEB6C5]/40 dark:border-transparent'
                 }`}
               >
                 <Cpu className="w-3.5 h-3.5" />
@@ -112,8 +112,8 @@ export const ArchitectureSection: React.FC<ArchitectureSectionProps> = ({
                 onClick={() => setSelectedFlow('data')}
                 className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
                   selectedFlow === 'data'
-                    ? 'bg-[#316BEA] text-white shadow-md'
-                    : 'bg-slate-900 text-slate-400 hover:text-white'
+                    ? 'bg-[#D190AC] dark:bg-[#0080AB] text-white shadow-xs'
+                    : 'bg-[#F7F6ED] dark:bg-slate-900 text-slate-700 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white border border-[#DEB6C5]/40 dark:border-transparent'
                 }`}
               >
                 <Database className="w-3.5 h-3.5" />
@@ -121,22 +121,22 @@ export const ArchitectureSection: React.FC<ArchitectureSectionProps> = ({
               </button>
             </div>
             
-            <div className="text-[11px] font-mono text-slate-400 flex items-center gap-2">
-              <Clock className="w-3.5 h-3.5 text-[#159A68]" />
+            <div className="text-[11px] font-mono text-slate-600 dark:text-slate-400 flex items-center gap-2">
+              <Clock className="w-3.5 h-3.5 text-emerald-600 dark:text-[#159A68]" />
               <span>Target Latency: &lt;120ms</span>
             </div>
           </div>
 
           {/* Animated Box-and-Arrow Node Grid */}
           <div className="space-y-4 mb-8">
-            <div className="text-xs font-mono text-[#316BEA] font-semibold uppercase tracking-wider">
+            <div className="text-xs font-mono text-[#8F3760] dark:text-[#25C3FF] font-bold uppercase tracking-wider">
               {selectedFlow === 'user' && 'User & Browser In-Page Flow Sequence:'}
               {selectedFlow === 'decision' && 'Server-Side Policy & Experiment Decision Pipeline:'}
               {selectedFlow === 'data' && 'Cryptographic Click ID & Async Affiliate Reconciliation:'}
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-3">
-              {(selectedFlow === 'user' ? userFlowNodes : selectedFlow === 'decision' ? decisionFlowNodes : dataFlowNodes).map((node, index, arr) => {
+              {(selectedFlow === 'user' ? userFlowNodes : selectedFlow === 'decision' ? decisionFlowNodes : dataFlowNodes).map((node, index) => {
                 const isSelected = activeNode === node.id;
                 return (
                   <div key={node.id} className="relative group">
@@ -144,29 +144,29 @@ export const ArchitectureSection: React.FC<ArchitectureSectionProps> = ({
                       onClick={() => setActiveNode(node.id)}
                       className={`w-full text-left p-3.5 rounded-xl border transition-all h-full flex flex-col justify-between cursor-pointer ${
                         isSelected
-                          ? 'bg-[#316BEA] border-blue-400 text-white shadow-lg ring-2 ring-[#316BEA]/40'
-                          : 'bg-slate-900 border-slate-800 text-slate-300 hover:bg-slate-800/80 hover:border-slate-700'
+                          ? 'bg-white dark:bg-[#0080AB] border-[#D190AC] dark:border-blue-400 text-slate-900 dark:text-white shadow-md ring-2 ring-[#D190AC]/30 dark:ring-[#25C3FF]/40'
+                          : 'bg-[#F7F6ED]/90 dark:bg-slate-900 border-[#DEB6C5]/50 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-800/80 hover:border-[#DEB6C5]'
                       }`}
                     >
                       <div>
                         <span className={`text-[9px] font-mono font-bold uppercase tracking-wider block mb-1 ${
-                          isSelected ? 'text-blue-100' : 'text-[#316BEA]'
+                          isSelected ? 'text-[#8F3760] dark:text-blue-100 font-extrabold' : 'text-[#D190AC] dark:text-[#25C3FF]'
                         }`}>
                           {node.role}
                         </span>
-                        <h4 className="text-xs font-bold leading-tight text-white mb-2">
+                        <h4 className="text-xs font-bold leading-tight text-slate-900 dark:text-white mb-2">
                           {node.title}
                         </h4>
                         <p className={`text-[11px] leading-relaxed line-clamp-3 ${
-                          isSelected ? 'text-blue-50' : 'text-slate-400'
+                          isSelected ? 'text-slate-700 dark:text-blue-50' : 'text-slate-600 dark:text-slate-400'
                         }`}>
                           {node.desc}
                         </p>
                       </div>
 
-                      <div className="mt-3 pt-2 border-t border-white/10 text-[9px] font-mono text-slate-400 flex items-center justify-between">
+                      <div className="mt-3 pt-2 border-t border-[#DEB6C5]/30 dark:border-white/10 text-[9px] font-mono text-slate-500 dark:text-slate-400 flex items-center justify-between">
                         <span>Node {index + 1}</span>
-                        {isSelected && <span className="text-white font-bold">Selected</span>}
+                        {isSelected && <span className="text-[#8F3760] dark:text-white font-bold">Selected</span>}
                       </div>
                     </button>
                   </div>
@@ -177,13 +177,13 @@ export const ArchitectureSection: React.FC<ArchitectureSectionProps> = ({
 
           {/* Active Node Detail Card */}
           {activeNode && (
-            <div className="p-4 rounded-xl bg-slate-900 dark:bg-slate-900/90 border border-slate-700/80 text-xs">
-              <div className="flex items-center justify-between mb-1 text-slate-400 font-mono text-[10px]">
+            <div className="p-4 rounded-xl bg-white dark:bg-slate-900/90 border border-[#DEB6C5]/70 dark:border-slate-700/80 text-xs">
+              <div className="flex items-center justify-between mb-1 text-slate-500 dark:text-slate-400 font-mono text-[10px]">
                 <span>ARCHITECTURE NODE SPECIFICATION</span>
-                <span className="text-[#316BEA] font-bold">Fail-Closed Guarantee</span>
+                <span className="text-[#8F3760] dark:text-[#25C3FF] font-bold">Fail-Closed Guarantee</span>
               </div>
-              <p className="text-slate-200 leading-relaxed">
-                Every node in the sequence reports structured observability logs (<code className="text-blue-300 font-mono">click_id, config_version, experiment_assigned</code>). If any downstream service fails or latency exceeds 200ms, the extension fails silently without degrading the retailer's native browsing speed.
+              <p className="text-slate-700 dark:text-slate-200 leading-relaxed">
+                Every node in the sequence reports structured observability logs (<code className="text-[#8F3760] dark:text-blue-300 font-mono">click_id, config_version, experiment_assigned</code>). If any downstream service fails or latency exceeds 200ms, the extension fails silently without degrading the retailer's native browsing speed.
               </p>
             </div>
           )}
@@ -191,29 +191,29 @@ export const ArchitectureSection: React.FC<ArchitectureSectionProps> = ({
 
         {/* 4 Cross-Functional Architecture Safeguards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-xs">
-          <div className="p-4 rounded-xl bg-white dark:bg-[#0E1726] border border-[#DCE4EE] dark:border-slate-800 shadow-xs space-y-1.5">
-            <span className="font-mono text-[10px] font-bold uppercase text-[#316BEA] dark:text-blue-400 block">1. Attribution Safety</span>
+          <div className="p-4 rounded-xl bg-white dark:bg-[#0E1726] border border-[#DEB6C5]/70 dark:border-slate-800 shadow-xs space-y-1.5">
+            <span className="font-mono text-[10px] font-bold uppercase text-[#8F3760] dark:text-blue-400 block">1. Attribution Safety</span>
             <p className="text-slate-600 dark:text-slate-300 leading-relaxed">
               Existing creator/network referral detected? <strong>YES → Suppress router.</strong> Router never overwrites active third-party commissions.
             </p>
           </div>
 
-          <div className="p-4 rounded-xl bg-white dark:bg-[#0E1726] border border-[#DCE4EE] dark:border-slate-800 shadow-xs space-y-1.5">
-            <span className="font-mono text-[10px] font-bold uppercase text-[#316BEA] dark:text-blue-400 block">2. Reconciliation Timeout</span>
+          <div className="p-4 rounded-xl bg-white dark:bg-[#0E1726] border border-[#DEB6C5]/70 dark:border-slate-800 shadow-xs space-y-1.5">
+            <span className="font-mono text-[10px] font-bold uppercase text-[#8F3760] dark:text-blue-400 block">2. Reconciliation Timeout</span>
             <p className="text-slate-600 dark:text-slate-300 leading-relaxed">
               Unreconciled Click IDs enter a holding maturity bucket and are excluded from primary ITT outcome until finalized.
             </p>
           </div>
 
-          <div className="p-4 rounded-xl bg-white dark:bg-[#0E1726] border border-[#DCE4EE] dark:border-slate-800 shadow-xs space-y-1.5">
-            <span className="font-mono text-[10px] font-bold uppercase text-[#316BEA] dark:text-blue-400 block">3. Config Rollback</span>
+          <div className="p-4 rounded-xl bg-white dark:bg-[#0E1726] border border-[#DEB6C5]/70 dark:border-slate-800 shadow-xs space-y-1.5">
+            <span className="font-mono text-[10px] font-bold uppercase text-[#8F3760] dark:text-blue-400 block">3. Config Rollback</span>
             <p className="text-slate-600 dark:text-slate-300 leading-relaxed">
               Partner-specific allowlists can be instantly disabled server-side without requiring Chrome Web Store releases.
             </p>
           </div>
 
-          <div className="p-4 rounded-xl bg-white dark:bg-[#0E1726] border border-[#DCE4EE] dark:border-slate-800 shadow-xs space-y-1.5">
-            <span className="font-mono text-[10px] font-bold uppercase text-[#316BEA] dark:text-blue-400 block">4. Opaque Security</span>
+          <div className="p-4 rounded-xl bg-white dark:bg-[#0E1726] border border-[#DEB6C5]/70 dark:border-slate-800 shadow-xs space-y-1.5">
+            <span className="font-mono text-[10px] font-bold uppercase text-[#8F3760] dark:text-blue-400 block">4. Opaque Security</span>
             <p className="text-slate-600 dark:text-slate-300 leading-relaxed">
               The client receives only an opaque boolean eligibility token. No raw purchase history or personal data is passed to the extension.
             </p>

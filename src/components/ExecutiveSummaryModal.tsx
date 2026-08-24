@@ -72,12 +72,12 @@ Attribution Precedence Rule: If a user arrives via an existing creator/affiliate
 
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4 sm:p-6 animate-in fade-in duration-200">
-      <div className="bg-white dark:bg-[#0E1726] border border-[#DCE4EE] dark:border-slate-800 rounded-2xl shadow-2xl max-w-4xl w-full overflow-hidden flex flex-col max-h-[90vh]">
+      <div className="bg-white dark:bg-[#0E1726] border border-[#DEB6C5] dark:border-slate-800 rounded-2xl shadow-2xl max-w-4xl w-full overflow-hidden flex flex-col max-h-[90vh] transition-colors">
         
         {/* Header */}
         <div className="bg-[#0B1728] text-white p-5 sm:p-6 flex items-center justify-between border-b border-slate-800">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-[#316BEA] flex items-center justify-center font-display font-black text-lg text-white shadow-md">
+            <div className="w-10 h-10 rounded-xl bg-[#D190AC] dark:bg-[#0080AB] flex items-center justify-center font-display font-black text-lg text-white shadow-md">
               CK
             </div>
             <div>
@@ -99,7 +99,7 @@ Attribution Precedence Rule: If a user arrives via an existing creator/affiliate
             <button
               onClick={handleDownloadPdf}
               disabled={isExportingPdf}
-              className="p-2 sm:px-3 sm:py-2 rounded-lg bg-[#316BEA] hover:bg-blue-600 text-white transition-colors text-xs font-semibold flex items-center gap-1.5 shadow-sm cursor-pointer disabled:opacity-50"
+              className="p-2 sm:px-3 sm:py-2 rounded-lg bg-[#D190AC] dark:bg-[#0080AB] hover:bg-[#8F3760] dark:hover:bg-blue-600 text-white transition-colors text-xs font-semibold flex items-center gap-1.5 shadow-sm cursor-pointer disabled:opacity-50"
               title="Download Executive 1-Pager as Vector A4 PDF"
             >
               {isExportingPdf ? (
@@ -155,26 +155,26 @@ Attribution Precedence Rule: If a user arrives via an existing creator/affiliate
         <div className="p-6 overflow-y-auto space-y-6 text-slate-800 dark:text-slate-200 text-xs sm:text-sm">
           
           {/* Top Key Metrics Banner */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-slate-50 dark:bg-slate-900/80 p-4 rounded-xl border border-slate-200 dark:border-slate-800">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-[#F0EAD5]/60 dark:bg-slate-900/80 p-4 rounded-xl border border-[#DEB6C5]/60 dark:border-slate-800 transition-colors">
             <div>
-              <div className="text-[10px] uppercase font-mono text-slate-400 font-bold">Target Metric</div>
-              <div className="text-base sm:text-lg font-extrabold font-mono text-[#316BEA] dark:text-blue-400 mt-0.5">+0.12 ΔO / user</div>
-              <div className="text-[10px] text-slate-500 dark:text-slate-400">Incremental Tracked Orders</div>
+              <div className="text-[10px] uppercase font-mono text-slate-500 dark:text-slate-400 font-bold">Target Metric</div>
+              <div className="text-base sm:text-lg font-extrabold font-mono text-[#8F3760] dark:text-blue-400 mt-0.5">+0.12 ΔO / user</div>
+              <div className="text-[10px] text-slate-600 dark:text-slate-400">Incremental Tracked Orders</div>
             </div>
             <div>
-              <div className="text-[10px] uppercase font-mono text-slate-400 font-bold">Evaluation Standard</div>
-              <div className="text-base sm:text-lg font-extrabold font-mono text-emerald-700 dark:text-emerald-400 mt-0.5">50/50 ITT</div>
-              <div className="text-[10px] text-slate-500 dark:text-slate-400">Intention-to-Treat Holdout</div>
+              <div className="text-[10px] uppercase font-mono text-slate-500 dark:text-slate-400 font-bold">Evaluation Standard</div>
+              <div className="text-base sm:text-lg font-extrabold font-mono text-emerald-800 dark:text-emerald-400 mt-0.5">50/50 ITT</div>
+              <div className="text-[10px] text-slate-600 dark:text-slate-400">Intention-to-Treat Holdout</div>
             </div>
             <div>
-              <div className="text-[10px] uppercase font-mono text-slate-400 font-bold">Q1 Target Net Margin</div>
+              <div className="text-[10px] uppercase font-mono text-slate-500 dark:text-slate-400 font-bold">Q1 Target Net Margin</div>
               <div className="text-base sm:text-lg font-extrabold font-mono text-slate-900 dark:text-white mt-0.5">₹1.52M+</div>
-              <div className="text-[10px] text-slate-500 dark:text-slate-400">Gross Contribution Profit</div>
+              <div className="text-[10px] text-slate-600 dark:text-slate-400">Gross Contribution Profit</div>
             </div>
             <div>
-              <div className="text-[10px] uppercase font-mono text-slate-400 font-bold">Safety Guardrail</div>
-              <div className="text-base sm:text-lg font-extrabold font-mono text-amber-700 dark:text-amber-400 mt-0.5">Fail-Closed</div>
-              <div className="text-[10px] text-slate-500 dark:text-slate-400">Attribution Precedence Locked</div>
+              <div className="text-[10px] uppercase font-mono text-slate-500 dark:text-slate-400 font-bold">Safety Guardrail</div>
+              <div className="text-base sm:text-lg font-extrabold font-mono text-amber-800 dark:text-amber-400 mt-0.5">Fail-Closed</div>
+              <div className="text-[10px] text-slate-600 dark:text-slate-400">Attribution Precedence Locked</div>
             </div>
           </div>
 
@@ -182,8 +182,8 @@ Attribution Precedence Rule: If a user arrives via an existing creator/affiliate
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             
             {/* Pillar 1 */}
-            <div className="p-4 rounded-xl border border-blue-200 dark:border-blue-900/50 bg-blue-50/50 dark:bg-blue-950/30 space-y-2">
-              <div className="flex items-center gap-2 text-[#316BEA] dark:text-blue-400 font-bold font-display text-sm">
+            <div className="p-4 rounded-xl border border-[#DEB6C5] dark:border-blue-900/50 bg-[#F0EAD5]/70 dark:bg-blue-950/30 space-y-2 transition-colors">
+              <div className="flex items-center gap-2 text-[#8F3760] dark:text-blue-400 font-bold font-display text-sm">
                 <Target className="w-4 h-4" />
                 <span>1. Core Diagnosis</span>
               </div>
@@ -193,7 +193,7 @@ Attribution Precedence Rule: If a user arrives via an existing creator/affiliate
             </div>
 
             {/* Pillar 2 */}
-            <div className="p-4 rounded-xl border border-emerald-200 dark:border-emerald-900/50 bg-emerald-50/50 dark:bg-emerald-950/30 space-y-2">
+            <div className="p-4 rounded-xl border border-emerald-300 dark:border-emerald-900/50 bg-emerald-50/60 dark:bg-emerald-950/30 space-y-2 transition-colors">
               <div className="flex items-center gap-2 text-emerald-800 dark:text-emerald-400 font-bold font-display text-sm">
                 <TrendingUp className="w-4 h-4" />
                 <span>2. The V1 Solution</span>
@@ -204,8 +204,8 @@ Attribution Precedence Rule: If a user arrives via an existing creator/affiliate
             </div>
 
             {/* Pillar 3 */}
-            <div className="p-4 rounded-xl border border-purple-200 dark:border-purple-900/50 bg-purple-50/50 dark:bg-purple-950/30 space-y-2">
-              <div className="flex items-center gap-2 text-purple-800 dark:text-purple-400 font-bold font-display text-sm">
+            <div className="p-4 rounded-xl border border-[#DEB6C5] dark:border-purple-900/50 bg-[#F0D6DE]/40 dark:bg-purple-950/30 space-y-2 transition-colors">
+              <div className="flex items-center gap-2 text-[#8F3760] dark:text-purple-400 font-bold font-display text-sm">
                 <ShieldCheck className="w-4 h-4" />
                 <span>3. Gated Discipline</span>
               </div>
@@ -229,23 +229,23 @@ Attribution Precedence Rule: If a user arrives via an existing creator/affiliate
           </div>
 
           {/* Author Note */}
-          <div className="flex items-center justify-between pt-2 border-t border-slate-200 dark:border-slate-800 text-xs text-slate-500 dark:text-slate-400">
-            <span>Authored by: <strong className="text-slate-800 dark:text-slate-200">Suvam Priyaranjan Sahoo</strong></span>
-            <span>Target Role: <strong className="text-slate-800 dark:text-slate-200">Associate Product Manager (APM)</strong></span>
+          <div className="flex items-center justify-between pt-2 border-t border-[#DEB6C5]/40 dark:border-slate-800 text-xs text-slate-600 dark:text-slate-400">
+            <span>Authored by: <strong className="text-slate-900 dark:text-slate-200">Suvam Priyaranjan Sahoo</strong></span>
+            <span>Target Role: <strong className="text-slate-900 dark:text-slate-200">Associate Product Manager (APM)</strong></span>
           </div>
 
         </div>
 
         {/* Footer */}
-        <div className="bg-slate-50 dark:bg-slate-900 p-4 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between gap-3">
-          <div className="text-xs text-slate-500 dark:text-slate-400 font-mono hidden sm:block">
+        <div className="bg-[#F7F6ED] dark:bg-slate-900 p-4 border-t border-[#DEB6C5]/60 dark:border-slate-800 flex items-center justify-between gap-3 transition-colors">
+          <div className="text-xs text-slate-600 dark:text-slate-400 font-mono hidden sm:block">
             Format: Standard A4 Vector PDF • Optimized for executive review
           </div>
           <div className="flex items-center gap-2">
             <button
               onClick={handleDownloadPdf}
               disabled={isExportingPdf}
-              className="px-4 py-2 rounded-lg bg-[#316BEA] hover:bg-blue-600 text-white text-xs font-bold shadow-sm transition-all flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
+              className="px-4 py-2 rounded-lg bg-[#D190AC] dark:bg-[#0080AB] hover:bg-[#8F3760] dark:hover:bg-blue-600 text-white text-xs font-bold shadow-sm transition-all flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
             >
               {isExportingPdf ? (
                 <>
@@ -261,7 +261,7 @@ Attribution Precedence Rule: If a user arrives via an existing creator/affiliate
             </button>
             <button
               onClick={onClose}
-              className="px-4 py-2 rounded-lg bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 text-xs font-semibold transition-colors cursor-pointer"
+              className="px-4 py-2 rounded-lg bg-[#F0EAD5] dark:bg-slate-800 hover:bg-[#DEB6C5]/40 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 text-xs font-semibold border border-[#DEB6C5]/50 dark:border-slate-700 transition-colors cursor-pointer"
             >
               Close
             </button>

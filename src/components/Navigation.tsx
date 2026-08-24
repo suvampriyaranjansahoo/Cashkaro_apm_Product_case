@@ -17,7 +17,6 @@ import {
   Award,
   Sun,
   Moon,
-  Monitor,
   FileDown,
   Eye,
   ListOrdered
@@ -83,16 +82,14 @@ export const Navigation: React.FC<NavigationProps> = ({
     return () => window.removeEventListener('scroll', handleScroll);
   }, [setActiveSection]);
 
-  const cycleTheme = () => {
-    if (themeMode === 'light') setThemeMode('dark');
-    else if (themeMode === 'dark') setThemeMode('system');
-    else setThemeMode('light');
+  const toggleTheme = () => {
+    const nextMode = themeMode === 'dark' ? 'light' : 'dark';
+    setThemeMode(nextMode);
   };
 
   const getThemeTitle = () => {
-    if (themeMode === 'light') return 'Theme: Light (Click for Dark)';
-    if (themeMode === 'dark') return 'Theme: Dark (Click for System)';
-    return 'Theme: System-Aware (Click for Light)';
+    if (themeMode === 'light') return 'Switch to Dark Theme (Aquatic Blue)';
+    return 'Switch to Light Theme (Cream Bunny with Rose)';
   };
 
   const currentIndex = SECTIONS.findIndex((s) => s.id === activeSection);
@@ -280,16 +277,28 @@ export const Navigation: React.FC<NavigationProps> = ({
               </button>
             </div>
 
-            {/* Theme Toggle Button (Light / Dark / System) */}
+            {/* Theme Toggle Button (Light / Dark Mode) */}
             <button
-              onClick={cycleTheme}
-              className="p-2 text-slate-300 hover:text-white bg-slate-900/90 hover:bg-slate-800 border border-slate-700/80 rounded-lg transition-all cursor-pointer flex items-center gap-1"
+              onClick={toggleTheme}
+              className="px-2.5 py-1.5 text-slate-300 hover:text-white bg-slate-900/90 hover:bg-slate-800 border border-slate-700/80 rounded-lg transition-all cursor-pointer flex items-center gap-1.5 group shadow-xs"
               title={getThemeTitle()}
               aria-label={getThemeTitle()}
             >
-              {themeMode === 'light' && <Sun className="w-4 h-4 text-amber-400" />}
-              {themeMode === 'dark' && <Moon className="w-4 h-4 text-blue-400" />}
-              {themeMode === 'system' && <Monitor className="w-4 h-4 text-emerald-400" />}
+              {themeMode === 'light' ? (
+                <>
+                  <Sun className="w-4 h-4 text-amber-400 group-hover:rotate-45 transition-transform duration-300" />
+                  <span className="text-[11px] font-semibold text-slate-300 group-hover:text-amber-300 hidden sm:inline">
+                    Light
+                  </span>
+                </>
+              ) : (
+                <>
+                  <Moon className="w-4 h-4 text-[#25C3FF] group-hover:-rotate-12 transition-transform duration-300" />
+                  <span className="text-[11px] font-semibold text-slate-300 group-hover:text-cyan-300 hidden sm:inline">
+                    Dark
+                  </span>
+                </>
+              )}
             </button>
 
             {/* Quick Search Button */}
@@ -342,9 +351,9 @@ export const Navigation: React.FC<NavigationProps> = ({
       </header>
 
       {/* Reading Depth Banner */}
-      <div className="bg-[#EBF2FE] dark:bg-slate-900/90 border-b border-[#D4E4FC] dark:border-slate-800 py-2 px-4 text-xs text-[#0B1F3A] dark:text-slate-200 flex items-center justify-between max-w-7xl mx-auto rounded-b-lg mb-4 transition-colors">
+      <div className="bg-white/80 dark:bg-slate-900/90 border border-[#DEB6C5]/50 dark:border-slate-800 py-2 px-4 text-xs text-[#0B1F3A] dark:text-slate-200 flex items-center justify-between max-w-7xl mx-auto rounded-b-xl mb-4 shadow-xs backdrop-blur-xs transition-colors">
         <div className="flex items-center gap-2">
-          <Clock className="w-3.5 h-3.5 text-[#316BEA] dark:text-[#60A5FA] shrink-0" />
+          <Clock className="w-3.5 h-3.5 text-[#D190AC] dark:text-[#25C3FF] shrink-0" />
           <span>
             {readingDepth === '30s' && (
               <strong>30s Executive View Active:</strong>

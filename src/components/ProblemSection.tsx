@@ -92,13 +92,13 @@ export const ProblemSection: React.FC<ProblemSectionProps> = ({
         />
 
         {/* Non-Linear Journey Interactive Visualization */}
-        <div className="bg-white dark:bg-[#0E1726] border border-[#DCE4EE] dark:border-slate-800 rounded-2xl p-5 sm:p-7 shadow-sm mb-8">
-          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 dark:border-slate-800 pb-4 mb-6">
+        <div className="bg-white dark:bg-[#0E1726] border border-[#DEB6C5]/70 dark:border-slate-800 rounded-2xl p-5 sm:p-7 shadow-xs mb-8 transition-colors">
+          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#F0D6DE] dark:border-slate-800 pb-4 mb-6">
             <div>
-              <span className="text-[10px] font-mono uppercase tracking-wider text-slate-400 font-semibold">Behavioral Model</span>
+              <span className="text-[10px] font-mono uppercase tracking-wider text-[#D190AC] dark:text-[#25C3FF] font-semibold">Behavioral Model</span>
               <h3 className="text-base font-bold text-slate-900 dark:text-white">The Non-Linear Shopping Journey & Leakage Points</h3>
             </div>
-            <div className="text-xs bg-blue-50 dark:bg-blue-950/50 text-[#316BEA] dark:text-blue-300 px-2.5 py-1 rounded-md font-medium border border-blue-100 dark:border-blue-800/50">
+            <div className="text-xs bg-[#F0D6DE]/50 dark:bg-blue-950/50 text-[#8F3760] dark:text-blue-300 px-2.5 py-1 rounded-md font-medium border border-[#DEB6C5]/50 dark:border-blue-800/50">
               Interactive Flow: Click moments below to inspect failure modes
             </div>
           </div>
@@ -107,73 +107,73 @@ export const ProblemSection: React.FC<ProblemSectionProps> = ({
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 relative">
             
             {/* Step 1 */}
-            <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200/80 dark:border-slate-800 space-y-2">
+            <div className="p-3.5 rounded-xl bg-[#F7F6ED]/70 dark:bg-slate-900/60 border border-[#DEB6C5]/40 dark:border-slate-800 space-y-2">
               <div className="flex items-center justify-between text-[11px] font-mono text-slate-400">
                 <span>01. Need</span>
-                <Search className="w-3.5 h-3.5" />
+                <Search className="w-3.5 h-3.5 text-[#D190AC] dark:text-slate-400" />
               </div>
               <div className="font-semibold text-xs text-slate-800 dark:text-slate-200">Need / Discovery</div>
-              <div className="text-[11px] text-slate-500 dark:text-slate-400">User searches for product or opens preferred shopping app.</div>
-              <div className="pt-2 border-t border-slate-200/60 dark:border-slate-800 text-[10px] text-rose-600 dark:text-rose-400 font-medium flex items-center gap-1">
+              <div className="text-[11px] text-slate-600 dark:text-slate-400">User searches for product or opens preferred shopping app.</div>
+              <div className="pt-2 border-t border-[#DEB6C5]/30 dark:border-slate-800 text-[10px] text-rose-600 dark:text-rose-400 font-medium flex items-center gap-1">
                 <XCircle className="w-3 h-3 shrink-0" />
                 <span>Leakage: Direct retailer entry</span>
               </div>
             </div>
 
             {/* Step 2 */}
-            <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200/80 dark:border-slate-800 space-y-2">
+            <div className="p-3.5 rounded-xl bg-[#F7F6ED]/70 dark:bg-slate-900/60 border border-[#DEB6C5]/40 dark:border-slate-800 space-y-2">
               <div className="flex items-center justify-between text-[11px] font-mono text-slate-400">
                 <span>02. Compare</span>
-                <RotateCcw className="w-3.5 h-3.5" />
+                <RotateCcw className="w-3.5 h-3.5 text-[#D190AC] dark:text-slate-400" />
               </div>
               <div className="font-semibold text-xs text-slate-800 dark:text-slate-200">Compare Retailers</div>
-              <div className="text-[11px] text-slate-500 dark:text-slate-400">Cross-browsing tabs, checking coupon blogs & bank offers.</div>
-              <div className="pt-2 border-t border-slate-200/60 dark:border-slate-800 text-[10px] text-amber-700 dark:text-amber-400 font-medium flex items-center gap-1">
+              <div className="text-[11px] text-slate-600 dark:text-slate-400">Cross-browsing tabs, checking coupon blogs & bank offers.</div>
+              <div className="pt-2 border-t border-[#DEB6C5]/30 dark:border-slate-800 text-[10px] text-amber-700 dark:text-amber-400 font-medium flex items-center gap-1">
                 <CornerDownRight className="w-3 h-3 shrink-0" />
                 <span>Shift: Tab jumps & distraction</span>
               </div>
             </div>
 
             {/* Step 3 (TARGET STEP) */}
-            <div className="p-3.5 rounded-xl bg-blue-50/70 dark:bg-blue-950/40 border-2 border-[#316BEA] dark:border-blue-500 shadow-xs space-y-2 relative">
-              <div className="absolute -top-2.5 right-2 px-2 py-0.5 rounded-full bg-[#316BEA] text-white text-[9px] font-mono font-bold uppercase tracking-wider shadow-xs">
+            <div className="p-3.5 rounded-xl bg-[#F0D6DE]/60 dark:bg-blue-950/40 border-2 border-[#D190AC] dark:border-blue-500 shadow-xs space-y-2 relative">
+              <div className="absolute -top-2.5 right-2 px-2 py-0.5 rounded-full bg-[#D190AC] dark:bg-[#0080AB] text-white text-[9px] font-mono font-bold uppercase tracking-wider shadow-xs">
                 Targeted Moment
               </div>
-              <div className="flex items-center justify-between text-[11px] font-mono text-[#316BEA] dark:text-blue-300">
+              <div className="flex items-center justify-between text-[11px] font-mono text-[#8F3760] dark:text-blue-300">
                 <span>03. Cart Intent</span>
                 <ShoppingCart className="w-3.5 h-3.5" />
               </div>
               <div className="font-bold text-xs text-[#0B1F3A] dark:text-white">Retailer / Cart</div>
-              <div className="text-[11px] text-slate-600 dark:text-slate-300">Product found; cart populated on retailer site.</div>
-              <div className="pt-2 border-t border-blue-200 dark:border-blue-900/60 text-[10px] text-[#316BEA] dark:text-blue-300 font-bold flex items-center gap-1">
+              <div className="text-[11px] text-slate-700 dark:text-slate-300">Product found; cart populated on retailer site.</div>
+              <div className="pt-2 border-t border-[#DEB6C5]/50 dark:border-blue-900/60 text-[10px] text-[#8F3760] dark:text-blue-300 font-bold flex items-center gap-1">
                 <AlertTriangle className="w-3 h-3 shrink-0" />
                 <span>Late recall + Restart friction</span>
               </div>
             </div>
 
             {/* Step 4 */}
-            <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200/80 dark:border-slate-800 space-y-2">
+            <div className="p-3.5 rounded-xl bg-[#F7F6ED]/70 dark:bg-slate-900/60 border border-[#DEB6C5]/40 dark:border-slate-800 space-y-2">
               <div className="flex items-center justify-between text-[11px] font-mono text-slate-400">
                 <span>04. Checkout</span>
-                <CheckCircle className="w-3.5 h-3.5" />
+                <CheckCircle className="w-3.5 h-3.5 text-[#D190AC] dark:text-slate-400" />
               </div>
               <div className="font-semibold text-xs text-slate-800 dark:text-slate-200">Purchase Execution</div>
-              <div className="text-[11px] text-slate-500 dark:text-slate-400">Payment completed; merchant order ID generated.</div>
-              <div className="pt-2 border-t border-slate-200/60 dark:border-slate-800 text-[10px] text-rose-600 dark:text-rose-400 font-medium flex items-center gap-1">
+              <div className="text-[11px] text-slate-600 dark:text-slate-400">Payment completed; merchant order ID generated.</div>
+              <div className="pt-2 border-t border-[#DEB6C5]/30 dark:border-slate-800 text-[10px] text-rose-600 dark:text-rose-400 font-medium flex items-center gap-1">
                 <XCircle className="w-3 h-3 shrink-0" />
                 <span>Leakage: Tracking drop / ad-block</span>
               </div>
             </div>
 
             {/* Step 5 */}
-            <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200/80 dark:border-slate-800 space-y-2">
+            <div className="p-3.5 rounded-xl bg-[#F7F6ED]/70 dark:bg-slate-900/60 border border-[#DEB6C5]/40 dark:border-slate-800 space-y-2">
               <div className="flex items-center justify-between text-[11px] font-mono text-slate-400">
                 <span>05. Confidence</span>
-                <RotateCcw className="w-3.5 h-3.5" />
+                <RotateCcw className="w-3.5 h-3.5 text-[#D190AC] dark:text-slate-400" />
               </div>
               <div className="font-semibold text-xs text-slate-800 dark:text-slate-200">Cashback Confidence</div>
-              <div className="text-[11px] text-slate-500 dark:text-slate-400">Postback received & confirmed in user wallet.</div>
-              <div className="pt-2 border-t border-slate-200/60 dark:border-slate-800 text-[10px] text-amber-700 dark:text-amber-400 font-medium flex items-center gap-1">
+              <div className="text-[11px] text-slate-600 dark:text-slate-400">Postback received & confirmed in user wallet.</div>
+              <div className="pt-2 border-t border-[#DEB6C5]/30 dark:border-slate-800 text-[10px] text-amber-700 dark:text-amber-400 font-medium flex items-center gap-1">
                 <XCircle className="w-3 h-3 shrink-0" />
                 <span>Trust drop → Future bypass</span>
               </div>
@@ -182,16 +182,16 @@ export const ProblemSection: React.FC<ProblemSectionProps> = ({
         </div>
 
         {/* 4 Competing Leakage Moments Interactive Diagnostic Matrix */}
-        <div className="bg-white dark:bg-[#0E1726] border border-[#DCE4EE] dark:border-slate-800 rounded-2xl overflow-hidden shadow-sm">
-          <div className="p-4 sm:p-5 bg-slate-900 dark:bg-slate-950 text-white flex flex-wrap items-center justify-between gap-3">
+        <div className="bg-white dark:bg-[#0E1726] border border-[#DEB6C5]/70 dark:border-slate-800 rounded-2xl overflow-hidden shadow-sm transition-colors">
+          <div className="p-4 sm:p-5 bg-[#F0EAD5] dark:bg-slate-950 text-slate-900 dark:text-white border-b border-[#DEB6C5]/60 dark:border-slate-800 flex flex-wrap items-center justify-between gap-3">
             <div>
-              <span className="text-[10px] font-mono uppercase tracking-wider text-[#316BEA] font-semibold">Diagnostic Table</span>
-              <h3 className="text-base font-bold text-white">4 Leakage Moments vs Candidate Root Causes & Evidence Required</h3>
+              <span className="text-[10px] font-mono uppercase tracking-wider text-[#8F3760] dark:text-[#25C3FF] font-bold">Diagnostic Table</span>
+              <h3 className="text-base font-bold text-slate-900 dark:text-white">4 Leakage Moments vs Candidate Root Causes & Evidence Required</h3>
             </div>
-            <span className="text-xs text-slate-400">Click any row to inspect research protocols</span>
+            <span className="text-xs text-slate-600 dark:text-slate-400 font-medium">Click any row to inspect research protocols</span>
           </div>
 
-          <div className="divide-y divide-slate-100 dark:divide-slate-800">
+          <div className="divide-y divide-[#F0D6DE]/60 dark:divide-slate-800">
             {moments.map((item, index) => {
               const isSelected = activeMoment === index;
               return (
@@ -200,31 +200,35 @@ export const ProblemSection: React.FC<ProblemSectionProps> = ({
                   onClick={() => setActiveMoment(index)}
                   className={`p-4 sm:p-5 cursor-pointer transition-colors ${
                     isSelected 
-                      ? 'bg-blue-50/50 dark:bg-blue-950/30' 
-                      : 'hover:bg-slate-50/80 dark:hover:bg-slate-800/40'
+                      ? 'bg-[#F0D6DE]/40 dark:bg-blue-950/30' 
+                      : 'hover:bg-[#F7F6ED]/70 dark:hover:bg-slate-800/40'
                   }`}
                 >
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-2">
                     <div className="flex items-center gap-2">
                       <span className={`w-5 h-5 rounded-full flex items-center justify-center text-xs font-mono font-bold ${
-                        isSelected ? 'bg-[#316BEA] text-white' : 'bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-300'
+                        isSelected ? 'bg-[#D190AC] dark:bg-[#0080AB] text-white' : 'bg-[#F0EAD5] dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-[#DEB6C5]/40 dark:border-slate-700'
                       }`}>
                         {index + 1}
                       </span>
                       <h4 className="text-sm font-bold text-slate-900 dark:text-white">{item.title}</h4>
                     </div>
-                    <span className={`text-[10px] font-semibold px-2.5 py-0.5 rounded-full uppercase tracking-wider self-start sm:self-auto ${item.tagColor}`}>
+                    <span className={`text-[10px] font-semibold px-2.5 py-0.5 rounded-full uppercase tracking-wider self-start sm:self-auto ${
+                      item.isTarget
+                        ? 'bg-[#D190AC] text-white dark:bg-[#0080AB]'
+                        : item.tagColor
+                    }`}>
                       {item.tag}
                     </span>
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-12 gap-3 text-xs mt-3">
                     <div className="md:col-span-6 space-y-1">
-                      <span className="text-[10px] font-mono uppercase text-slate-400 font-semibold">Candidate Root Cause:</span>
+                      <span className="text-[10px] font-mono uppercase text-[#8F3760] dark:text-slate-400 font-bold">Candidate Root Cause:</span>
                       <p className="text-slate-700 dark:text-slate-300 font-medium leading-relaxed">{item.candidateCause}</p>
                     </div>
                     <div className="md:col-span-6 space-y-1">
-                      <span className="text-[10px] font-mono uppercase text-slate-400 font-semibold">Evidence Needed Before Build:</span>
+                      <span className="text-[10px] font-mono uppercase text-slate-500 dark:text-slate-400 font-bold">Evidence Needed Before Build:</span>
                       <p className="text-slate-600 dark:text-slate-400 leading-relaxed">{item.evidenceNeeded}</p>
                     </div>
                   </div>

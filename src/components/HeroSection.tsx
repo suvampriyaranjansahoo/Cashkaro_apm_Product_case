@@ -193,13 +193,13 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ readingDepth, onOpenRe
           </div>
 
           {/* Right Column: Interactive Decision Spine Card */}
-          <div className="lg:col-span-5 bg-[#0B1728] text-white rounded-2xl p-5 sm:p-6 border border-slate-800 shadow-xl relative overflow-hidden">
-            <div className="flex items-center justify-between border-b border-slate-800 pb-3 mb-4">
+          <div className="lg:col-span-5 bg-white dark:bg-[#0B1728] text-slate-900 dark:text-white rounded-2xl p-5 sm:p-6 border border-[#DEB6C5]/70 dark:border-slate-800 shadow-md dark:shadow-xl relative overflow-hidden transition-colors">
+            <div className="flex items-center justify-between border-b border-[#F0D6DE] dark:border-slate-800 pb-3 mb-4">
               <div>
-                <span className="text-[10px] tracking-widest font-mono uppercase text-[#316BEA] font-semibold">Strategic Spine</span>
-                <h2 className="text-base font-display font-bold text-white">The Product Decision Path</h2>
+                <span className="text-[10px] tracking-widest font-mono uppercase text-[#D190AC] dark:text-[#25C3FF] font-bold">Strategic Spine</span>
+                <h2 className="text-base font-display font-bold text-slate-900 dark:text-white">The Product Decision Path</h2>
               </div>
-              <span className="text-[11px] font-mono px-2 py-0.5 rounded bg-slate-800 text-slate-300">
+              <span className="text-[11px] font-mono px-2 py-0.5 rounded bg-[#F7F6ED] dark:bg-slate-800 text-[#0B1F3A] dark:text-slate-300 border border-[#DEB6C5]/40 dark:border-slate-700">
                 Interactive (7 Steps)
               </span>
             </div>
@@ -212,28 +212,28 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ readingDepth, onOpenRe
                   <button
                     key={step.num}
                     onClick={() => setActiveDecisionStep(idx)}
-                    className={`w-full text-left p-2.5 rounded-lg transition-all flex items-center justify-between group cursor-pointer ${
+                    className={`w-full text-left p-2.5 rounded-lg transition-all flex items-center justify-between group cursor-pointer border ${
                       isCurrent
-                        ? 'bg-[#316BEA] text-white shadow-md'
-                        : 'bg-slate-900/80 hover:bg-slate-800/90 text-slate-300'
+                        ? 'bg-gradient-to-r from-[#D190AC] to-[#DEB6C5] dark:from-[#0080AB] dark:to-[#00AFD3] text-white shadow-sm border-transparent'
+                        : 'bg-[#F7F6ED]/70 dark:bg-slate-900/80 hover:bg-[#F0EAD5] dark:hover:bg-slate-800/90 text-slate-700 dark:text-slate-300 border-[#DEB6C5]/30 dark:border-slate-800/80'
                     }`}
                   >
                     <div className="flex items-center gap-2.5">
                       <span className={`w-5 h-5 rounded flex items-center justify-center font-mono text-[10px] font-bold ${
-                        isCurrent ? 'bg-white text-[#316BEA]' : 'bg-slate-800 text-slate-400 group-hover:text-white'
+                        isCurrent ? 'bg-white text-[#D190AC] dark:text-[#0080AB]' : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white border border-[#DEB6C5]/40 dark:border-slate-700'
                       }`}>
                         {step.num}
                       </span>
                       <div>
                         <div className="text-xs font-semibold leading-tight">{step.title}</div>
-                        <div className={`text-[10px] leading-none mt-0.5 ${isCurrent ? 'text-blue-100' : 'text-slate-400'}`}>
+                        <div className={`text-[10px] leading-none mt-0.5 ${isCurrent ? 'text-white/90' : 'text-slate-500 dark:text-slate-400'}`}>
                           {step.subtitle}
                         </div>
                       </div>
                     </div>
                     
                     <span className={`text-[10px] px-2 py-0.5 rounded-full font-medium ${
-                      isCurrent ? 'bg-blue-900/50 text-white' : 'bg-slate-800 text-slate-400'
+                      isCurrent ? 'bg-white/20 text-white' : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-400 border border-[#DEB6C5]/30 dark:border-slate-700'
                     }`}>
                       {step.status}
                     </span>
@@ -243,14 +243,14 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ readingDepth, onOpenRe
             </div>
 
             {/* Active Step Inspector Card */}
-            <div className="bg-slate-900 border border-slate-800 rounded-xl p-4 transition-all">
+            <div className="bg-[#F7F6ED] dark:bg-slate-900 border border-[#DEB6C5]/60 dark:border-slate-800 rounded-xl p-4 transition-all shadow-xs">
               <div className="flex items-center justify-between mb-2">
-                <span className="text-[10px] font-mono uppercase text-slate-400">Step {decisionSteps[activeDecisionStep].num} Deep Dive</span>
-                <span className="text-xs font-bold text-[#316BEA]">
+                <span className="text-[10px] font-mono uppercase text-slate-500 dark:text-slate-400 font-semibold">Step {decisionSteps[activeDecisionStep].num} Deep Dive</span>
+                <span className="text-xs font-bold text-[#D190AC] dark:text-[#25C3FF]">
                   {decisionSteps[activeDecisionStep].title}
                 </span>
               </div>
-              <p className="text-xs text-slate-200 leading-relaxed">
+              <p className="text-xs text-slate-800 dark:text-slate-200 leading-relaxed font-medium">
                 {decisionSteps[activeDecisionStep].detail}
               </p>
             </div>

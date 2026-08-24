@@ -143,12 +143,12 @@ export const PdfExportModal: React.FC<PdfExportModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4 sm:p-6 animate-in fade-in duration-200">
-      <div className="bg-white dark:bg-[#0E1726] border border-[#DCE4EE] dark:border-slate-800 rounded-2xl shadow-2xl max-w-2xl w-full overflow-hidden flex flex-col">
+      <div className="bg-white dark:bg-[#0E1726] border border-[#DEB6C5] dark:border-slate-800 rounded-2xl shadow-2xl max-w-2xl w-full overflow-hidden flex flex-col transition-colors">
         
         {/* Header */}
         <div className="bg-[#0B1728] text-white p-5 sm:p-6 flex items-center justify-between border-b border-slate-800">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-[#316BEA] flex items-center justify-center text-white shadow-md shrink-0">
+            <div className="w-10 h-10 rounded-xl bg-[#D190AC] dark:bg-[#0080AB] flex items-center justify-center text-white shadow-md shrink-0">
               <FileDown className="w-5 h-5" />
             </div>
             <div>
@@ -191,30 +191,30 @@ export const PdfExportModal: React.FC<PdfExportModalProps> = ({
                 onClick={() => setSelectedFormat('exact-doc')}
                 className={`p-3.5 rounded-xl border text-left transition-all cursor-pointer flex flex-col justify-between relative overflow-hidden ${
                   selectedFormat === 'exact-doc'
-                    ? 'border-[#316BEA] bg-blue-50/90 dark:bg-blue-950/60 ring-2 ring-[#316BEA]/40 shadow-sm'
-                    : 'border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/60 hover:bg-slate-100 dark:hover:bg-slate-800'
+                    ? 'border-[#D190AC] dark:border-[#0080AB] bg-[#F0EAD5] dark:bg-blue-950/60 ring-2 ring-[#D190AC]/40 dark:ring-[#0080AB]/40 shadow-sm'
+                    : 'border-[#DEB6C5]/50 dark:border-slate-800 bg-[#F7F6ED] dark:bg-slate-900/60 hover:bg-[#F0EAD5] dark:hover:bg-slate-800'
                 }`}
               >
-                <div className="absolute top-0 right-0 bg-[#316BEA] text-white text-[9px] font-mono font-bold px-2 py-0.5 rounded-bl-lg">
+                <div className="absolute top-0 right-0 bg-[#D190AC] dark:bg-[#0080AB] text-white text-[9px] font-mono font-bold px-2 py-0.5 rounded-bl-lg">
                   RECOMMENDED
                 </div>
                 <div>
                   <div className="flex items-center justify-between">
-                    <div className="w-8 h-8 rounded-lg bg-blue-600/10 text-[#316BEA] dark:text-blue-400 flex items-center justify-center font-bold">
+                    <div className="w-8 h-8 rounded-lg bg-[#D190AC]/20 dark:bg-blue-600/10 text-[#8F3760] dark:text-blue-400 flex items-center justify-center font-bold">
                       <BookOpen className="w-4 h-4" />
                     </div>
                     {selectedFormat === 'exact-doc' && (
-                      <CheckCircle2 className="w-4 h-4 text-[#316BEA] dark:text-blue-400" />
+                      <CheckCircle2 className="w-4 h-4 text-[#8F3760] dark:text-blue-400" />
                     )}
                   </div>
                   <div className="font-bold text-slate-900 dark:text-white mt-2 text-xs sm:text-sm">
                     Exact 14-Page Assignment PDF
                   </div>
-                  <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1 leading-snug">
+                  <p className="text-[11px] text-slate-600 dark:text-slate-400 mt-1 leading-snug">
                     The complete official APM case submission with exact tables, G1-G4 gates, sensitivity math, and operating model.
                   </p>
                 </div>
-                <div className="mt-2.5 text-[10px] font-mono text-blue-700 dark:text-blue-300 font-semibold flex items-center gap-1">
+                <div className="mt-2.5 text-[10px] font-mono text-[#8F3760] dark:text-blue-300 font-semibold flex items-center gap-1">
                   <span>📄 Exact 14 Pages • Full Assignment</span>
                 </div>
               </button>
@@ -224,27 +224,27 @@ export const PdfExportModal: React.FC<PdfExportModalProps> = ({
                 onClick={() => setSelectedFormat('executive')}
                 className={`p-3.5 rounded-xl border text-left transition-all cursor-pointer flex flex-col justify-between ${
                   selectedFormat === 'executive'
-                    ? 'border-[#316BEA] bg-blue-50/70 dark:bg-blue-950/40 ring-2 ring-[#316BEA]/30'
-                    : 'border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/60 hover:bg-slate-100 dark:hover:bg-slate-800'
+                    ? 'border-[#D190AC] dark:border-[#0080AB] bg-[#F0EAD5] dark:bg-blue-950/40 ring-2 ring-[#D190AC]/30 dark:ring-[#0080AB]/30'
+                    : 'border-[#DEB6C5]/50 dark:border-slate-800 bg-[#F7F6ED] dark:bg-slate-900/60 hover:bg-[#F0EAD5] dark:hover:bg-slate-800'
                 }`}
               >
                 <div>
                   <div className="flex items-center justify-between">
-                    <div className="w-8 h-8 rounded-lg bg-emerald-600/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center font-bold">
+                    <div className="w-8 h-8 rounded-lg bg-emerald-600/10 text-emerald-700 dark:text-emerald-400 flex items-center justify-center font-bold">
                       <FileText className="w-4 h-4" />
                     </div>
                     {selectedFormat === 'executive' && (
-                      <CheckCircle2 className="w-4 h-4 text-[#316BEA] dark:text-blue-400" />
+                      <CheckCircle2 className="w-4 h-4 text-[#8F3760] dark:text-blue-400" />
                     )}
                   </div>
                   <div className="font-bold text-slate-900 dark:text-white mt-2 text-xs sm:text-sm">
                     Executive 1-Pager Brief
                   </div>
-                  <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1 leading-snug">
+                  <p className="text-[11px] text-slate-600 dark:text-slate-400 mt-1 leading-snug">
                     Single-page executive decision summary designed for quick 60-second review by hiring managers.
                   </p>
                 </div>
-                <div className="mt-2.5 text-[10px] font-mono text-emerald-600 dark:text-emerald-400 font-semibold">
+                <div className="mt-2.5 text-[10px] font-mono text-emerald-700 dark:text-emerald-400 font-semibold">
                   ⚡ 1-Page Summary • Instant Download
                 </div>
               </button>
@@ -254,27 +254,27 @@ export const PdfExportModal: React.FC<PdfExportModalProps> = ({
                 onClick={() => setSelectedFormat('full')}
                 className={`p-3.5 rounded-xl border text-left transition-all cursor-pointer flex flex-col justify-between ${
                   selectedFormat === 'full'
-                    ? 'border-[#316BEA] bg-blue-50/70 dark:bg-blue-950/40 ring-2 ring-[#316BEA]/30'
-                    : 'border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/60 hover:bg-slate-100 dark:hover:bg-slate-800'
+                    ? 'border-[#D190AC] dark:border-[#0080AB] bg-[#F0EAD5] dark:bg-blue-950/40 ring-2 ring-[#D190AC]/30 dark:ring-[#0080AB]/30'
+                    : 'border-[#DEB6C5]/50 dark:border-slate-800 bg-[#F7F6ED] dark:bg-slate-900/60 hover:bg-[#F0EAD5] dark:hover:bg-slate-800'
                 }`}
               >
                 <div>
                   <div className="flex items-center justify-between">
-                    <div className="w-8 h-8 rounded-lg bg-indigo-600/10 text-indigo-600 dark:text-indigo-400 flex items-center justify-center font-bold">
+                    <div className="w-8 h-8 rounded-lg bg-indigo-600/10 text-indigo-700 dark:text-indigo-400 flex items-center justify-center font-bold">
                       <Layers className="w-4 h-4" />
                     </div>
                     {selectedFormat === 'full' && (
-                      <CheckCircle2 className="w-4 h-4 text-[#316BEA] dark:text-blue-400" />
+                      <CheckCircle2 className="w-4 h-4 text-[#8F3760] dark:text-blue-400" />
                     )}
                   </div>
                   <div className="font-bold text-slate-900 dark:text-white mt-2 text-xs sm:text-sm">
                     Live UI Capture Dossier
                   </div>
-                  <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1 leading-snug">
+                  <p className="text-[11px] text-slate-600 dark:text-slate-400 mt-1 leading-snug">
                     DOM-rendered capture of the live interactive web app modules.
                   </p>
                 </div>
-                <div className="mt-2.5 text-[10px] font-mono text-indigo-600 dark:text-indigo-400 font-semibold">
+                <div className="mt-2.5 text-[10px] font-mono text-indigo-700 dark:text-indigo-400 font-semibold">
                   🌐 Live Web Modules Capture
                 </div>
               </button>
@@ -284,27 +284,27 @@ export const PdfExportModal: React.FC<PdfExportModalProps> = ({
                 onClick={() => setSelectedFormat('saved')}
                 className={`p-3.5 rounded-xl border text-left transition-all cursor-pointer flex flex-col justify-between ${
                   selectedFormat === 'saved'
-                    ? 'border-[#316BEA] bg-blue-50/70 dark:bg-blue-950/40 ring-2 ring-[#316BEA]/30'
-                    : 'border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/60 hover:bg-slate-100 dark:hover:bg-slate-800'
+                    ? 'border-[#D190AC] dark:border-[#0080AB] bg-[#F0EAD5] dark:bg-blue-950/40 ring-2 ring-[#D190AC]/30 dark:ring-[#0080AB]/30'
+                    : 'border-[#DEB6C5]/50 dark:border-slate-800 bg-[#F7F6ED] dark:bg-slate-900/60 hover:bg-[#F0EAD5] dark:hover:bg-slate-800'
                 }`}
               >
                 <div>
                   <div className="flex items-center justify-between">
-                    <div className="w-8 h-8 rounded-lg bg-amber-600/10 text-amber-600 dark:text-amber-400 flex items-center justify-center font-bold">
+                    <div className="w-8 h-8 rounded-lg bg-amber-600/10 text-amber-700 dark:text-amber-400 flex items-center justify-center font-bold">
                       <Bookmark className="w-4 h-4" />
                     </div>
                     {selectedFormat === 'saved' && (
-                      <CheckCircle2 className="w-4 h-4 text-[#316BEA] dark:text-blue-400" />
+                      <CheckCircle2 className="w-4 h-4 text-[#8F3760] dark:text-blue-400" />
                     )}
                   </div>
                   <div className="font-bold text-slate-900 dark:text-white mt-2 text-xs sm:text-sm">
                     Saved Bookmarked Insights
                   </div>
-                  <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1 leading-snug">
+                  <p className="text-[11px] text-slate-600 dark:text-slate-400 mt-1 leading-snug">
                     Curated custom PDF with only your bookmarked sections.
                   </p>
                 </div>
-                <div className="mt-2.5 text-[10px] font-mono text-amber-600 dark:text-amber-400 font-semibold">
+                <div className="mt-2.5 text-[10px] font-mono text-amber-700 dark:text-amber-400 font-semibold">
                   ⭐ {markedSectionIds.length} Saved Section{markedSectionIds.length === 1 ? '' : 's'}
                 </div>
               </button>
@@ -313,22 +313,22 @@ export const PdfExportModal: React.FC<PdfExportModalProps> = ({
           </div>
 
           {/* Options Checklist */}
-          <div className="bg-slate-50 dark:bg-slate-900/70 p-4 rounded-xl border border-slate-200 dark:border-slate-800 space-y-2.5">
-            <div className="text-xs font-bold text-slate-700 dark:text-slate-300">
+          <div className="bg-[#F0EAD5]/60 dark:bg-slate-900/70 p-4 rounded-xl border border-[#DEB6C5]/60 dark:border-slate-800 space-y-2.5 transition-colors">
+            <div className="text-xs font-bold text-slate-800 dark:text-slate-300">
               Export Formatting Preferences:
             </div>
             
-            <label className="flex items-center gap-2.5 cursor-pointer text-xs text-slate-600 dark:text-slate-400">
+            <label className="flex items-center gap-2.5 cursor-pointer text-xs text-slate-700 dark:text-slate-400">
               <input
                 type="checkbox"
                 checked={inkFriendly}
                 onChange={(e) => setInkFriendly(e.target.checked)}
-                className="rounded border-slate-300 text-blue-600 focus:ring-blue-500"
+                className="rounded border-[#DEB6C5] text-[#8F3760] focus:ring-[#D190AC]"
               />
               <span><strong>Ink-Friendly Light Background:</strong> Optimizes contrast and saves printer toner during physical printouts.</span>
             </label>
 
-            <div className="text-[11px] text-slate-500 dark:text-slate-400 pt-1 border-t border-slate-200 dark:border-slate-800 flex items-center gap-1.5">
+            <div className="text-[11px] text-slate-600 dark:text-slate-400 pt-1 border-t border-[#DEB6C5]/40 dark:border-slate-800 flex items-center gap-1.5">
               <ShieldCheck className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400 shrink-0" />
               <span>Includes candidate contact: <strong>sahoosuvampriyaranjan10@gmail.com</strong> & date watermark.</span>
             </div>
@@ -339,14 +339,14 @@ export const PdfExportModal: React.FC<PdfExportModalProps> = ({
             <div className="p-4 rounded-xl bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-900/50 space-y-2 animate-in fade-in">
               <div className="flex items-center justify-between text-xs font-semibold text-blue-800 dark:text-blue-300">
                 <span className="flex items-center gap-2">
-                  <Loader2 className="w-4 h-4 animate-spin text-[#316BEA]" />
+                  <Loader2 className="w-4 h-4 animate-spin text-[#8F3760] dark:text-[#316BEA]" />
                   {statusText}
                 </span>
                 <span className="font-mono">{progress}%</span>
               </div>
               <div className="w-full bg-blue-200 dark:bg-blue-900/60 h-2 rounded-full overflow-hidden">
                 <div 
-                  className="bg-[#316BEA] h-full transition-all duration-300 ease-out"
+                  className="bg-[#D190AC] dark:bg-[#0080AB] h-full transition-all duration-300 ease-out"
                   style={{ width: `${progress}%` }}
                 />
               </div>
@@ -371,7 +371,7 @@ export const PdfExportModal: React.FC<PdfExportModalProps> = ({
         </div>
 
         {/* Footer Actions */}
-        <div className="bg-slate-50 dark:bg-slate-900 p-4 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between gap-3">
+        <div className="bg-[#F7F6ED] dark:bg-slate-900 p-4 border-t border-[#DEB6C5]/60 dark:border-slate-800 flex items-center justify-between gap-3 transition-colors">
           <div className="flex items-center gap-2">
             {onOpenPrintPreview && (
               <button
@@ -380,10 +380,10 @@ export const PdfExportModal: React.FC<PdfExportModalProps> = ({
                   onOpenPrintPreview();
                 }}
                 disabled={isGenerating}
-                className="px-3.5 py-2 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs font-semibold hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
+                className="px-3.5 py-2 rounded-lg border border-[#DEB6C5]/60 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-300 text-xs font-semibold hover:bg-[#F0EAD5] dark:hover:bg-slate-700 transition-colors flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
                 title="Inspect A4 layout, safe margins, and pagination"
               >
-                <Eye className="w-3.5 h-3.5 text-cyan-500" />
+                <Eye className="w-3.5 h-3.5 text-cyan-600 dark:text-cyan-400" />
                 <span>Print Preview</span>
               </button>
             )}
@@ -391,7 +391,7 @@ export const PdfExportModal: React.FC<PdfExportModalProps> = ({
             <button
               onClick={handleBrowserPrint}
               disabled={isGenerating}
-              className="px-3.5 py-2 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs font-semibold hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
+              className="px-3.5 py-2 rounded-lg border border-[#DEB6C5]/60 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-300 text-xs font-semibold hover:bg-[#F0EAD5] dark:hover:bg-slate-700 transition-colors flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
               title="Open browser system print dialog"
             >
               <Printer className="w-3.5 h-3.5" />
@@ -403,7 +403,7 @@ export const PdfExportModal: React.FC<PdfExportModalProps> = ({
             <button
               onClick={onClose}
               disabled={isGenerating}
-              className="px-4 py-2 rounded-lg text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white text-xs font-semibold transition-colors cursor-pointer"
+              className="px-4 py-2 rounded-lg text-slate-700 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white text-xs font-semibold transition-colors cursor-pointer"
             >
               Cancel
             </button>
@@ -411,7 +411,7 @@ export const PdfExportModal: React.FC<PdfExportModalProps> = ({
             <button
               onClick={handleExport}
               disabled={isGenerating}
-              className="px-5 py-2 rounded-lg bg-[#316BEA] hover:bg-blue-600 text-white text-xs font-bold shadow-sm transition-all flex items-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed hover:scale-[1.02]"
+              className="px-5 py-2 rounded-lg bg-[#D190AC] dark:bg-[#0080AB] hover:bg-[#8F3760] dark:hover:bg-blue-600 text-white text-xs font-bold shadow-sm transition-all flex items-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed hover:scale-[1.02]"
             >
               {isGenerating ? (
                 <>

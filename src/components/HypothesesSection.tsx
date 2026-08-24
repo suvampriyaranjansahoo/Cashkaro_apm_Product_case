@@ -176,18 +176,18 @@ export const HypothesesSection: React.FC<HypothesesSectionProps> = ({
         </div>
 
         {/* Behavioral Archetype Matrix */}
-        <div className="bg-white dark:bg-[#0E1726] border border-[#DCE4EE] dark:border-slate-800 rounded-2xl overflow-hidden shadow-sm">
-          <div className="p-4 sm:p-5 bg-[#0B1728] dark:bg-slate-950 text-white flex flex-wrap items-center justify-between gap-3">
+        <div className="bg-white dark:bg-[#0E1726] border border-[#DEB6C5]/70 dark:border-slate-800 rounded-2xl overflow-hidden shadow-xs transition-colors">
+          <div className="p-4 sm:p-5 bg-[#F0EAD5] dark:bg-slate-950 text-slate-900 dark:text-white border-b border-[#DEB6C5]/60 dark:border-slate-800 flex flex-wrap items-center justify-between gap-3">
             <div className="flex items-center gap-2">
-              <Users className="w-4 h-4 text-[#316BEA]" />
-              <h3 className="text-sm font-bold text-white uppercase tracking-wider font-mono">Behavioral Archetypes (Patterns vs Hypotheses)</h3>
+              <Users className="w-4 h-4 text-[#D190AC] dark:text-[#25C3FF]" />
+              <h3 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider font-mono">Behavioral Archetypes (Patterns vs Hypotheses)</h3>
             </div>
-            <span className="text-xs text-slate-400 font-mono">Consented 1st-Party Telemetry</span>
+            <span className="text-xs text-slate-600 dark:text-slate-400 font-mono font-medium">Consented 1st-Party Telemetry</span>
           </div>
 
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
-              <thead className="bg-slate-50 dark:bg-slate-900/80 border-b border-slate-200 dark:border-slate-800 font-mono text-[11px] text-slate-500 dark:text-slate-400 uppercase">
+              <thead className="bg-[#F7F6ED] dark:bg-slate-900/80 border-b border-[#DEB6C5]/40 dark:border-slate-800 font-mono text-[11px] text-slate-600 dark:text-slate-400 uppercase">
                 <tr>
                   <th className="p-3.5 sm:px-4">Archetype</th>
                   <th className="p-3.5 sm:px-4">Observed Telemetry</th>
@@ -196,9 +196,9 @@ export const HypothesesSection: React.FC<HypothesesSectionProps> = ({
                   <th className="p-3.5 sm:px-4">Evidence Needed</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100 dark:divide-slate-800 text-slate-700 dark:text-slate-300">
-                <tr className="bg-blue-50/30 dark:bg-blue-950/20 font-medium">
-                  <td className="p-3.5 sm:px-4 font-bold text-[#316BEA] dark:text-blue-400">
+              <tbody className="divide-y divide-[#F0D6DE]/60 dark:divide-slate-800 text-slate-700 dark:text-slate-300">
+                <tr className="bg-[#F0D6DE]/30 dark:bg-blue-950/20 font-medium">
+                  <td className="p-3.5 sm:px-4 font-bold text-[#8F3760] dark:text-blue-400">
                     High-Frequency Leakage (Target)
                   </td>
                   <td className="p-3.5 sm:px-4">
@@ -208,7 +208,7 @@ export const HypothesesSection: React.FC<HypothesesSectionProps> = ({
                     CashKaro is valued but not routed at moment of retailer intent.
                   </td>
                   <td className="p-3.5 sm:px-4">
-                    <span className="px-2 py-0.5 rounded bg-blue-100 dark:bg-blue-950 text-blue-800 dark:text-blue-300 font-semibold border border-blue-200 dark:border-blue-800">
+                    <span className="px-2 py-0.5 rounded bg-[#F0D6DE] dark:bg-blue-950 text-[#8F3760] dark:text-blue-300 font-semibold border border-[#DEB6C5] dark:border-blue-800">
                       Validate Intent Router
                     </span>
                   </td>
@@ -246,7 +246,7 @@ export const HypothesesSection: React.FC<HypothesesSectionProps> = ({
                     A CashKaro shopping habit or value perception was never established.
                   </td>
                   <td className="p-3.5 sm:px-4">
-                    <span className="px-2 py-0.5 rounded bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-semibold border border-slate-300 dark:border-slate-700">
+                    <span className="px-2 py-0.5 rounded bg-[#F0EAD5] dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-semibold border border-[#DEB6C5]/50 dark:border-slate-700">
                       Discovery / Value Research
                     </span>
                   </td>
@@ -258,8 +258,8 @@ export const HypothesesSection: React.FC<HypothesesSectionProps> = ({
             </table>
           </div>
 
-          <div className="p-3.5 bg-slate-50 dark:bg-slate-900/60 border-t border-slate-200 dark:border-slate-800 text-[11px] text-slate-600 dark:text-slate-400 flex items-start gap-2">
-            <Info className="w-4 h-4 text-[#316BEA] shrink-0 mt-0.5" />
+          <div className="p-3.5 bg-[#F7F6ED] dark:bg-slate-900/60 border-t border-[#DEB6C5]/40 dark:border-slate-800 text-[11px] text-slate-600 dark:text-slate-400 flex items-start gap-2">
+            <Info className="w-4 h-4 text-[#D190AC] dark:text-[#25C3FF] shrink-0 mt-0.5" />
             <div>
               <strong>Target ≠ Experiment Population:</strong> Target segment = validated high-frequency leakage users. Experiment-eligible population = Target segment + Desktop/Chrome reach + Consent + Eligible retailer + Measurement eligibility.
             </div>

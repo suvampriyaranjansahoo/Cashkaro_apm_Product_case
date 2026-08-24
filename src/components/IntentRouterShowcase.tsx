@@ -65,16 +65,16 @@ export const IntentRouterShowcase: React.FC<IntentRouterShowcaseProps> = ({
         />
 
         {/* Platform Toggle Bar */}
-        <div className="flex flex-wrap items-center justify-between gap-4 p-4 rounded-2xl bg-white dark:bg-[#0E1726] border border-[#DCE4EE] dark:border-slate-800 shadow-xs mb-8">
+        <div className="flex flex-wrap items-center justify-between gap-4 p-4 rounded-2xl bg-white dark:bg-[#0E1726] border border-[#DEB6C5]/70 dark:border-slate-800 shadow-xs mb-8 transition-colors">
           <div className="flex items-center gap-3">
-            <span className="text-xs font-semibold text-slate-700 dark:text-slate-300 font-display">Interactive Prototype:</span>
-            <div className="flex rounded-xl bg-slate-100 dark:bg-slate-900 p-1 border border-slate-200 dark:border-slate-800">
+            <span className="text-xs font-semibold text-slate-800 dark:text-slate-200 font-display">Interactive Prototype:</span>
+            <div className="flex rounded-xl bg-[#F0EAD5] dark:bg-slate-900 p-1 border border-[#DEB6C5]/60 dark:border-slate-800">
               <button
                 onClick={() => setPlatformView('desktop')}
                 className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
                   platformView === 'desktop'
-                    ? 'bg-[#316BEA] text-white shadow-xs'
-                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                    ? 'bg-[#D190AC] dark:bg-[#0080AB] text-white shadow-xs'
+                    : 'text-slate-700 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
                 }`}
               >
                 <Monitor className="w-3.5 h-3.5" />
@@ -84,8 +84,8 @@ export const IntentRouterShowcase: React.FC<IntentRouterShowcaseProps> = ({
                 onClick={() => setPlatformView('mobile')}
                 className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
                   platformView === 'mobile'
-                    ? 'bg-[#316BEA] text-white shadow-xs'
-                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                    ? 'bg-[#D190AC] dark:bg-[#0080AB] text-white shadow-xs'
+                    : 'text-slate-700 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
                 }`}
               >
                 <Smartphone className="w-3.5 h-3.5" />
@@ -94,14 +94,14 @@ export const IntentRouterShowcase: React.FC<IntentRouterShowcaseProps> = ({
             </div>
           </div>
 
-          <div className="text-xs text-slate-500 dark:text-slate-400 font-mono hidden md:block">
+          <div className="text-xs text-slate-600 dark:text-slate-400 font-mono hidden md:block">
             {platformView === 'desktop' ? 'V1 Scope: Chrome Extension' : 'V1.5 Spec: User-Initiated Share/Clipboard Recovery'}
           </div>
         </div>
 
         {/* JTBD Box */}
-        <div className="p-4 sm:p-5 rounded-xl bg-blue-50/70 dark:bg-blue-950/40 border border-[#C6DCFD] dark:border-blue-900/60 mb-8 text-xs sm:text-sm text-slate-800 dark:text-slate-200">
-          <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-[#316BEA] dark:text-blue-400 block mb-1">
+        <div className="p-4 sm:p-5 rounded-xl bg-[#F0EAD5]/70 dark:bg-blue-950/40 border border-[#DEB6C5] dark:border-blue-900/60 mb-8 text-xs sm:text-sm text-slate-800 dark:text-slate-200 transition-colors">
+          <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-[#8F3760] dark:text-blue-400 block mb-1">
             Job To Be Done (JTBD)
           </span>
           <p className="font-medium text-slate-900 dark:text-white leading-snug">
@@ -265,17 +265,17 @@ export const IntentRouterShowcase: React.FC<IntentRouterShowcaseProps> = ({
             <div className="lg:col-span-5 space-y-5">
               
               {/* Interactive State Toggle Buttons */}
-              <div className="p-4 rounded-xl bg-white border border-[#DCE4EE] shadow-xs space-y-2">
-                <span className="text-[10px] font-mono uppercase text-slate-400 font-bold block">
+              <div className="p-4 rounded-xl bg-white dark:bg-[#0E1726] border border-[#DEB6C5]/70 dark:border-slate-800 shadow-xs space-y-2 transition-colors">
+                <span className="text-[10px] font-mono uppercase text-slate-500 dark:text-slate-400 font-bold block">
                   Interactive State Toggle:
                 </span>
                 <div className="grid grid-cols-1 gap-2 text-xs">
                   <button
                     onClick={() => { setActiveUiState('eligible'); setIsActivated(false); }}
-                    className={`p-2.5 rounded-lg text-left font-semibold transition-all flex items-center justify-between ${
+                    className={`p-2.5 rounded-lg text-left font-semibold transition-all flex items-center justify-between cursor-pointer ${
                       activeUiState === 'eligible'
-                        ? 'bg-[#316BEA] text-white shadow-sm'
-                        : 'bg-slate-50 text-slate-700 hover:bg-slate-100'
+                        ? 'bg-[#D190AC] dark:bg-[#0080AB] text-white shadow-sm'
+                        : 'bg-[#F0EAD5] dark:bg-slate-800/80 text-slate-800 dark:text-slate-300 hover:bg-[#DEB6C5]/40'
                     }`}
                   >
                     <span>1. Eligible Intent (Prompt Shown)</span>
@@ -283,10 +283,10 @@ export const IntentRouterShowcase: React.FC<IntentRouterShowcaseProps> = ({
                   </button>
                   <button
                     onClick={() => { setActiveUiState('referral-blocked'); setIsActivated(false); }}
-                    className={`p-2.5 rounded-lg text-left font-semibold transition-all flex items-center justify-between ${
+                    className={`p-2.5 rounded-lg text-left font-semibold transition-all flex items-center justify-between cursor-pointer ${
                       activeUiState === 'referral-blocked'
-                        ? 'bg-[#0B1728] text-white shadow-sm border border-amber-500/40'
-                        : 'bg-slate-50 text-slate-700 hover:bg-slate-100'
+                        ? 'bg-[#8F3760] dark:bg-[#0B1728] text-white shadow-sm border border-amber-500/40'
+                        : 'bg-[#F0EAD5] dark:bg-slate-800/80 text-slate-800 dark:text-slate-300 hover:bg-[#DEB6C5]/40'
                     }`}
                   >
                     <span>2. Existing Referral (Suppressed)</span>
@@ -294,10 +294,10 @@ export const IntentRouterShowcase: React.FC<IntentRouterShowcaseProps> = ({
                   </button>
                   <button
                     onClick={() => { setActiveUiState('checkout-suppressed'); setIsActivated(false); }}
-                    className={`p-2.5 rounded-lg text-left font-semibold transition-all flex items-center justify-between ${
+                    className={`p-2.5 rounded-lg text-left font-semibold transition-all flex items-center justify-between cursor-pointer ${
                       activeUiState === 'checkout-suppressed'
-                        ? 'bg-[#0B1728] text-white shadow-sm'
-                        : 'bg-slate-50 text-slate-700 hover:bg-slate-100'
+                        ? 'bg-[#8F3760] dark:bg-[#0B1728] text-white shadow-sm'
+                        : 'bg-[#F0EAD5] dark:bg-slate-800/80 text-slate-800 dark:text-slate-300 hover:bg-[#DEB6C5]/40'
                     }`}
                   >
                     <span>3. Checkout / Sensitive (Suppressed)</span>
@@ -307,26 +307,26 @@ export const IntentRouterShowcase: React.FC<IntentRouterShowcaseProps> = ({
               </div>
 
               {/* 4 Core Design Principles */}
-              <div className="bg-white border border-[#DCE4EE] rounded-xl p-4 sm:p-5 shadow-xs space-y-3 text-xs">
-                <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-slate-400 block">
+              <div className="bg-white dark:bg-[#0E1726] border border-[#DEB6C5]/70 dark:border-slate-800 rounded-xl p-4 sm:p-5 shadow-xs space-y-3 text-xs transition-colors">
+                <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 block">
                   4 Core UX & Attribution Principles
                 </span>
                 
-                <div className="space-y-2 text-slate-700">
-                  <div className="p-2.5 rounded-lg bg-slate-50 border border-slate-200/80">
-                    <strong className="text-slate-900 block">1. One Clear Value Statement:</strong>
+                <div className="space-y-2 text-slate-800 dark:text-slate-300">
+                  <div className="p-2.5 rounded-lg bg-[#F0EAD5]/60 dark:bg-slate-800/80 border border-[#DEB6C5]/50 dark:border-slate-700/80">
+                    <strong className="text-slate-900 dark:text-white block">1. One Clear Value Statement:</strong>
                     Rate and terms are dynamically synced from server-side affiliate config.
                   </div>
-                  <div className="p-2.5 rounded-lg bg-slate-50 border border-slate-200/80">
-                    <strong className="text-slate-900 block">2. Explicit Action Only:</strong>
+                  <div className="p-2.5 rounded-lg bg-[#F0EAD5]/60 dark:bg-slate-800/80 border border-[#DEB6C5]/50 dark:border-slate-700/80">
+                    <strong className="text-slate-900 dark:text-white block">2. Explicit Action Only:</strong>
                     Zero auto-activation. Requires user click; never interrupts checkout flow.
                   </div>
-                  <div className="p-2.5 rounded-lg bg-slate-50 border border-slate-200/80">
-                    <strong className="text-slate-900 block">3. Existing Referral Wins:</strong>
+                  <div className="p-2.5 rounded-lg bg-[#F0EAD5]/60 dark:bg-slate-800/80 border border-[#DEB6C5]/50 dark:border-slate-700/80">
+                    <strong className="text-slate-900 dark:text-white block">3. Existing Referral Wins:</strong>
                     Prior creator/partner affiliate tokens are respected and never overwritten.
                   </div>
-                  <div className="p-2.5 rounded-lg bg-slate-50 border border-slate-200/80">
-                    <strong className="text-slate-900 block">4. "Tracking Expected":</strong>
+                  <div className="p-2.5 rounded-lg bg-[#F0EAD5]/60 dark:bg-slate-800/80 border border-[#DEB6C5]/50 dark:border-slate-700/80">
+                    <strong className="text-slate-900 dark:text-white block">4. "Tracking Expected":</strong>
                     Communicates system state without falsely guaranteeing payout before <GlossaryBadge termKey="S2S Postback">postback</GlossaryBadge>.
                   </div>
                 </div>
@@ -499,35 +499,35 @@ export const IntentRouterShowcase: React.FC<IntentRouterShowcaseProps> = ({
 
             {/* Right: Mobile Intent Protocol Details */}
             <div className="lg:col-span-6 space-y-5">
-              <div className="p-5 rounded-2xl bg-white border border-[#DCE4EE] shadow-xs space-y-4">
-                <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-                  <span className="font-display font-bold text-sm text-slate-900 flex items-center gap-2">
-                    <Smartphone className="w-4 h-4 text-[#316BEA]" />
+              <div className="p-5 rounded-2xl bg-white dark:bg-[#0E1726] border border-[#DEB6C5]/70 dark:border-slate-800 shadow-xs space-y-4 transition-colors">
+                <div className="flex items-center justify-between border-b border-[#DEB6C5]/40 dark:border-slate-800 pb-3">
+                  <span className="font-display font-bold text-sm text-slate-900 dark:text-white flex items-center gap-2">
+                    <Smartphone className="w-4 h-4 text-[#8F3760] dark:text-blue-400" />
                     <span>Mobile V1.5 Recovery Protocol</span>
                   </span>
-                  <span className="text-[10px] font-mono uppercase bg-purple-50 text-purple-700 px-2 py-0.5 rounded font-bold">
+                  <span className="text-[10px] font-mono uppercase bg-[#F0D6DE] dark:bg-purple-950/80 text-[#8F3760] dark:text-purple-300 px-2 py-0.5 rounded font-bold border border-[#DEB6C5] dark:border-purple-800/60">
                     Gated on V1 Validation
                   </span>
                 </div>
 
-                <div className="space-y-3 text-xs text-slate-700">
-                  <div className="p-3 rounded-xl bg-slate-50 border border-slate-200/80 space-y-1">
-                    <strong className="text-slate-900 block font-semibold">1. User-Initiated Share Intent:</strong>
+                <div className="space-y-3 text-xs text-slate-800 dark:text-slate-300">
+                  <div className="p-3 rounded-xl bg-[#F0EAD5]/60 dark:bg-slate-800/80 border border-[#DEB6C5]/50 dark:border-slate-700/80 space-y-1">
+                    <strong className="text-slate-900 dark:text-white block font-semibold">1. User-Initiated Share Intent:</strong>
                     <span>No automated accessibility service sniffing or background app spying. The user explicitly shares or copies a partner link to CashKaro.</span>
                   </div>
 
-                  <div className="p-3 rounded-xl bg-slate-50 border border-slate-200/80 space-y-1">
-                    <strong className="text-slate-900 block font-semibold">2. Immediate SubID Deep-Linking:</strong>
+                  <div className="p-3 rounded-xl bg-[#F0EAD5]/60 dark:bg-slate-800/80 border border-[#DEB6C5]/50 dark:border-slate-700/80 space-y-1">
+                    <strong className="text-slate-900 dark:text-white block font-semibold">2. Immediate SubID Deep-Linking:</strong>
                     <span>CashKaro resolves the merchant URL, verifies affiliate eligibility, and returns an OS deep-link URI directly reopening the merchant cart.</span>
                   </div>
 
-                  <div className="p-3 rounded-xl bg-slate-50 border border-slate-200/80 space-y-1">
-                    <strong className="text-slate-900 block font-semibold">3. Zero Habit Disruption:</strong>
+                  <div className="p-3 rounded-xl bg-[#F0EAD5]/60 dark:bg-slate-800/80 border border-[#DEB6C5]/50 dark:border-slate-700/80 space-y-1">
+                    <strong className="text-slate-900 dark:text-white block font-semibold">3. Zero Habit Disruption:</strong>
                     <span>Takes &lt;1.8 seconds end-to-end, solving mobile cart loss anxiety without requiring re-discovery in CashKaro.</span>
                   </div>
                 </div>
 
-                <div className="pt-2 text-xs text-slate-500">
+                <div className="pt-2 text-xs text-slate-500 dark:text-slate-400">
                   <em>Note: Mobile recovery is deliberately scoped for Phase 1.5 after desktop extension proves causal incrementality in G4.</em>
                 </div>
               </div>
@@ -537,13 +537,13 @@ export const IntentRouterShowcase: React.FC<IntentRouterShowcaseProps> = ({
         )}
 
         {/* Deliberately Gated Architecture Footer Notice */}
-        <div className="p-5 rounded-2xl bg-slate-100 border border-slate-300 text-xs sm:text-sm text-slate-700">
+        <div className="p-5 rounded-2xl bg-[#F0EAD5] dark:bg-slate-900 border border-[#DEB6C5] dark:border-slate-800 text-xs sm:text-sm text-slate-800 dark:text-slate-300 transition-colors">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-2">
-            <div className="flex items-center gap-2 text-slate-900 font-bold">
-              <ShieldCheck className="w-4 h-4 text-[#316BEA]" />
+            <div className="flex items-center gap-2 text-slate-900 dark:text-white font-bold">
+              <ShieldCheck className="w-4 h-4 text-[#8F3760] dark:text-[#25C3FF]" />
               <h4 className="font-display font-bold">Attribution Integrity & Privacy Guarantee</h4>
             </div>
-            <span className="px-2.5 py-0.5 rounded-full bg-slate-200 text-slate-700 font-mono text-[10px] font-bold uppercase">
+            <span className="px-2.5 py-0.5 rounded-full bg-[#DEB6C5]/40 dark:bg-slate-800 text-slate-800 dark:text-slate-300 font-mono text-[10px] font-bold uppercase border border-[#DEB6C5]/60 dark:border-slate-700">
               Zero PII Policy
             </span>
           </div>

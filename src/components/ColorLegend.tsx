@@ -2,7 +2,7 @@ import React from 'react';
 
 export const ColorLegend: React.FC = () => {
   return (
-    <div className="bg-white dark:bg-[#0E1726] border border-[#DCE4EE] dark:border-slate-800 rounded-xl p-3 shadow-xs flex flex-wrap items-center justify-between gap-3 text-xs">
+    <div className="bg-white dark:bg-[#0E1726] border border-[#DEB6C5]/70 dark:border-slate-800 rounded-xl p-3 shadow-xs flex flex-wrap items-center justify-between gap-3 text-xs transition-colors">
       <div className="flex items-center gap-2 font-medium text-slate-500 dark:text-slate-400">
         <span className="text-[10px] tracking-wider uppercase font-semibold text-slate-400 dark:text-slate-500">Decision Code</span>
         <span className="text-slate-300 dark:text-slate-700">|</span>

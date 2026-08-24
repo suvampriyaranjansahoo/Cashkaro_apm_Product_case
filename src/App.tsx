@@ -20,6 +20,7 @@ import { ExecutiveSummaryModal } from './components/ExecutiveSummaryModal';
 import { PdfExportModal } from './components/PdfExportModal';
 import { PrintPreviewModal } from './components/PrintPreviewModal';
 import { OutlineSidebar } from './components/OutlineSidebar';
+import { BackgroundDepthCanvas } from './components/BackgroundDepthCanvas';
 import { ArrowUp, Sparkles, BookOpen, Printer, Sun, Moon, FileDown, Eye } from 'lucide-react';
 
 export default function App() {
@@ -39,10 +40,15 @@ export default function App() {
     }
   });
 
-  // Theme Management (system / dark / light)
+  // Theme Management (light / dark)
   const [themeMode, setThemeMode] = useState<ThemeMode>(() => {
-    const saved = localStorage.getItem('theme_mode');
-    return (saved as ThemeMode) || 'system';
+    try {
+      const saved = localStorage.getItem('theme_mode');
+      if (saved === 'dark' || saved === 'light') return saved as ThemeMode;
+      return 'light';
+    } catch {
+      return 'light';
+    }
   });
 
   // Recruiter Highlighted Insights State
@@ -58,30 +64,16 @@ export default function App() {
   // Apply Theme to DOM
   useEffect(() => {
     const root = document.documentElement;
-    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-    
-    const applyTheme = () => {
-      const isDark =
-        themeMode === 'dark' ||
-        (themeMode === 'system' && mediaQuery.matches);
-      
-      if (isDark) {
-        root.classList.add('dark');
-      } else {
-        root.classList.remove('dark');
-      }
-    };
-
-    applyTheme();
-    localStorage.setItem('theme_mode', themeMode);
-
-    const listener = () => {
-      if (themeMode === 'system') {
-        applyTheme();
-      }
-    };
-    mediaQuery.addEventListener('change', listener);
-    return () => mediaQuery.removeEventListener('change', listener);
+    if (themeMode === 'dark') {
+      root.classList.add('dark');
+    } else {
+      root.classList.remove('dark');
+    }
+    try {
+      localStorage.setItem('theme_mode', themeMode);
+    } catch (e) {
+      console.error(e);
+    }
   }, [themeMode]);
 
   // Persist Highlights to LocalStorage
@@ -119,8 +111,11 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F7F9FC] dark:bg-[#070D18] text-[#0B1F3A] dark:text-slate-100 flex flex-col selection:bg-[#316BEA]/15 selection:text-[#316BEA] pb-20 transition-colors">
+    <div className="min-h-screen bg-[#F7F6ED] dark:bg-[#050E1A] text-[#0B1F3A] dark:text-slate-100 flex flex-col selection:bg-[#316BEA]/15 selection:text-[#316BEA] pb-20 transition-colors relative overflow-x-hidden">
       
+      {/* 3D Depth Architectural Background with Perspective Plane & Volumetric Light Cones */}
+      <BackgroundDepthCanvas />
+
       {/* Sticky Navigation Bar */}
       <Navigation
         readingDepth={readingDepth}
@@ -175,7 +170,7 @@ export default function App() {
       </div>
 
       {/* Main Document Content */}
-      <main className="flex-1">
+      <main className="flex-1 relative z-10">
         <HeroSection 
           readingDepth={readingDepth} 
           onOpenRecruiterHub={() => setRecruiterHubOpen(true)}
@@ -251,6 +246,8 @@ export default function App() {
         onOpenPdfExport={() => setPdfExportOpen(true)}
         onOpenPrintPreview={() => setPrintPreviewOpen(true)}
         onToggleOutline={() => setOutlineOpen(prev => !prev)}
+        themeMode={themeMode}
+        onToggleTheme={() => setThemeMode(prev => prev === 'dark' ? 'light' : 'dark')}
       />
 
       {/* Recruiter Evaluation Hub Modal */}

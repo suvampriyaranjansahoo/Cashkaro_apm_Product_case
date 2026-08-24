@@ -4,22 +4,52 @@
 @layer base {
   :root {
     color-scheme: light;
+    /* The Cream Bunny With Rose Color Scheme:
+       1. Pink Aura: #F0D6DE
+       2. Charming Cream: #F0EAD5
+       3. Neo Pearl: #F7F6ED
+       4. Alayah: #DEB6C5
+       5. Viola: #D190AC
+    */
+    --palette-light-neo-pearl: #F7F6ED;
+    --palette-light-charming-cream: #F0EAD5;
+    --palette-light-pink-aura: #F0D6DE;
+    --palette-light-alayah: #DEB6C5;
+    --palette-light-viola: #D190AC;
+
+    --bg-grid-color: rgba(209, 144, 172, 0.13);
+    --bg-vignette-color: rgba(247, 246, 237, 0.75);
   }
   
   html.dark {
     color-scheme: dark;
+    /* The Aquatic Blue Color Scheme:
+       1. Cerulean: #0080AB
+       2. Cerulean (Xona): #00AFD3
+       3. Aqua: #02FEFF
+       4. Neon Aqua Blue: #25C3FF
+       5. Blue Ball: #099AD9
+    */
+    --palette-dark-cerulean: #0080AB;
+    --palette-dark-cerulean-xona: #00AFD3;
+    --palette-dark-aqua: #02FEFF;
+    --palette-dark-neon-aqua: #25C3FF;
+    --palette-dark-blue-ball: #099AD9;
+
+    --bg-grid-color: rgba(37, 195, 255, 0.12);
+    --bg-vignette-color: rgba(4, 11, 22, 0.80);
   }
 
   body {
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
     color: #0B1F3A;
-    background-color: #F7F9FC;
-    transition: background-color 0.2s ease, color 0.2s ease;
+    background-color: #F7F6ED;
+    transition: background-color 0.3s ease, color 0.3s ease;
   }
 
   html.dark body {
     color: #E2E8F0;
-    background-color: #070C18;
+    background-color: #050E1A;
   }
   
   h1, h2, h3, h4, .font-display {
@@ -29,6 +59,26 @@
   code, pre, .font-mono {
     font-family: 'JetBrains Mono', monospace;
   }
+}
+
+/* 3D Depth Utilities */
+.transform-style-3d {
+  transform-style: preserve-3d;
+}
+.perspective-1000 {
+  perspective: 1000px;
+}
+.translate-z-6 {
+  transform: translateZ(24px);
+}
+.translate-z-8 {
+  transform: translateZ(32px);
+}
+.-translate-z-6 {
+  transform: translateZ(-24px);
+}
+.-translate-z-8 {
+  transform: translateZ(-32px);
 }
 
 /* Custom subtle scrollbar */

@@ -73,26 +73,26 @@ export const GlossaryBadge: React.FC<GlossaryBadgeProps> = ({ termKey, children 
       </button>
 
       {isOpen && (
-        <div 
-          className="absolute z-50 bottom-full left-1/2 -translate-x-1/2 mb-2 w-72 sm:w-80 p-3.5 bg-slate-900 text-white rounded-xl shadow-2xl border border-slate-700 text-xs animate-in fade-in zoom-in-95 duration-150 text-left pointer-events-none"
+        <span 
+          className="block absolute z-50 bottom-full left-1/2 -translate-x-1/2 mb-2 w-72 sm:w-80 p-3.5 bg-[#0B1728] dark:bg-slate-900 text-white rounded-xl shadow-2xl border border-slate-700/80 text-xs animate-in fade-in zoom-in-95 duration-150 text-left pointer-events-none"
         >
-          <div className="flex items-center justify-between border-b border-slate-700 pb-1.5 mb-2">
-            <span className="font-mono text-[10px] uppercase font-bold text-[#316BEA]">
+          <span className="flex items-center justify-between border-b border-slate-700/80 pb-1.5 mb-2">
+            <span className="font-mono text-[10px] uppercase font-bold text-[#D190AC] dark:text-[#25C3FF]">
               {data.category}
             </span>
             <span className="text-[10px] text-slate-400 font-mono">Senior Analyst Glossary</span>
-          </div>
-          <div className="font-bold text-slate-100 mb-1 text-sm font-display">
+          </span>
+          <span className="block font-bold text-slate-100 mb-1 text-sm font-display">
             {data.term}
-          </div>
-          <p className="text-slate-300 text-[11px] leading-relaxed mb-2">
+          </span>
+          <span className="block text-slate-300 text-[11px] leading-relaxed mb-2">
             {data.shortDef}
-          </p>
-          <div className="p-2 rounded bg-slate-950 border border-slate-800 text-[10px] text-slate-400">
+          </span>
+          <span className="block p-2 rounded bg-slate-950/80 border border-slate-800 text-[10px] text-slate-400">
             <strong className="text-amber-300 font-mono">Product Rationale:</strong> {data.analystContext}
-          </div>
-          <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-[1px] border-4 border-transparent border-t-slate-900" />
-        </div>
+          </span>
+          <span className="block absolute top-full left-1/2 -translate-x-1/2 -mt-[1px] border-4 border-transparent border-t-[#0B1728] dark:border-t-slate-900" />
+        </span>
       )}
     </span>
   );

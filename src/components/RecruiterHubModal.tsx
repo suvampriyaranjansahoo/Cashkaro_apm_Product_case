@@ -156,7 +156,7 @@ Recommendation: Advance to final APM/PM rounds.`;
 
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 animate-in fade-in duration-200">
-      <div className="bg-white border border-slate-200 rounded-3xl shadow-2xl max-w-5xl w-full overflow-hidden flex flex-col max-h-[92vh]">
+      <div className="bg-white dark:bg-[#0E1726] border border-[#DEB6C5] dark:border-slate-800 rounded-3xl shadow-2xl max-w-5xl w-full overflow-hidden flex flex-col max-h-[92vh] transition-colors">
         
         {/* Top Recruiter Ribbon */}
         <div className="bg-gradient-to-r from-[#0B1728] via-[#132845] to-[#0B1728] text-white p-5 sm:p-6 border-b border-slate-800 flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -233,16 +233,16 @@ Recommendation: Advance to final APM/PM rounds.`;
         </div>
 
         {/* Modal Scrollable Body */}
-        <div className="p-5 sm:p-8 overflow-y-auto space-y-6 text-slate-800">
+        <div className="p-5 sm:p-8 overflow-y-auto space-y-6 text-slate-800 dark:text-slate-200">
           
           {/* Executive Recruiter Value Pitch */}
-          <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-blue-50 to-indigo-50/40 border border-blue-200/80 flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-[#F0EAD5] via-[#F7F6ED] to-[#F0D6DE]/40 dark:from-blue-950/40 dark:to-indigo-950/20 border border-[#DEB6C5] dark:border-blue-900/60 flex flex-col md:flex-row md:items-center justify-between gap-4 transition-colors">
             <div className="space-y-1">
-              <div className="flex items-center gap-2 text-[#316BEA] font-bold font-display text-sm">
-                <Sparkles className="w-4 h-4 text-[#316BEA]" />
+              <div className="flex items-center gap-2 text-[#8F3760] dark:text-[#38BDF8] font-bold font-display text-sm">
+                <Sparkles className="w-4 h-4 text-[#8F3760] dark:text-[#38BDF8]" />
                 <span>Why Suvam Stands Out in the APM Cohort:</span>
               </div>
-              <p className="text-xs sm:text-sm text-slate-700 leading-relaxed max-w-3xl">
+              <p className="text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed max-w-3xl">
                 Unlike surface-level PM cases that jump to feature ideas or AI buzzwords, this work applies <strong>causal econometric rigor, ecosystem safety guardrails, and formulaic break-even financial thresholds</strong> to solve high-intent user leakage.
               </p>
             </div>
@@ -250,7 +250,7 @@ Recommendation: Advance to final APM/PM rounds.`;
             <div className="flex sm:flex-col gap-2 shrink-0">
               <button
                 onClick={() => { onClose(); onNavigateSection('intent-router'); }}
-                className="px-4 py-2 rounded-xl bg-[#316BEA] hover:bg-blue-700 text-white font-bold text-xs flex items-center justify-center gap-1.5 transition-all shadow-sm cursor-pointer"
+                className="px-4 py-2 rounded-xl bg-[#D190AC] dark:bg-[#0080AB] hover:bg-[#8F3760] dark:hover:bg-blue-600 text-white font-bold text-xs flex items-center justify-center gap-1.5 transition-all shadow-sm cursor-pointer"
               >
                 <span>Interactive Prototype</span>
                 <ChevronRight className="w-3.5 h-3.5" />
@@ -266,21 +266,21 @@ Recommendation: Advance to final APM/PM rounds.`;
           </div>
 
           {/* Exact 14-Page File Download Card for Hiring Committee */}
-          <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-emerald-50 via-teal-50 to-slate-50 border border-emerald-300 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-emerald-50 via-[#F0EAD5] to-slate-50 dark:from-emerald-950/40 dark:via-slate-900 dark:to-slate-900 border border-emerald-300 dark:border-emerald-800/60 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4 transition-colors">
             <div className="flex items-start gap-3.5">
               <div className="w-10 h-10 rounded-xl bg-emerald-600 text-white flex items-center justify-center font-bold text-lg shrink-0 shadow-sm">
                 <BookOpen className="w-5 h-5" />
               </div>
               <div>
                 <div className="flex items-center gap-2">
-                  <span className="font-display font-bold text-sm text-slate-900">
+                  <span className="font-display font-bold text-sm text-slate-900 dark:text-white">
                     Official 14-Page CashKaro APM Submission File
                   </span>
-                  <span className="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-mono text-[10px] font-bold border border-emerald-300">
+                  <span className="px-2 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-900/60 text-emerald-800 dark:text-emerald-300 font-mono text-[10px] font-bold border border-emerald-300 dark:border-emerald-700/60">
                     Exact Dossier PDF
                   </span>
                 </div>
-                <p className="text-xs text-slate-600 mt-1 leading-snug">
+                <p className="text-xs text-slate-600 dark:text-slate-400 mt-1 leading-snug">
                   Download the complete, unabridged assignment document containing all 14 structured pages, candidate problem framing, G1–G4 gates, S2S architecture flows, break-even unit economics, and executive sign-off.
                 </p>
               </div>
@@ -308,11 +308,11 @@ Recommendation: Advance to final APM/PM rounds.`;
           {/* 5-Competency APM Evaluation Framework */}
           <div>
             <div className="flex items-center justify-between mb-3">
-              <h3 className="font-display font-extrabold text-base sm:text-lg text-[#0B1F3A] flex items-center gap-2">
-                <Award className="w-5 h-5 text-[#316BEA]" />
+              <h3 className="font-display font-extrabold text-base sm:text-lg text-[#0B1F3A] dark:text-white flex items-center gap-2">
+                <Award className="w-5 h-5 text-[#8F3760] dark:text-[#38BDF8]" />
                 <span>APM Candidate Competency Scorecard (5 Pillars)</span>
               </h3>
-              <span className="text-xs font-mono text-slate-400">Click any card to jump to section</span>
+              <span className="text-xs font-mono text-slate-500 dark:text-slate-400">Click any card to jump to section</span>
             </div>
 
             {/* Competency Pills Navigation */}
@@ -323,17 +323,17 @@ Recommendation: Advance to final APM/PM rounds.`;
                   onClick={() => setSelectedPillar(idx)}
                   className={`p-2.5 rounded-xl text-left transition-all border cursor-pointer ${
                     selectedPillar === idx
-                      ? 'bg-[#0B1728] text-white border-slate-900 shadow-md scale-[1.02]'
-                      : 'bg-slate-50 hover:bg-slate-100 text-slate-700 border-slate-200'
+                      ? 'bg-[#D190AC] dark:bg-[#0080AB] text-white border-[#DEB6C5] dark:border-blue-400 shadow-md scale-[1.02]'
+                      : 'bg-[#F0EAD5] dark:bg-slate-800 hover:bg-[#DEB6C5]/40 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-300 border-[#DEB6C5]/50 dark:border-slate-700'
                   }`}
                 >
-                  <div className="text-[10px] font-mono font-bold uppercase tracking-wider opacity-70">
+                  <div className="text-[10px] font-mono font-bold uppercase tracking-wider opacity-80">
                     Pillar {idx + 1}
                   </div>
                   <div className="text-xs font-bold font-display truncate mt-0.5">
                     {comp.title.split('. ')[1]}
                   </div>
-                  <div className="text-[10px] text-emerald-500 font-mono mt-1 flex items-center gap-1">
+                  <div className={`text-[10px] font-mono mt-1 flex items-center gap-1 ${selectedPillar === idx ? 'text-white font-semibold' : 'text-emerald-700 dark:text-emerald-400'}`}>
                     <CheckCircle2 className="w-3 h-3" />
                     <span>Validated</span>
                   </div>
@@ -404,31 +404,31 @@ Recommendation: Advance to final APM/PM rounds.`;
 
           {/* Recruiter Quick Actions Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
-            <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-1.5">
-              <span className="text-[10px] font-mono uppercase font-bold text-slate-400">Direct Contact</span>
-              <div className="font-bold text-slate-900 text-sm">{candidateInfo.name}</div>
-              <div className="text-xs text-[#316BEA] font-mono">{candidateInfo.email}</div>
+            <div className="p-4 rounded-2xl bg-[#F0EAD5]/60 dark:bg-slate-800/80 border border-[#DEB6C5]/60 dark:border-slate-700 space-y-1.5 transition-colors">
+              <span className="text-[10px] font-mono uppercase font-bold text-slate-500 dark:text-slate-400">Direct Contact</span>
+              <div className="font-bold text-slate-900 dark:text-white text-sm">{candidateInfo.name}</div>
+              <div className="text-xs text-[#8F3760] dark:text-[#38BDF8] font-mono">{candidateInfo.email}</div>
             </div>
 
-            <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-1.5">
-              <span className="text-[10px] font-mono uppercase font-bold text-slate-400">Interview Artifacts</span>
-              <div className="font-bold text-slate-900 text-sm">Full Investment Memo</div>
-              <div className="text-xs text-slate-500">14 Structured Exact Pages</div>
+            <div className="p-4 rounded-2xl bg-[#F0EAD5]/60 dark:bg-slate-800/80 border border-[#DEB6C5]/60 dark:border-slate-700 space-y-1.5 transition-colors">
+              <span className="text-[10px] font-mono uppercase font-bold text-slate-500 dark:text-slate-400">Interview Artifacts</span>
+              <div className="font-bold text-slate-900 dark:text-white text-sm">Full Investment Memo</div>
+              <div className="text-xs text-slate-600 dark:text-slate-400">14 Structured Exact Pages</div>
             </div>
 
-            <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-1.5">
-              <span className="text-[10px] font-mono uppercase font-bold text-slate-400">Decision Framework</span>
-              <div className="font-bold text-slate-900 text-sm">G1–G4 Kill-Gate Model</div>
-              <div className="text-xs text-emerald-600 font-semibold">Zero-Dogma Scale/Kill Rule</div>
+            <div className="p-4 rounded-2xl bg-[#F0EAD5]/60 dark:bg-slate-800/80 border border-[#DEB6C5]/60 dark:border-slate-700 space-y-1.5 transition-colors">
+              <span className="text-[10px] font-mono uppercase font-bold text-slate-500 dark:text-slate-400">Decision Framework</span>
+              <div className="font-bold text-slate-900 dark:text-white text-sm">G1–G4 Kill-Gate Model</div>
+              <div className="text-xs text-emerald-700 dark:text-emerald-400 font-semibold">Zero-Dogma Scale/Kill Rule</div>
             </div>
           </div>
 
         </div>
 
         {/* Footer */}
-        <div className="bg-slate-50 p-4 sm:p-5 border-t border-slate-200 flex flex-wrap items-center justify-between gap-3">
-          <div className="text-xs text-slate-500 font-mono">
-            Prepared by <strong className="text-slate-800">Suvam Priyaranjan Sahoo</strong> • APM Product Strategy Case
+        <div className="bg-[#F7F6ED] dark:bg-slate-900 p-4 sm:p-5 border-t border-[#DEB6C5]/60 dark:border-slate-800 flex flex-wrap items-center justify-between gap-3 transition-colors">
+          <div className="text-xs text-slate-600 dark:text-slate-400 font-mono">
+            Prepared by <strong className="text-slate-900 dark:text-white">Suvam Priyaranjan Sahoo</strong> • APM Product Strategy Case
           </div>
 
           <div className="flex items-center gap-2">
@@ -438,7 +438,7 @@ Recommendation: Advance to final APM/PM rounds.`;
                   onClose();
                   onOpenPrintPreview();
                 }}
-                className="px-3.5 py-2 rounded-xl bg-cyan-50 text-cyan-800 hover:bg-cyan-100 border border-cyan-200 font-bold text-xs flex items-center gap-1.5 transition-colors cursor-pointer"
+                className="px-3.5 py-2 rounded-xl bg-cyan-100 dark:bg-cyan-950/60 text-cyan-900 dark:text-cyan-200 hover:bg-cyan-200 border border-cyan-300 dark:border-cyan-800 font-bold text-xs flex items-center gap-1.5 transition-colors cursor-pointer"
               >
                 <span>Print Preview</span>
               </button>
@@ -449,7 +449,7 @@ Recommendation: Advance to final APM/PM rounds.`;
                   onClose();
                   onOpenPdfExport();
                 }}
-                className="px-4 py-2 rounded-xl bg-blue-50 text-[#316BEA] hover:bg-blue-100 border border-blue-200 font-bold text-xs flex items-center gap-1.5 transition-colors cursor-pointer"
+                className="px-4 py-2 rounded-xl bg-[#F0D6DE] dark:bg-blue-950/60 text-[#8F3760] dark:text-blue-300 hover:bg-[#DEB6C5] border border-[#DEB6C5] dark:border-blue-800 font-bold text-xs flex items-center gap-1.5 transition-colors cursor-pointer"
               >
                 <FileDown className="w-4 h-4" />
                 <span>Export PDF Options</span>
@@ -457,7 +457,7 @@ Recommendation: Advance to final APM/PM rounds.`;
             )}
             <button
               onClick={handleCopyRecruiterNote}
-              className="px-4 py-2 rounded-xl bg-slate-200 hover:bg-slate-300 text-slate-800 font-semibold text-xs transition-colors cursor-pointer"
+              className="px-4 py-2 rounded-xl bg-[#F0EAD5] dark:bg-slate-800 hover:bg-[#DEB6C5]/40 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 font-semibold text-xs border border-[#DEB6C5]/50 dark:border-slate-700 transition-colors cursor-pointer"
             >
               {copiedNote ? 'Copied to Clipboard!' : 'Copy Evaluation Note'}
             </button>

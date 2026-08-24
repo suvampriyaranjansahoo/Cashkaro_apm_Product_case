@@ -23,7 +23,8 @@ import {
   ArrowUpRight,
   Filter,
   Eye,
-  ChevronDown
+  ChevronDown,
+  Hourglass
 } from 'lucide-react';
 
 interface OutlineSidebarProps {
@@ -41,21 +42,36 @@ interface OutlineSidebarProps {
 
 type OutlineCategoryFilter = 'all' | 'strategic' | 'technical' | 'economics' | 'saved';
 
-// Category mapping for quick filtering
-const SECTION_CATEGORIES: Record<string, { category: 'strategic' | 'technical' | 'economics'; readTime: string; icon: any }> = {
-  'hero': { category: 'strategic', readTime: '1m', icon: Award },
-  'problem': { category: 'strategic', readTime: '2m', icon: HelpCircle },
-  'hypotheses': { category: 'strategic', readTime: '2m', icon: GitBranch },
-  'prioritization': { category: 'strategic', readTime: '2m', icon: Sliders },
-  'validation': { category: 'strategic', readTime: '2m', icon: ShieldCheck },
-  'mind-change': { category: 'strategic', readTime: '1m', icon: HelpCircle },
-  'intent-router': { category: 'technical', readTime: '2m', icon: Sparkles },
-  'product-spec': { category: 'technical', readTime: '3m', icon: FileText },
-  'architecture': { category: 'technical', readTime: '2m', icon: GitBranch },
-  'measurement': { category: 'economics', readTime: '2m', icon: BarChart3 },
-  'simulator': { category: 'economics', readTime: '2m', icon: Calculator },
-  'operating-model': { category: 'technical', readTime: '2m', icon: Users },
-  'final-decision': { category: 'strategic', readTime: '1m', icon: CheckCircle2 },
+// Category mapping with icons and baseline character counts for initial render
+const SECTION_METAS: Record<string, { category: 'strategic' | 'technical' | 'economics'; baselineChars: number; icon: any }> = {
+  'hero': { category: 'strategic', baselineChars: 1400, icon: Award },
+  'problem': { category: 'strategic', baselineChars: 2100, icon: HelpCircle },
+  'hypotheses': { category: 'strategic', baselineChars: 2400, icon: GitBranch },
+  'prioritization': { category: 'strategic', baselineChars: 2200, icon: Sliders },
+  'validation': { category: 'strategic', baselineChars: 2600, icon: ShieldCheck },
+  'mind-change': { category: 'strategic', baselineChars: 1500, icon: HelpCircle },
+  'intent-router': { category: 'technical', baselineChars: 2300, icon: Sparkles },
+  'product-spec': { category: 'technical', baselineChars: 3600, icon: FileText },
+  'architecture': { category: 'technical', baselineChars: 2500, icon: GitBranch },
+  'measurement': { category: 'economics', baselineChars: 2400, icon: BarChart3 },
+  'simulator': { category: 'economics', baselineChars: 2300, icon: Calculator },
+  'operating-model': { category: 'technical', baselineChars: 2400, icon: Users },
+  'final-decision': { category: 'strategic', baselineChars: 1400, icon: CheckCircle2 },
+};
+
+/**
+ * Calculates estimated reading time based on character count.
+ * Technical & strategic product memos typically have an average reading pace of ~950-1,000 characters/minute.
+ */
+export const calculateReadingTimeFromChars = (charCount: number) => {
+  const charsPerMinute = 950;
+  const mins = Math.max(1, Math.round(charCount / charsPerMinute));
+  return {
+    mins,
+    formatted: `${mins}m`,
+    chars: charCount,
+    charLabel: charCount >= 1000 ? `${(charCount / 1000).toFixed(1)}k chars` : `${charCount} chars`,
+  };
 };
 
 export const OutlineSidebar: React.FC<OutlineSidebarProps> = ({
@@ -75,6 +91,43 @@ export const OutlineSidebar: React.FC<OutlineSidebarProps> = ({
   const [scrollPercentage, setScrollPercentage] = useState<number>(0);
   const activeItemRef = useRef<HTMLButtonElement | null>(null);
   const listContainerRef = useRef<HTMLDivElement | null>(null);
+
+  // Dynamic state for character counts extracted directly from DOM
+  const [sectionCharCounts, setSectionCharCounts] = useState<Record<string, number>>(() => {
+    const initial: Record<string, number> = {};
+    Object.keys(SECTION_METAS).forEach((key) => {
+      initial[key] = SECTION_METAS[key].baselineChars;
+    });
+    return initial;
+  });
+
+  // Dynamically measure actual DOM character counts per section
+  useEffect(() => {
+    const measureDomCharacters = () => {
+      const counts: Record<string, number> = {};
+      SECTIONS.forEach((sec) => {
+        const el = document.getElementById(sec.id);
+        if (el) {
+          const text = el.innerText || '';
+          const cleanLength = text.replace(/\s+/g, ' ').trim().length;
+          if (cleanLength > 100) {
+            counts[sec.id] = cleanLength;
+          }
+        }
+      });
+      if (Object.keys(counts).length > 0) {
+        setSectionCharCounts((prev) => ({ ...prev, ...counts }));
+      }
+    };
+
+    // Trigger after DOM rendering / readingDepth toggle
+    const timer = setTimeout(measureDomCharacters, 400);
+    window.addEventListener('resize', measureDomCharacters);
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener('resize', measureDomCharacters);
+    };
+  }, [readingDepth]);
 
   // Save expanded state to local storage
   useEffect(() => {
@@ -116,7 +169,7 @@ export const OutlineSidebar: React.FC<OutlineSidebarProps> = ({
   // Filter sections by search and category
   const filteredSections = useMemo(() => {
     return SECTIONS.filter((sec) => {
-      const meta = SECTION_CATEGORIES[sec.id] || { category: 'strategic' };
+      const meta = SECTION_METAS[sec.id] || { category: 'strategic' };
       
       // Category filter check
       if (categoryFilter === 'saved' && !highlightedSections.includes(sec.id)) {
@@ -145,8 +198,49 @@ export const OutlineSidebar: React.FC<OutlineSidebarProps> = ({
     });
   }, [searchQuery, categoryFilter, highlightedSections]);
 
+  // Total document reading time
+  const totalDocumentReadingMins = useMemo(() => {
+    return SECTIONS.reduce((acc, sec) => {
+      const chars = sectionCharCounts[sec.id] || SECTION_METAS[sec.id]?.baselineChars || 2000;
+      return acc + calculateReadingTimeFromChars(chars).mins;
+    }, 0);
+  }, [sectionCharCounts]);
+
+  // Category aggregate reading times
+  const categoryReadingTimes = useMemo(() => {
+    const times = {
+      strategic: 0,
+      technical: 0,
+      economics: 0,
+      saved: 0,
+    };
+    SECTIONS.forEach((sec) => {
+      const meta = SECTION_METAS[sec.id];
+      const chars = sectionCharCounts[sec.id] || meta?.baselineChars || 2000;
+      const mins = calculateReadingTimeFromChars(chars).mins;
+      if (meta?.category) {
+        times[meta.category] += mins;
+      }
+      if (highlightedSections.includes(sec.id)) {
+        times.saved += mins;
+      }
+    });
+    return times;
+  }, [sectionCharCounts, highlightedSections]);
+
   const activeIndex = SECTIONS.findIndex((s) => s.id === activeSection);
   const currentSectionMeta = SECTIONS[activeIndex] || SECTIONS[0];
+  const currentCharCount = sectionCharCounts[currentSectionMeta.id] || SECTION_METAS[currentSectionMeta.id]?.baselineChars || 2000;
+  const currentReadTime = calculateReadingTimeFromChars(currentCharCount);
+
+  // Calculate remaining estimated review time from current section onwards
+  const remainingReadingMins = useMemo(() => {
+    if (activeIndex < 0) return totalDocumentReadingMins;
+    return SECTIONS.slice(activeIndex).reduce((acc, sec) => {
+      const chars = sectionCharCounts[sec.id] || SECTION_METAS[sec.id]?.baselineChars || 2000;
+      return acc + calculateReadingTimeFromChars(chars).mins;
+    }, 0);
+  }, [activeIndex, sectionCharCounts, totalDocumentReadingMins]);
 
   const handleSelectSection = (sectionId: string) => {
     onNavigateSection(sectionId);
@@ -168,27 +262,28 @@ export const OutlineSidebar: React.FC<OutlineSidebarProps> = ({
           <button
             id="outline-expand-trigger"
             onClick={() => setIsOpen(true)}
-            className="group flex items-center gap-2 px-3 py-2.5 bg-white dark:bg-[#0E1726] hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-slate-700/80 rounded-xl shadow-lg hover:shadow-xl transition-all cursor-pointer hover:border-[#316BEA] dark:hover:border-blue-500"
+            className="group flex items-center gap-2 px-3 py-2.5 bg-white dark:bg-[#0E1726] hover:bg-[#F0EAD5] dark:hover:bg-slate-800 text-slate-800 dark:text-slate-200 border border-[#DEB6C5]/70 dark:border-slate-700/80 rounded-xl shadow-lg hover:shadow-xl transition-all cursor-pointer hover:border-[#D190AC] dark:hover:border-blue-500"
             title="Open Document Outline Sidebar (Shortcut: Alt+O)"
           >
-            <div className="w-6 h-6 rounded-lg bg-blue-50 dark:bg-blue-950/60 text-[#316BEA] dark:text-blue-400 flex items-center justify-center font-mono text-[11px] font-bold">
+            <div className="w-6 h-6 rounded-lg bg-[#D190AC]/20 dark:bg-blue-950/60 text-[#8F3760] dark:text-blue-400 flex items-center justify-center font-mono text-[11px] font-bold">
               {String(activeIndex + 1).padStart(2, '0')}
             </div>
             <div className="flex flex-col text-left">
               <div className="flex items-center gap-1.5">
-                <ListOrdered className="w-3.5 h-3.5 text-[#316BEA]" />
+                <ListOrdered className="w-3.5 h-3.5 text-[#8F3760] dark:text-[#316BEA]" />
                 <span className="text-xs font-bold font-display tracking-tight text-slate-900 dark:text-white">
                   Outline
                 </span>
-                <span className="text-[10px] font-mono text-slate-400">
-                  {activeIndex + 1}/{SECTIONS.length}
+                <span className="text-[10px] font-mono bg-[#F0EAD5] dark:bg-blue-950/80 text-[#8F3760] dark:text-blue-300 px-1 py-0.2 rounded border border-[#DEB6C5]/70 dark:border-blue-900/50 flex items-center gap-0.5">
+                  <Clock className="w-2.5 h-2.5" />
+                  {currentReadTime.formatted}
                 </span>
               </div>
-              <span className="text-[10px] text-slate-500 dark:text-slate-400 max-w-[120px] truncate font-medium">
+              <span className="text-[10px] text-slate-600 dark:text-slate-400 max-w-[120px] truncate font-medium">
                 {currentSectionMeta.shortTitle}
               </span>
             </div>
-            <ChevronRight className="w-4 h-4 text-slate-400 group-hover:text-[#316BEA] group-hover:translate-x-0.5 transition-all" />
+            <ChevronRight className="w-4 h-4 text-slate-400 group-hover:text-[#8F3760] dark:group-hover:text-[#316BEA] group-hover:translate-x-0.5 transition-all" />
           </button>
         </div>
       )}
@@ -205,14 +300,14 @@ export const OutlineSidebar: React.FC<OutlineSidebarProps> = ({
       {/* Expandable Sidebar Panel */}
       <div 
         id="outline-sidebar-panel"
-        className={`fixed top-16 bottom-0 left-0 z-40 w-80 sm:w-96 bg-white dark:bg-[#0A111E] border-r border-slate-200 dark:border-slate-800 shadow-2xl flex flex-col transition-transform duration-300 ease-in-out ${
+        className={`fixed top-16 bottom-0 left-0 z-40 w-80 sm:w-96 bg-[#FDFBF7] dark:bg-[#0A111E] border-r border-[#DEB6C5]/70 dark:border-slate-800 shadow-2xl flex flex-col transition-transform duration-300 ease-in-out ${
           isOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
         {/* Header Bar */}
-        <div className="p-4 border-b border-slate-200 dark:border-slate-800/80 bg-slate-50/80 dark:bg-[#070D18] flex items-center justify-between shrink-0">
+        <div className="p-4 border-b border-[#DEB6C5]/60 dark:border-slate-800/80 bg-[#F7F6ED] dark:bg-[#070D18] flex items-center justify-between shrink-0 transition-colors">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#316BEA] to-blue-600 flex items-center justify-center text-white shadow-xs">
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#D190AC] to-[#8F3760] dark:from-[#316BEA] dark:to-blue-600 flex items-center justify-center text-white shadow-xs">
               <ListOrdered className="w-4 h-4" />
             </div>
             <div>
@@ -220,13 +315,18 @@ export const OutlineSidebar: React.FC<OutlineSidebarProps> = ({
                 <h3 className="text-sm font-bold text-slate-900 dark:text-white font-display">
                   Document Outline
                 </h3>
-                <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-blue-50 dark:bg-blue-950/60 text-[#316BEA] dark:text-blue-400 font-bold border border-blue-200 dark:border-blue-900/60">
+                <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-[#F0EAD5] dark:bg-blue-950/60 text-[#8F3760] dark:text-blue-400 font-bold border border-[#DEB6C5]/70 dark:border-blue-900/60">
                   {SECTIONS.length} Sections
                 </span>
               </div>
-              <p className="text-[11px] text-slate-500 dark:text-slate-400">
-                Non-linear recruiter strategic navigator
-              </p>
+              <div className="flex items-center gap-1.5 text-[11px] text-slate-600 dark:text-slate-400 mt-0.5">
+                <span className="flex items-center gap-1 font-mono font-semibold text-slate-800 dark:text-slate-300">
+                  <Clock className="w-3 h-3 text-[#8F3760] dark:text-[#316BEA]" />
+                  ~{totalDocumentReadingMins}m total read
+                </span>
+                <span>•</span>
+                <span className="text-[10px]">Char-based pacing</span>
+              </div>
             </div>
           </div>
 
@@ -242,32 +342,35 @@ export const OutlineSidebar: React.FC<OutlineSidebarProps> = ({
           </div>
         </div>
 
-        {/* Document Progress Meter */}
-        <div className="px-4 py-2.5 bg-white dark:bg-[#0E1726] border-b border-slate-100 dark:border-slate-800/60 shrink-0">
-          <div className="flex items-center justify-between text-[11px] font-mono text-slate-500 dark:text-slate-400 mb-1.5">
+        {/* Document Progress & Pace Meter */}
+        <div className="px-4 py-2.5 bg-white dark:bg-[#0E1726] border-b border-[#DEB6C5]/40 dark:border-slate-800/60 shrink-0 transition-colors">
+          <div className="flex items-center justify-between text-[11px] font-mono text-slate-600 dark:text-slate-400 mb-1.5">
             <div className="flex items-center gap-1.5">
               <span className="font-semibold text-slate-800 dark:text-slate-200">
-                Current: Section {String(activeIndex + 1).padStart(2, '0')}
+                Sec {String(activeIndex + 1).padStart(2, '0')}:
               </span>
-              <span className="text-slate-400">•</span>
-              <span className="text-[#316BEA] dark:text-blue-400 font-medium truncate max-w-[140px]">
+              <span className="text-[#8F3760] dark:text-blue-400 font-medium truncate max-w-[110px]">
                 {currentSectionMeta.shortTitle}
               </span>
+              <span className="px-1.5 py-0.2 bg-[#F0EAD5] dark:bg-blue-950/60 text-[#8F3760] dark:text-blue-300 rounded text-[9px] font-bold">
+                {currentReadTime.formatted}
+              </span>
             </div>
-            <span className="font-bold text-slate-700 dark:text-slate-300">
-              {Math.round(scrollPercentage)}%
-            </span>
+            <div className="flex items-center gap-1 font-bold text-slate-800 dark:text-slate-300">
+              <span>{Math.round(scrollPercentage)}%</span>
+              <span className="text-[10px] text-slate-500 dark:text-slate-400 font-normal">({remainingReadingMins}m left)</span>
+            </div>
           </div>
-          <div className="w-full bg-slate-100 dark:bg-slate-800 h-1.5 rounded-full overflow-hidden">
+          <div className="w-full bg-[#F0EAD5] dark:bg-slate-800 h-1.5 rounded-full overflow-hidden">
             <div 
-              className="bg-gradient-to-r from-[#316BEA] to-[#159A68] h-full transition-all duration-150 rounded-full"
+              className="bg-gradient-to-r from-[#D190AC] to-[#8F3760] dark:from-[#316BEA] dark:to-[#159A68] h-full transition-all duration-150 rounded-full"
               style={{ width: `${scrollPercentage}%` }}
             />
           </div>
         </div>
 
         {/* Search & Topic Filters */}
-        <div className="p-3.5 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-[#070D18] space-y-2.5 shrink-0">
+        <div className="p-3.5 border-b border-[#DEB6C5]/40 dark:border-slate-800 bg-[#F7F6ED]/70 dark:bg-[#070D18] space-y-2.5 shrink-0 transition-colors">
           
           {/* Search Input */}
           <div className="relative">
@@ -278,7 +381,7 @@ export const OutlineSidebar: React.FC<OutlineSidebarProps> = ({
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search sections, PRD, metrics, gates..."
-              className="w-full pl-8 pr-7 py-1.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg text-xs text-slate-800 dark:text-slate-200 placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-[#316BEA] transition-all"
+              className="w-full pl-8 pr-7 py-1.5 bg-white dark:bg-slate-900 border border-[#DEB6C5]/70 dark:border-slate-700 rounded-lg text-xs text-slate-800 dark:text-slate-200 placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-[#D190AC] dark:focus:ring-[#316BEA] transition-all"
             />
             {searchQuery && (
               <button
@@ -290,50 +393,50 @@ export const OutlineSidebar: React.FC<OutlineSidebarProps> = ({
             )}
           </div>
 
-          {/* Category Filter Pills */}
+          {/* Category Filter Pills with Reading Times */}
           <div className="flex items-center gap-1 overflow-x-auto pb-1 text-[11px] scrollbar-none">
             <button
               onClick={() => setCategoryFilter('all')}
               className={`px-2 py-1 rounded-md font-semibold whitespace-nowrap transition-colors cursor-pointer ${
                 categoryFilter === 'all'
-                  ? 'bg-[#316BEA] text-white'
-                  : 'bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-700 hover:text-slate-900 dark:hover:text-white'
+                  ? 'bg-[#D190AC] dark:bg-[#0080AB] text-white shadow-xs'
+                  : 'bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-400 border border-[#DEB6C5]/60 dark:border-slate-700 hover:text-slate-900 dark:hover:text-white'
               }`}
             >
-              All ({SECTIONS.length})
+              All ({totalDocumentReadingMins}m)
             </button>
 
             <button
               onClick={() => setCategoryFilter('strategic')}
               className={`px-2 py-1 rounded-md font-semibold whitespace-nowrap transition-colors cursor-pointer ${
                 categoryFilter === 'strategic'
-                  ? 'bg-[#316BEA] text-white'
-                  : 'bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-700 hover:text-slate-900 dark:hover:text-white'
+                  ? 'bg-[#D190AC] dark:bg-[#0080AB] text-white shadow-xs'
+                  : 'bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-400 border border-[#DEB6C5]/60 dark:border-slate-700 hover:text-slate-900 dark:hover:text-white'
               }`}
             >
-              Strategy
+              Strategy ({categoryReadingTimes.strategic}m)
             </button>
 
             <button
               onClick={() => setCategoryFilter('technical')}
               className={`px-2 py-1 rounded-md font-semibold whitespace-nowrap transition-colors cursor-pointer ${
                 categoryFilter === 'technical'
-                  ? 'bg-[#316BEA] text-white'
-                  : 'bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-700 hover:text-slate-900 dark:hover:text-white'
+                  ? 'bg-[#D190AC] dark:bg-[#0080AB] text-white shadow-xs'
+                  : 'bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-400 border border-[#DEB6C5]/60 dark:border-slate-700 hover:text-slate-900 dark:hover:text-white'
               }`}
             >
-              Tech / PRD
+              Tech ({categoryReadingTimes.technical}m)
             </button>
 
             <button
               onClick={() => setCategoryFilter('economics')}
               className={`px-2 py-1 rounded-md font-semibold whitespace-nowrap transition-colors cursor-pointer ${
                 categoryFilter === 'economics'
-                  ? 'bg-[#316BEA] text-white'
-                  : 'bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-700 hover:text-slate-900 dark:hover:text-white'
+                  ? 'bg-[#D190AC] dark:bg-[#0080AB] text-white shadow-xs'
+                  : 'bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-400 border border-[#DEB6C5]/60 dark:border-slate-700 hover:text-slate-900 dark:hover:text-white'
               }`}
             >
-              Economics
+              Econ ({categoryReadingTimes.economics}m)
             </button>
 
             {highlightedSections.length > 0 && (
@@ -341,12 +444,12 @@ export const OutlineSidebar: React.FC<OutlineSidebarProps> = ({
                 onClick={() => setCategoryFilter('saved')}
                 className={`px-2 py-1 rounded-md font-semibold whitespace-nowrap transition-colors cursor-pointer flex items-center gap-1 ${
                   categoryFilter === 'saved'
-                    ? 'bg-amber-600 text-white'
+                    ? 'bg-amber-600 text-white shadow-xs'
                     : 'bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-900/60'
                 }`}
               >
                 <Bookmark className="w-2.5 h-2.5 fill-current" />
-                <span>Saved ({highlightedSections.length})</span>
+                <span>Saved ({categoryReadingTimes.saved}m)</span>
               </button>
             )}
           </div>
@@ -367,16 +470,17 @@ export const OutlineSidebar: React.FC<OutlineSidebarProps> = ({
             filteredSections.map((sec, idx) => {
               const isCurrent = sec.id === activeSection;
               const isMarked = highlightedSections.includes(sec.id);
-              const meta = SECTION_CATEGORIES[sec.id] || { category: 'strategic', readTime: '2m', icon: FileText };
-              const IconComp = meta.icon;
+              const meta = SECTION_METAS[sec.id] || { category: 'strategic', baselineChars: 2000, icon: FileText };
+              const charCount = sectionCharCounts[sec.id] || meta.baselineChars;
+              const readTimeInfo = calculateReadingTimeFromChars(charCount);
 
               return (
                 <div
                   key={sec.id}
                   className={`group relative rounded-xl border transition-all ${
                     isCurrent
-                      ? 'bg-blue-50/80 dark:bg-blue-950/40 border-[#316BEA]/60 dark:border-blue-500/60 shadow-xs'
-                      : 'bg-white dark:bg-[#0E1726] border-slate-200/80 dark:border-slate-800/80 hover:border-slate-300 dark:hover:border-slate-700 hover:bg-slate-50/60 dark:hover:bg-slate-800/50'
+                      ? 'bg-[#F0EAD5] dark:bg-blue-950/40 border-[#D190AC] dark:border-blue-500/60 shadow-xs'
+                      : 'bg-white dark:bg-[#0E1726] border-[#DEB6C5]/50 dark:border-slate-800/80 hover:border-[#D190AC]/70 dark:hover:border-slate-700 hover:bg-[#F7F6ED] dark:hover:bg-slate-800/50'
                   }`}
                 >
                   <button
@@ -384,11 +488,11 @@ export const OutlineSidebar: React.FC<OutlineSidebarProps> = ({
                     onClick={() => handleSelectSection(sec.id)}
                     className="w-full text-left p-2.5 pr-8 flex items-start gap-2.5 cursor-pointer"
                   >
-                    {/* Number Tag & Icon */}
+                    {/* Number Tag */}
                     <div className={`w-6 h-6 rounded-md flex items-center justify-center font-mono text-[10px] font-bold shrink-0 transition-colors ${
                       isCurrent
-                        ? 'bg-[#316BEA] text-white shadow-xs'
-                        : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 group-hover:bg-blue-50 dark:group-hover:bg-slate-700 group-hover:text-[#316BEA]'
+                        ? 'bg-[#D190AC] dark:bg-[#0080AB] text-white shadow-xs'
+                        : 'bg-[#F0EAD5]/70 dark:bg-slate-800 text-slate-700 dark:text-slate-400 group-hover:bg-[#F0EAD5] dark:group-hover:bg-slate-700 group-hover:text-[#8F3760]'
                     }`}>
                       {sec.num}
                     </div>
@@ -399,31 +503,45 @@ export const OutlineSidebar: React.FC<OutlineSidebarProps> = ({
                         <span className={`text-xs font-bold truncate ${
                           isCurrent 
                             ? 'text-[#0B1F3A] dark:text-white font-display' 
-                            : 'text-slate-800 dark:text-slate-200 group-hover:text-[#316BEA] dark:group-hover:text-blue-400'
+                            : 'text-slate-800 dark:text-slate-200 group-hover:text-[#8F3760] dark:group-hover:text-blue-400'
                         }`}>
                           {sec.title}
                         </span>
                       </div>
 
                       {/* Summary Excerpt */}
-                      <p className="text-[10px] text-slate-500 dark:text-slate-400 line-clamp-2 leading-relaxed font-normal">
+                      <p className="text-[10px] text-slate-600 dark:text-slate-400 line-clamp-2 leading-relaxed font-normal">
                         {sec.summary30s}
                       </p>
 
                       {/* Read time and Category Badge */}
-                      <div className="flex items-center gap-2 mt-1.5 text-[9px] font-mono text-slate-400">
-                        <span className="flex items-center gap-1">
+                      <div className="flex items-center gap-1.5 mt-1.5 text-[9px] font-mono">
+                        {/* Prominent Estimated Read Time Tag */}
+                        <span 
+                          className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded font-bold border transition-colors ${
+                            isCurrent
+                              ? 'bg-[#D190AC] dark:bg-[#0080AB] text-white border-[#D190AC] dark:border-[#0080AB]'
+                              : 'bg-[#F0EAD5]/60 dark:bg-blue-950/70 text-[#8F3760] dark:text-blue-300 border-[#DEB6C5]/60 dark:border-blue-900/60 group-hover:bg-[#F0EAD5]'
+                          }`}
+                          title={`Estimated reading time: ${readTimeInfo.formatted} based on ~${readTimeInfo.chars.toLocaleString()} characters`}
+                        >
                           <Clock className="w-2.5 h-2.5" />
-                          {meta.readTime}
+                          <span>{readTimeInfo.formatted}</span>
                         </span>
-                        <span>•</span>
-                        <span className="uppercase tracking-wider">
+
+                        <span className="text-slate-500 dark:text-slate-500">
+                          (~{readTimeInfo.charLabel})
+                        </span>
+
+                        <span className="text-slate-300 dark:text-slate-700">•</span>
+                        <span className="uppercase tracking-wider text-slate-500 dark:text-slate-500">
                           {meta.category}
                         </span>
+
                         {isCurrent && (
                           <>
-                            <span>•</span>
-                            <span className="text-[#316BEA] dark:text-blue-400 font-bold">ACTIVE</span>
+                            <span className="text-slate-300 dark:text-slate-700">•</span>
+                            <span className="text-[#8F3760] dark:text-blue-400 font-bold">ACTIVE</span>
                           </>
                         )}
                       </div>
@@ -453,9 +571,9 @@ export const OutlineSidebar: React.FC<OutlineSidebarProps> = ({
         </div>
 
         {/* Recruiter Quick Deep Dive Jump Links (Bottom Footer) */}
-        <div className="p-3 bg-slate-50 dark:bg-[#070D18] border-t border-slate-200 dark:border-slate-800 shrink-0 space-y-2">
+        <div className="p-3 bg-[#F7F6ED] dark:bg-[#070D18] border-t border-[#DEB6C5]/60 dark:border-slate-800 shrink-0 space-y-2 transition-colors">
           
-          <div className="text-[10px] font-mono uppercase tracking-wider text-slate-400 font-semibold flex items-center justify-between">
+          <div className="text-[10px] font-mono uppercase tracking-wider text-slate-500 dark:text-slate-400 font-semibold flex items-center justify-between">
             <span>Recruiter Quick Jumps</span>
             <span className="text-slate-400">Press Alt+O to toggle</span>
           </div>
@@ -463,33 +581,33 @@ export const OutlineSidebar: React.FC<OutlineSidebarProps> = ({
           <div className="grid grid-cols-2 gap-1.5">
             <button
               onClick={() => handleSelectSection('product-spec')}
-              className="px-2 py-1.5 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-[11px] font-semibold text-slate-700 dark:text-slate-300 hover:text-[#316BEA] dark:hover:text-blue-400 hover:border-blue-300 transition-colors text-left flex items-center justify-between cursor-pointer"
+              className="px-2 py-1.5 rounded-lg bg-white dark:bg-slate-900 border border-[#DEB6C5]/60 dark:border-slate-800 text-[11px] font-semibold text-slate-800 dark:text-slate-300 hover:text-[#8F3760] dark:hover:text-blue-400 hover:border-[#D190AC] transition-colors text-left flex items-center justify-between cursor-pointer"
             >
-              <span>PRD Specs (AC1-7)</span>
+              <span>PRD Specs ({calculateReadingTimeFromChars(sectionCharCounts['product-spec'] || 3600).formatted})</span>
               <ArrowUpRight className="w-3 h-3 opacity-60" />
             </button>
 
             <button
               onClick={() => handleSelectSection('validation')}
-              className="px-2 py-1.5 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-[11px] font-semibold text-slate-700 dark:text-slate-300 hover:text-[#316BEA] dark:hover:text-blue-400 hover:border-blue-300 transition-colors text-left flex items-center justify-between cursor-pointer"
+              className="px-2 py-1.5 rounded-lg bg-white dark:bg-slate-900 border border-[#DEB6C5]/60 dark:border-slate-800 text-[11px] font-semibold text-slate-800 dark:text-slate-300 hover:text-[#8F3760] dark:hover:text-blue-400 hover:border-[#D190AC] transition-colors text-left flex items-center justify-between cursor-pointer"
             >
-              <span>4 Validation Gates</span>
+              <span>4 Gates ({calculateReadingTimeFromChars(sectionCharCounts['validation'] || 2600).formatted})</span>
               <ArrowUpRight className="w-3 h-3 opacity-60" />
             </button>
 
             <button
               onClick={() => handleSelectSection('measurement')}
-              className="px-2 py-1.5 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-[11px] font-semibold text-slate-700 dark:text-slate-300 hover:text-[#316BEA] dark:hover:text-blue-400 hover:border-blue-300 transition-colors text-left flex items-center justify-between cursor-pointer"
+              className="px-2 py-1.5 rounded-lg bg-white dark:bg-slate-900 border border-[#DEB6C5]/60 dark:border-slate-800 text-[11px] font-semibold text-slate-800 dark:text-slate-300 hover:text-[#8F3760] dark:hover:text-blue-400 hover:border-[#D190AC] transition-colors text-left flex items-center justify-between cursor-pointer"
             >
-              <span>50/50 ITT Framework</span>
+              <span>50/50 ITT ({calculateReadingTimeFromChars(sectionCharCounts['measurement'] || 2400).formatted})</span>
               <ArrowUpRight className="w-3 h-3 opacity-60" />
             </button>
 
             <button
               onClick={() => handleSelectSection('simulator')}
-              className="px-2 py-1.5 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-[11px] font-semibold text-slate-700 dark:text-slate-300 hover:text-[#316BEA] dark:hover:text-blue-400 hover:border-blue-300 transition-colors text-left flex items-center justify-between cursor-pointer"
+              className="px-2 py-1.5 rounded-lg bg-white dark:bg-slate-900 border border-[#DEB6C5]/60 dark:border-slate-800 text-[11px] font-semibold text-slate-800 dark:text-slate-300 hover:text-[#8F3760] dark:hover:text-blue-400 hover:border-[#D190AC] transition-colors text-left flex items-center justify-between cursor-pointer"
             >
-              <span>Financial Model</span>
+              <span>Financial ({calculateReadingTimeFromChars(sectionCharCounts['simulator'] || 2300).formatted})</span>
               <ArrowUpRight className="w-3 h-3 opacity-60" />
             </button>
           </div>
@@ -497,7 +615,7 @@ export const OutlineSidebar: React.FC<OutlineSidebarProps> = ({
           <div className="flex items-center gap-1.5 pt-1">
             <button
               onClick={onOpen1Pager}
-              className="flex-1 py-1.5 bg-[#316BEA] hover:bg-blue-600 text-white rounded-lg text-xs font-bold flex items-center justify-center gap-1.5 transition-colors cursor-pointer shadow-xs"
+              className="flex-1 py-1.5 bg-[#D190AC] dark:bg-[#0080AB] hover:bg-[#8F3760] dark:hover:bg-blue-600 text-white rounded-lg text-xs font-bold flex items-center justify-center gap-1.5 transition-colors cursor-pointer shadow-xs"
             >
               <FileText className="w-3.5 h-3.5" />
               <span>Executive 1-Pager</span>
@@ -506,10 +624,10 @@ export const OutlineSidebar: React.FC<OutlineSidebarProps> = ({
             {onOpenPrintPreview && (
               <button
                 onClick={onOpenPrintPreview}
-                className="px-2.5 py-1.5 bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-lg text-xs font-semibold flex items-center gap-1 transition-colors cursor-pointer"
+                className="px-2.5 py-1.5 bg-[#F0EAD5] dark:bg-slate-800 hover:bg-[#DEB6C5]/50 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 border border-[#DEB6C5]/60 dark:border-slate-700 rounded-lg text-xs font-semibold flex items-center gap-1 transition-colors cursor-pointer"
                 title="A4 Print Preview"
               >
-                <Eye className="w-3.5 h-3.5 text-cyan-500" />
+                <Eye className="w-3.5 h-3.5 text-cyan-600 dark:text-cyan-400" />
                 <span>Preview</span>
               </button>
             )}
@@ -521,3 +639,4 @@ export const OutlineSidebar: React.FC<OutlineSidebarProps> = ({
     </aside>
   );
 };
+
