@@ -10,7 +10,8 @@ import {
   AlertCircle,
   HelpCircle,
   Maximize2,
-  ChevronDown
+  ChevronDown,
+  FileDown
 } from 'lucide-react';
 import { ReadingDepth } from '../types';
 import { ColorLegend } from './ColorLegend';
@@ -18,9 +19,10 @@ import { ColorLegend } from './ColorLegend';
 interface HeroSectionProps {
   readingDepth: ReadingDepth;
   onOpenRecruiterHub?: () => void;
+  onOpenPdfExport?: () => void;
 }
 
-export const HeroSection: React.FC<HeroSectionProps> = ({ readingDepth, onOpenRecruiterHub }) => {
+export const HeroSection: React.FC<HeroSectionProps> = ({ readingDepth, onOpenRecruiterHub, onOpenPdfExport }) => {
   const [activeDecisionStep, setActiveDecisionStep] = useState<number>(3);
 
   const decisionSteps = [
@@ -173,13 +175,25 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ readingDepth, onOpenRe
                   </div>
                 </div>
 
-                <button
-                  onClick={onOpenRecruiterHub}
-                  className="px-4 py-2 rounded-xl bg-gradient-to-r from-[#316BEA] to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-bold text-xs flex items-center justify-center gap-1.5 transition-all shadow-sm shrink-0 cursor-pointer self-start sm:self-auto"
-                >
-                  <span>Open Evaluation Hub</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
-                </button>
+                <div className="flex items-center gap-2 shrink-0 self-start sm:self-auto">
+                  {onOpenPdfExport && (
+                    <button
+                      onClick={onOpenPdfExport}
+                      className="px-3 py-2 rounded-xl bg-emerald-600/90 hover:bg-emerald-500 text-white font-bold text-xs flex items-center justify-center gap-1.5 transition-all shadow-sm cursor-pointer border border-emerald-400/40"
+                      title="Download Strategy Memo as PDF"
+                    >
+                      <FileDown className="w-3.5 h-3.5 text-white" />
+                      <span>Download PDF</span>
+                    </button>
+                  )}
+                  <button
+                    onClick={onOpenRecruiterHub}
+                    className="px-3.5 py-2 rounded-xl bg-gradient-to-r from-[#316BEA] to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-bold text-xs flex items-center justify-center gap-1.5 transition-all shadow-sm cursor-pointer"
+                  >
+                    <span>Evaluation Hub</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </button>
+                </div>
               </div>
             )}
 

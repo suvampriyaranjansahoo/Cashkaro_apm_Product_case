@@ -172,11 +172,14 @@ export const RecruiterStickyBar: React.FC<RecruiterStickyBarProps> = ({
                 {onOpenPdfExport && (
                   <button
                     onClick={onOpenPdfExport}
-                    className="flex items-center gap-1 px-2 sm:px-2.5 py-1.5 bg-[#F0EAD5] hover:bg-[#DEB6C5]/50 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 hover:text-slate-900 dark:hover:text-white border border-[#DEB6C5]/60 dark:border-slate-700/40 rounded-xl text-xs font-semibold transition-colors cursor-pointer shrink-0 whitespace-nowrap"
-                    title="Download Strategy Memo as PDF"
+                    className="flex items-center gap-1.5 px-2 sm:px-3 py-1.5 bg-gradient-to-r from-[#159A68] to-emerald-600 hover:from-emerald-500 hover:to-teal-500 text-white border border-emerald-400/40 rounded-xl text-xs font-bold shadow-xs transition-all cursor-pointer shrink-0 whitespace-nowrap"
+                    title="Download Strategy Memo as PDF (Press 'D')"
                   >
-                    <FileDown className="w-3.5 h-3.5 text-[#8F3760] dark:text-blue-400" />
-                    <span>PDF</span>
+                    <FileDown className="w-3.5 h-3.5 text-white" />
+                    <span>Download PDF</span>
+                    <span className="hidden md:inline-block px-1 py-0.2 bg-black/20 rounded text-[9px] font-mono text-emerald-100 ml-0.5">
+                      D
+                    </span>
                   </button>
                 )}
 

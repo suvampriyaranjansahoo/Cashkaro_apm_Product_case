@@ -166,9 +166,9 @@ export const BreadcrumbTrail: React.FC<BreadcrumbTrailProps> = ({
   return (
     <nav 
       aria-label="Document Breadcrumb"
-      className="sticky top-14 sm:top-16 z-30 bg-[#F7F6ED]/90 dark:bg-[#050E1A]/90 backdrop-blur-md border-b border-[#DEB6C5]/50 dark:border-slate-800/80 transition-colors no-print px-4 sm:px-6 lg:px-8 py-2"
+      className="sticky top-16 z-30 bg-[#F7F6ED]/95 dark:bg-[#050E1A]/95 backdrop-blur-md border-b border-[#DEB6C5]/50 dark:border-slate-800/80 transition-colors no-print px-2.5 sm:px-6 lg:px-8 py-2"
     >
-      <div className="max-w-5xl mx-auto flex items-center justify-between gap-2 text-xs">
+      <div className="max-w-7xl mx-auto flex items-center justify-between gap-2 text-xs">
         
         {/* Left: Trail items */}
         <div className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto scrollbar-none py-0.5 min-w-0">

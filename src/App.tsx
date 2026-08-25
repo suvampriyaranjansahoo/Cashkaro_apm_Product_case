@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { ReadingDepth, ThemeMode } from './types';
+import { SECTIONS } from './data/caseData';
 import { Navigation } from './components/Navigation';
 import { HeroSection } from './components/HeroSection';
 import { ProblemSection } from './components/ProblemSection';
@@ -22,7 +23,7 @@ import { PdfExportModal } from './components/PdfExportModal';
 import { PrintPreviewModal } from './components/PrintPreviewModal';
 import { OutlineSidebar } from './components/OutlineSidebar';
 import { BackgroundDepthCanvas } from './components/BackgroundDepthCanvas';
-import { ArrowUp, Sparkles, BookOpen, Printer, Sun, Moon, FileDown, Eye } from 'lucide-react';
+import { ArrowUp, Sparkles, BookOpen, Printer, Sun, Moon, FileDown, Eye, Keyboard, ChevronDown, ChevronUp } from 'lucide-react';
 
 export default function App() {
   const [readingDepth, setReadingDepth] = useState<ReadingDepth>('7m');
@@ -91,11 +92,12 @@ export default function App() {
     });
   };
 
+  // Active section scrolling with keyboard shortcut support
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const scrollToSection = (id: string) => {
+  const scrollToSection = useCallback((id: string) => {
     setActiveSection(id);
     const element = document.getElementById(id);
     if (element) {
@@ -103,13 +105,105 @@ export default function App() {
       const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
       window.scrollTo({ top: y, behavior: 'smooth' });
     }
-  };
+  }, []);
 
   const scrollToFirstHighlight = () => {
     if (highlightedSections.length > 0) {
       scrollToSection(highlightedSections[0]);
     }
   };
+
+  // Keyboard Navigation: Arrow Keys (Up/Down, Left/Right), J/K, and D for PDF
+  const [navToast, setNavToast] = useState<{ visible: boolean; label: string; sub?: string } | null>(null);
+
+  const navigateRelativeSection = useCallback((direction: 'next' | 'prev') => {
+    const currentIdx = SECTIONS.findIndex((s) => s.id === activeSection);
+    let nextIdx = 0;
+    if (currentIdx === -1) {
+      nextIdx = direction === 'next' ? 0 : SECTIONS.length - 1;
+    } else {
+      nextIdx = direction === 'next' ? Math.min(SECTIONS.length - 1, currentIdx + 1) : Math.max(0, currentIdx - 1);
+    }
+    const targetSection = SECTIONS[nextIdx];
+    if (targetSection && targetSection.id !== activeSection) {
+      scrollToSection(targetSection.id);
+      setNavToast({
+        visible: true,
+        label: `${targetSection.num}. ${targetSection.shortTitle}`,
+        sub: direction === 'next' ? 'Next Section (↓ / →)' : 'Previous Section (↑ / ←)',
+      });
+    }
+  }, [activeSection, scrollToSection]);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Don't trigger if user is inside an input, textarea, or contentEditable
+      const target = e.target as HTMLElement | null;
+      if (target && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable)) {
+        return;
+      }
+
+      // If any major modal is open, let modal manage keys
+      if (recruiterHubOpen || execSummaryOpen || printPreviewOpen) {
+        if (e.key === 'Escape') {
+          setRecruiterHubOpen(false);
+          setExecSummaryOpen(false);
+          setPrintPreviewOpen(false);
+        }
+        return;
+      }
+
+      if (pdfExportOpen) {
+        if (e.key === 'Escape') {
+          setPdfExportOpen(false);
+        }
+        return;
+      }
+
+      // Quick PDF Export shortcut: 'd' or 'p' or 'Ctrl/Cmd+P' override
+      if ((e.key === 'd' || e.key === 'D') && !e.metaKey && !e.ctrlKey && !e.altKey) {
+        e.preventDefault();
+        setPdfExportOpen(true);
+        return;
+      }
+
+      // Arrow navigation
+      if (e.key === 'ArrowDown' || e.key === 'ArrowRight' || e.key === 'j' || e.key === 'J') {
+        // Prevent default only if Alt/Cmd not held
+        if (!e.metaKey && !e.ctrlKey && !e.altKey) {
+          e.preventDefault();
+          navigateRelativeSection('next');
+        }
+      } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft' || e.key === 'k' || e.key === 'K') {
+        if (!e.metaKey && !e.ctrlKey && !e.altKey) {
+          e.preventDefault();
+          navigateRelativeSection('prev');
+        }
+      } else if ((e.key === 'o' || e.key === 'O') && !e.metaKey && !e.ctrlKey && !e.altKey) {
+        e.preventDefault();
+        setOutlineOpen((prev) => !prev);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [
+    navigateRelativeSection, 
+    recruiterHubOpen, 
+    execSummaryOpen, 
+    pdfExportOpen, 
+    printPreviewOpen
+  ]);
+
+  // Auto-hide navigation toast after 1.5 seconds
+  useEffect(() => {
+    if (navToast?.visible) {
+      const timer = setTimeout(() => {
+        setNavToast(null);
+      }, 1500);
+      return () => clearTimeout(timer);
+    }
+  }, [navToast]);
 
   return (
     <motion.div 
@@ -262,6 +356,7 @@ export default function App() {
         <HeroSection 
           readingDepth={readingDepth} 
           onOpenRecruiterHub={() => setRecruiterHubOpen(true)}
+          onOpenPdfExport={() => setPdfExportOpen(true)}
         />
         <ProblemSection 
           readingDepth={readingDepth} 
@@ -370,6 +465,35 @@ export default function App() {
         readingDepth={readingDepth}
         markedSectionIds={highlightedSections}
       />
+
+      {/* Dynamic Keyboard Navigation Toast HUD */}
+      <AnimatePresence>
+        {navToast?.visible && (
+          <motion.div
+            initial={{ opacity: 0, y: 20, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -10, scale: 0.95 }}
+            transition={{ duration: 0.18 }}
+            className="fixed bottom-20 left-1/2 -translate-x-1/2 z-50 pointer-events-none no-print"
+          >
+            <div className="bg-slate-900/95 dark:bg-slate-950/95 backdrop-blur-md text-white border border-blue-500/50 px-4 py-2 rounded-full shadow-xl flex items-center gap-3">
+              <div className="w-6 h-6 rounded-full bg-blue-600/30 flex items-center justify-center text-blue-400">
+                <Keyboard className="w-3.5 h-3.5" />
+              </div>
+              <div>
+                <div className="text-xs font-bold text-slate-100 flex items-center gap-1.5">
+                  <span>{navToast.label}</span>
+                </div>
+                {navToast.sub && (
+                  <div className="text-[10px] text-blue-300 font-mono">
+                    {navToast.sub}
+                  </div>
+                )}
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Global Minimal Footer */}
       <footer className="bg-[#0B1728] dark:bg-[#050A13] text-white py-12 border-t border-slate-800 dark:border-slate-900 text-xs no-print transition-colors">

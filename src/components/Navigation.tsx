@@ -19,7 +19,9 @@ import {
   Moon,
   FileDown,
   Eye,
-  ListOrdered
+  ListOrdered,
+  Route,
+  Zap
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { ExecutiveSummaryModal } from './ExecutiveSummaryModal';
@@ -83,6 +85,20 @@ export const Navigation: React.FC<NavigationProps> = ({
     return () => window.removeEventListener('scroll', handleScroll);
   }, [setActiveSection]);
 
+  // Global Cmd+K / Ctrl+K shortcut to open section search modal
+  useEffect(() => {
+    const handleKey = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        setSearchOpen((prev) => !prev);
+      } else if (e.key === 'Escape' && searchOpen) {
+        setSearchOpen(false);
+      }
+    };
+    window.addEventListener('keydown', handleKey);
+    return () => window.removeEventListener('keydown', handleKey);
+  }, [searchOpen]);
+
   const toggleTheme = () => {
     const nextMode = themeMode === 'dark' ? 'light' : 'dark';
     setThemeMode(nextMode);
@@ -128,52 +144,67 @@ export const Navigation: React.FC<NavigationProps> = ({
       </div>
 
       {/* Main Sticky Header */}
-      <header className="sticky top-0 z-40 bg-[#0B1728]/95 dark:bg-[#070D18]/95 backdrop-blur-md text-white border-b border-slate-800 dark:border-slate-800/80 shadow-sm transition-all">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-3">
+      <header className="sticky top-0 z-40 bg-[#FAF9F5]/95 dark:bg-[#070D18]/95 backdrop-blur-md text-[#0B1F3A] dark:text-white border-b border-[#E2DDD0] dark:border-slate-800/80 shadow-xs transition-colors">
+        <div className="max-w-7xl mx-auto px-2.5 sm:px-4 lg:px-8 h-16 flex items-center justify-between gap-1.5 sm:gap-3">
           
           {/* Logo & Case Tag */}
-          <div className="flex items-center gap-3 shrink-0">
+          <div className="flex items-center gap-2 sm:gap-3 shrink-0">
             <button 
               onClick={() => scrollToSection('hero')}
-              className="flex items-center gap-2 text-left group cursor-pointer"
+              className="flex items-center gap-2.5 text-left group cursor-pointer"
+              title="Return to Strategy Memo Overview"
             >
-              <div className="w-8 h-8 rounded-lg bg-[#316BEA] flex items-center justify-center font-display font-bold text-sm tracking-tighter text-white shadow-sm group-hover:scale-105 transition-transform">
-                CK
-              </div>
-              <div>
-                <div className="flex items-center gap-1.5">
-                  <span className="text-[10px] tracking-widest uppercase font-semibold text-slate-400">APM Memo</span>
-                  <span className="inline-block w-1.5 h-1.5 rounded-full bg-[#159A68]"></span>
+              {/* Multidimensional Brand Icon */}
+              <div className="relative w-9 h-9 rounded-xl p-[1.5px] bg-gradient-to-br from-[#316BEA] via-[#00AFD3] to-[#D190AC] shadow-xs group-hover:scale-105 transition-all duration-300 shrink-0">
+                <div className="w-full h-full bg-white dark:bg-[#070D18] rounded-[10px] flex items-center justify-center relative overflow-hidden shadow-inner">
+                  <div className="absolute inset-0 bg-gradient-to-tr from-[#316BEA]/15 dark:from-[#316BEA]/30 via-transparent to-[#00AFD3]/15 opacity-80 group-hover:opacity-100 transition-opacity" />
+                  <Route className="w-4 h-4 text-[#316BEA] dark:text-[#38BDF8] group-hover:scale-110 transition-transform relative z-10" />
+                  <span className="absolute -bottom-0.5 -right-0.5 w-2 h-2 rounded-full bg-[#159A68] border-2 border-white dark:border-[#070D18]" />
                 </div>
-                <div className="text-xs font-semibold text-slate-200 group-hover:text-white transition-colors truncate max-w-[140px] sm:max-w-none">
-                  CashKaro Intent Router
+              </div>
+
+              {/* Brand Typography & Status */}
+              <div>
+                <div className="flex items-center gap-1.5 leading-none">
+                  <span className="font-display font-bold text-sm tracking-tight text-[#0B1F3A] dark:text-white group-hover:text-[#316BEA] dark:group-hover:text-[#38BDF8] transition-colors">
+                    CashKaro
+                  </span>
+                  <span className="px-1.5 py-0.5 rounded text-[9px] font-mono font-bold uppercase tracking-wider bg-blue-50 dark:bg-blue-500/20 text-[#316BEA] dark:text-[#60A5FA] border border-blue-200 dark:border-blue-500/30">
+                    Router
+                  </span>
+                </div>
+                <div className="flex items-center gap-1.5 mt-0.5">
+                  <span className="inline-block w-1.5 h-1.5 rounded-full bg-[#159A68] animate-pulse"></span>
+                  <span className="text-[10px] tracking-wide font-medium text-slate-500 dark:text-slate-400">
+                    APM Strategy Memo
+                  </span>
                 </div>
               </div>
             </button>
           </div>
 
           {/* Center: Reading Progress & Section Breadcrumb */}
-          <div className="hidden lg:flex items-center gap-2 text-xs text-slate-400 border border-slate-800 dark:border-slate-700 bg-slate-900/80 px-3 py-1 rounded-full">
-            <span className="font-mono text-[#316BEA] dark:text-[#60A5FA] font-bold">{Math.round(scrollProgress)}% read</span>
-            <span className="text-slate-600">•</span>
-            <span className="text-slate-300 font-medium truncate max-w-[220px]">
+          <div className="hidden 2xl:flex items-center gap-2 text-xs text-slate-600 dark:text-slate-400 border border-[#E2DDD0] dark:border-slate-700 bg-white/80 dark:bg-slate-900/80 px-3 py-1 rounded-full shrink-0 shadow-2xs">
+            <span className="font-mono text-[#316BEA] dark:text-[#60A5FA] font-bold">{Math.round(scrollProgress)}%</span>
+            <span className="text-slate-300 dark:text-slate-600">•</span>
+            <span className="text-slate-700 dark:text-slate-300 font-medium truncate max-w-[180px]">
               {currentSectionObj.shortTitle}: {currentSectionObj.title}
             </span>
           </div>
 
           {/* Right Action Tools */}
-          <div className="flex items-center gap-2 sm:gap-2.5 shrink-0">
+          <div className="flex items-center gap-1 sm:gap-1.5 lg:gap-2 shrink-0">
             
             {/* Recruiter & Hiring Manager Evaluation Hub */}
             {onOpenRecruiterHub && (
               <button
                 onClick={onOpenRecruiterHub}
-                className="flex items-center gap-1.5 px-3 py-1.5 bg-gradient-to-r from-amber-500/20 via-blue-600/30 to-indigo-600/30 hover:from-amber-500/30 hover:to-indigo-600/50 text-amber-200 hover:text-white border border-amber-500/40 rounded-lg text-xs font-bold shadow-xs transition-all cursor-pointer"
+                className="flex items-center gap-1.5 px-2 sm:px-2.5 lg:px-3 py-1.5 bg-gradient-to-r from-amber-500/10 via-blue-50 to-indigo-50 dark:from-amber-500/20 dark:via-blue-600/30 dark:to-indigo-600/30 hover:from-amber-500/20 hover:to-indigo-100 dark:hover:from-amber-500/30 dark:hover:to-indigo-600/50 text-amber-900 dark:text-amber-200 hover:text-amber-950 dark:hover:text-white border border-amber-300 dark:border-amber-500/40 rounded-lg text-xs font-bold shadow-xs transition-all cursor-pointer shrink-0"
                 title="Open Recruiter & Hiring Manager Evaluation Hub"
               >
-                <Award className="w-3.5 h-3.5 text-amber-400" />
-                <span className="hidden sm:inline">Recruiter Hub</span>
-                <span className="sm:hidden">Scorecard</span>
+                <Award className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400 shrink-0" />
+                <span className="hidden md:inline">Recruiter Hub</span>
+                <span className="hidden xs:inline md:hidden">Hub</span>
               </button>
             )}
 
@@ -181,38 +212,38 @@ export const Navigation: React.FC<NavigationProps> = ({
             {highlightedCount > 0 && (
               <button
                 onClick={onScrollToFirstHighlight}
-                className="hidden sm:flex items-center gap-1.5 px-2.5 py-1.5 bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/50 rounded-lg text-xs font-medium transition-all cursor-pointer animate-in fade-in"
+                className="hidden sm:flex items-center gap-1 px-2 py-1.5 bg-amber-50 dark:bg-amber-500/20 hover:bg-amber-100 dark:hover:bg-amber-500/30 text-amber-900 dark:text-amber-300 border border-amber-300 dark:border-amber-500/50 rounded-lg text-xs font-medium transition-all cursor-pointer animate-in fade-in shrink-0"
                 title="Jump to recruiter marked insights"
               >
-                <Bookmark className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
-                <span className="font-mono text-[11px] font-bold">{highlightedCount} Saved</span>
+                <Bookmark className="w-3.5 h-3.5 fill-amber-500 text-amber-500 shrink-0" />
+                <span className="font-mono text-[11px] font-bold">{highlightedCount}</span>
+                <span className="hidden lg:inline text-[11px]">Saved</span>
               </button>
             )}
 
             {/* Executive 1-Pager Button */}
             <button
               onClick={() => setExecModalOpen(true)}
-              className="flex items-center gap-1.5 px-3 py-1.5 bg-gradient-to-r from-[#316BEA] to-blue-700 hover:from-blue-600 hover:to-blue-800 text-white rounded-lg text-xs font-bold shadow-xs transition-all cursor-pointer"
+              className="flex items-center gap-1.5 px-2 sm:px-2.5 lg:px-3 py-1.5 bg-gradient-to-r from-[#316BEA] to-blue-700 hover:from-blue-600 hover:to-blue-800 text-white rounded-lg text-xs font-bold shadow-xs transition-all cursor-pointer shrink-0"
               title="Open Executive 1-Pager Memo"
             >
-              <FileText className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline">1-Pager View</span>
-              <span className="sm:hidden">1-Pager</span>
+              <FileText className="w-3.5 h-3.5 shrink-0" />
+              <span className="hidden xs:inline">1-Pager</span>
             </button>
 
             {/* Outline Button */}
             {onToggleOutline && (
               <button
                 onClick={onToggleOutline}
-                className={`flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-semibold shadow-xs transition-all cursor-pointer border ${
+                className={`flex items-center gap-1.5 px-2 sm:px-2.5 py-1.5 rounded-lg text-xs font-semibold shadow-xs transition-all cursor-pointer border shrink-0 ${
                   isOutlineOpen
                     ? 'bg-[#316BEA] text-white border-blue-500'
-                    : 'bg-slate-900 hover:bg-slate-800 text-slate-200 hover:text-white border-slate-700/80'
+                    : 'bg-white hover:bg-[#F2EFE9] dark:bg-slate-900 dark:hover:bg-slate-800 text-[#0B1F3A] dark:text-slate-200 border-[#D8D2C4] dark:border-slate-700/80'
                 }`}
                 title="Toggle Expandable Document Outline (Shortcut: Alt+O)"
               >
-                <ListOrdered className="w-3.5 h-3.5 text-cyan-400" />
-                <span className="hidden md:inline">Outline</span>
+                <ListOrdered className="w-3.5 h-3.5 text-[#316BEA] dark:text-cyan-400 shrink-0" />
+                <span className="hidden xl:inline">Outline</span>
               </button>
             )}
 
@@ -220,35 +251,39 @@ export const Navigation: React.FC<NavigationProps> = ({
             {onOpenPrintPreview && (
               <button
                 onClick={onOpenPrintPreview}
-                className="hidden lg:flex items-center gap-1.5 px-2.5 py-1.5 bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700/80 rounded-lg text-xs font-semibold shadow-xs transition-all cursor-pointer"
+                className="hidden xl:flex items-center gap-1.5 px-2.5 py-1.5 bg-white hover:bg-[#F2EFE9] dark:bg-slate-900 dark:hover:bg-slate-800 text-[#0B1F3A] dark:text-slate-300 border-[#D8D2C4] dark:border-slate-700/80 rounded-lg text-xs font-semibold shadow-xs transition-all cursor-pointer shrink-0"
                 title="Open Sandboxed A4 Print Preview to inspect layout, spacing & page breaks"
               >
-                <Eye className="w-3.5 h-3.5 text-cyan-400" />
+                <Eye className="w-3.5 h-3.5 text-[#316BEA] dark:text-cyan-400 shrink-0" />
                 <span>Preview</span>
               </button>
             )}
 
-            {/* Export PDF Button */}
+            {/* Export PDF Download Button - High Visibility & Prominence */}
             {onOpenPdfExport && (
-              <button
+              <motion.button
+                whileHover={{ scale: 1.04 }}
+                whileTap={{ scale: 0.95 }}
                 onClick={onOpenPdfExport}
-                className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 bg-slate-900 hover:bg-slate-800 text-slate-200 hover:text-white border border-slate-700/80 rounded-lg text-xs font-semibold shadow-xs transition-all cursor-pointer"
-                title="Export Strategy Memo as PDF (Executive Brief or Full Dossier)"
+                className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 bg-gradient-to-r from-[#159A68] via-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white rounded-lg text-xs font-bold shadow-xs border border-emerald-400/40 transition-all cursor-pointer shrink-0"
+                title="Download Strategy Memo as PDF (Press 'D' or Click)"
               >
-                <FileDown className="w-3.5 h-3.5 text-blue-400" />
-                <span className="hidden md:inline">Export PDF</span>
-                <span className="md:hidden">PDF</span>
-              </button>
+                <FileDown className="w-3.5 h-3.5 text-emerald-100 shrink-0" />
+                <span className="inline">Download PDF</span>
+                <span className="hidden xl:inline-block px-1 py-0.2 bg-black/20 rounded text-[9px] font-mono text-emerald-100 ml-0.5 border border-emerald-300/30">
+                  D
+                </span>
+              </motion.button>
             )}
 
             {/* Reading Depth Pill Switcher */}
-            <div className="bg-slate-900 dark:bg-slate-950 border border-slate-700/80 p-0.5 rounded-lg flex items-center text-xs">
+            <div className="bg-[#EAE5D9] dark:bg-slate-950 border border-[#D8D2C4] dark:border-slate-700/80 p-0.5 rounded-lg flex items-center text-xs shrink-0">
               <button
                 onClick={() => setReadingDepth('30s')}
-                className={`px-2 py-1 rounded font-semibold transition-all cursor-pointer ${
+                className={`px-1.5 sm:px-2 py-1 rounded font-semibold text-[11px] sm:text-xs transition-all cursor-pointer ${
                   readingDepth === '30s'
                     ? 'bg-[#316BEA] text-white shadow-xs'
-                    : 'text-slate-400 hover:text-slate-200'
+                    : 'text-slate-700 dark:text-slate-400 hover:text-[#0B1F3A] dark:hover:text-slate-200'
                 }`}
                 title="30-second executive summary mode"
               >
@@ -256,10 +291,10 @@ export const Navigation: React.FC<NavigationProps> = ({
               </button>
               <button
                 onClick={() => setReadingDepth('2m')}
-                className={`px-2 py-1 rounded font-semibold transition-all cursor-pointer ${
+                className={`px-1.5 sm:px-2 py-1 rounded font-semibold text-[11px] sm:text-xs transition-all cursor-pointer ${
                   readingDepth === '2m'
                     ? 'bg-[#316BEA] text-white shadow-xs'
-                    : 'text-slate-400 hover:text-slate-200'
+                    : 'text-slate-700 dark:text-slate-400 hover:text-[#0B1F3A] dark:hover:text-slate-200'
                 }`}
                 title="2-minute core product strategy"
               >
@@ -267,10 +302,10 @@ export const Navigation: React.FC<NavigationProps> = ({
               </button>
               <button
                 onClick={() => setReadingDepth('7m')}
-                className={`px-2 py-1 rounded font-semibold transition-all cursor-pointer ${
+                className={`px-1.5 sm:px-2 py-1 rounded font-semibold text-[11px] sm:text-xs transition-all cursor-pointer ${
                   readingDepth === '7m'
                     ? 'bg-[#316BEA] text-white shadow-xs'
-                    : 'text-slate-400 hover:text-slate-200'
+                    : 'text-slate-700 dark:text-slate-400 hover:text-[#0B1F3A] dark:hover:text-slate-200'
                 }`}
                 title="7-minute comprehensive technical memo"
               >
@@ -283,7 +318,7 @@ export const Navigation: React.FC<NavigationProps> = ({
               whileHover={{ scale: 1.04 }}
               whileTap={{ scale: 0.94 }}
               onClick={toggleTheme}
-              className="relative px-2.5 py-1.5 text-slate-300 hover:text-white bg-slate-900/90 dark:bg-slate-950/90 hover:bg-slate-800 border border-slate-700/80 rounded-lg transition-colors cursor-pointer flex items-center gap-2 group shadow-xs overflow-hidden"
+              className="relative px-2 sm:px-2.5 py-1.5 text-[#0B1F3A] dark:text-slate-300 hover:text-black dark:hover:text-white bg-white dark:bg-slate-950/90 hover:bg-[#F2EFE9] dark:hover:bg-slate-800 border border-[#D8D2C4] dark:border-slate-700/80 rounded-lg transition-colors cursor-pointer flex items-center gap-1.5 group shadow-xs overflow-hidden shrink-0"
               title={getThemeTitle()}
               aria-label={getThemeTitle()}
             >
@@ -299,7 +334,7 @@ export const Navigation: React.FC<NavigationProps> = ({
               />
 
               {/* Animated Sun / Moon Icon Container */}
-              <div className="relative w-4 h-4 flex items-center justify-center">
+              <div className="relative w-4 h-4 flex items-center justify-center shrink-0">
                 <AnimatePresence mode="wait" initial={false}>
                   {themeMode === 'light' ? (
                     <motion.div
@@ -313,7 +348,7 @@ export const Navigation: React.FC<NavigationProps> = ({
                         damping: 22,
                         mass: 0.6
                       }}
-                      className="absolute inset-0 flex items-center justify-center text-amber-400"
+                      className="absolute inset-0 flex items-center justify-center text-amber-500"
                     >
                       <Sun className="w-4 h-4 drop-shadow-[0_0_6px_rgba(251,191,36,0.5)]" />
                     </motion.div>
@@ -322,7 +357,7 @@ export const Navigation: React.FC<NavigationProps> = ({
                       key="theme-moon"
                       initial={{ rotate: 90, scale: 0.3, opacity: 0 }}
                       animate={{ rotate: 0, scale: 1, opacity: 1 }}
-                      exit={{ rotate: -90, scale: 0.3, opacity: 0 }}
+                      exit={{ rotate: 90, scale: 0.3, opacity: 0 }}
                       transition={{
                         type: 'spring',
                         stiffness: 380,
@@ -338,7 +373,7 @@ export const Navigation: React.FC<NavigationProps> = ({
               </div>
 
               {/* Animated Label */}
-              <div className="relative overflow-hidden hidden sm:block h-4 w-9 text-left">
+              <div className="relative overflow-hidden hidden xl:block h-4 w-9 text-left">
                 <AnimatePresence mode="wait" initial={false}>
                   <motion.span
                     key={themeMode}
@@ -348,7 +383,7 @@ export const Navigation: React.FC<NavigationProps> = ({
                     transition={{ duration: 0.22, ease: 'easeOut' }}
                     className={`block text-[11px] font-semibold tracking-wide ${
                       themeMode === 'light' 
-                        ? 'text-amber-300 group-hover:text-amber-200' 
+                        ? 'text-amber-700 dark:text-amber-300' 
                         : 'text-cyan-300 group-hover:text-cyan-200'
                     }`}
                   >
@@ -361,23 +396,24 @@ export const Navigation: React.FC<NavigationProps> = ({
             {/* Quick Search Button */}
             <button
               onClick={() => setSearchOpen(true)}
-              className="p-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition-colors cursor-pointer"
+              className="p-1.5 sm:p-2 text-slate-600 dark:text-slate-400 hover:text-[#0B1F3A] dark:hover:text-white hover:bg-[#EAE5D9] dark:hover:bg-slate-800 rounded-lg transition-colors cursor-pointer shrink-0"
               title="Search sections (Cmd+K)"
             >
               <Search className="w-4 h-4" />
             </button>
 
             {/* Section Counter Badge */}
-            <div className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 bg-slate-900 dark:bg-slate-950 border border-slate-700/80 rounded-md font-mono text-xs text-slate-300">
+            <div className="hidden 2xl:flex items-center gap-1.5 px-2 py-1 bg-[#EAE5D9] dark:bg-slate-950 border border-[#D8D2C4] dark:border-slate-700/80 rounded-md font-mono text-xs text-slate-700 dark:text-slate-300 shrink-0">
               <span className="text-[#316BEA] dark:text-[#60A5FA] font-bold">{displayIndex}</span>
-              <span className="text-slate-600">/</span>
-              <span className="text-slate-400">{totalSections}</span>
+              <span className="text-slate-400 dark:text-slate-600">/</span>
+              <span className="text-slate-500 dark:text-slate-400">{totalSections}</span>
             </div>
 
             {/* Mobile Menu Trigger */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="xl:hidden p-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg cursor-pointer"
+              className="xl:hidden p-1.5 sm:p-2 text-slate-600 dark:text-slate-400 hover:text-[#0B1F3A] dark:hover:text-white hover:bg-[#EAE5D9] dark:hover:bg-slate-800 rounded-lg cursor-pointer shrink-0"
+              title="Toggle Sections Menu"
             >
               <Layers className="w-4 h-4" />
             </button>
@@ -386,20 +422,20 @@ export const Navigation: React.FC<NavigationProps> = ({
 
         {/* Mobile Navigation Drawer */}
         {mobileMenuOpen && (
-          <div className="xl:hidden border-t border-slate-800 bg-[#0B1728] dark:bg-[#070D18] px-4 py-3 max-h-96 overflow-y-auto animate-in slide-in-from-top-2 duration-150">
+          <div className="xl:hidden border-t border-[#E2DDD0] dark:border-slate-800 bg-[#FAF9F5] dark:bg-[#070D18] px-4 py-3 max-h-96 overflow-y-auto animate-in slide-in-from-top-2 duration-150 transition-colors">
             <div className="grid grid-cols-2 gap-1.5">
               {SECTIONS.map((sec) => (
                 <button
                   key={sec.id}
                   onClick={() => scrollToSection(sec.id)}
-                  className={`text-left px-3 py-2 rounded text-xs flex items-center justify-between cursor-pointer ${
+                  className={`text-left px-3 py-2 rounded text-xs flex items-center justify-between cursor-pointer transition-colors ${
                     activeSection === sec.id
                       ? 'bg-[#316BEA] text-white font-semibold'
-                      : 'text-slate-300 hover:bg-slate-800'
+                      : 'text-slate-700 dark:text-slate-300 hover:bg-[#EAE5D9] dark:hover:bg-slate-800 hover:text-[#0B1F3A] dark:hover:text-white'
                   }`}
                 >
                   <span className="truncate">{sec.shortTitle}</span>
-                  <span className="font-mono text-[10px] text-slate-400">{sec.num}</span>
+                  <span className="font-mono text-[10px] text-slate-500 dark:text-slate-400">{sec.num}</span>
                 </button>
               ))}
             </div>
@@ -408,10 +444,10 @@ export const Navigation: React.FC<NavigationProps> = ({
       </header>
 
       {/* Reading Depth Banner */}
-      <div className="bg-white/80 dark:bg-slate-900/90 border border-[#DEB6C5]/50 dark:border-slate-800 py-2 px-4 text-xs text-[#0B1F3A] dark:text-slate-200 flex items-center justify-between max-w-7xl mx-auto rounded-b-xl mb-4 shadow-xs backdrop-blur-xs transition-colors">
-        <div className="flex items-center gap-2">
+      <div className="bg-white/85 dark:bg-slate-900/90 border border-[#DEB6C5]/50 dark:border-slate-800 py-2 px-3 sm:px-4 text-xs text-[#0B1F3A] dark:text-slate-200 flex flex-wrap sm:flex-nowrap items-center justify-between gap-2 max-w-7xl mx-auto rounded-b-xl mb-4 shadow-xs backdrop-blur-xs transition-colors">
+        <div className="flex items-center gap-2 min-w-0">
           <Clock className="w-3.5 h-3.5 text-[#D190AC] dark:text-[#25C3FF] shrink-0" />
-          <span>
+          <span className="truncate sm:whitespace-normal">
             {readingDepth === '30s' && (
               <strong>30s Executive View Active:</strong>
             )}
@@ -422,17 +458,26 @@ export const Navigation: React.FC<NavigationProps> = ({
               <strong>7m Full Senior Analyst Memo Active:</strong>
             )}
             {' '}
-            {readingDepth === '30s' && 'Highlighting executive takeaways, problem diagnosis, core bet, and decision rule.'}
-            {readingDepth === '2m' && 'Displaying full hypotheses, interactive prototypes, validation gates, and experiment design.'}
-            {readingDepth === '7m' && 'Comprehensive mode including architectural flows, code acceptance criteria, sensitivity equations, and RACI.'}
+            {readingDepth === '30s' && 'Executive takeaways, problem diagnosis, core bet, and decision rule.'}
+            {readingDepth === '2m' && 'Full hypotheses, interactive prototypes, validation gates, and experiment design.'}
+            {readingDepth === '7m' && 'Comprehensive mode: architectural flows, code acceptance criteria, and RACI.'}
           </span>
         </div>
-        <button
-          onClick={() => setReadingDepth(readingDepth === '7m' ? '30s' : readingDepth === '30s' ? '2m' : '7m')}
-          className="text-[#316BEA] dark:text-blue-400 hover:underline font-medium shrink-0 ml-3 flex items-center gap-1 cursor-pointer"
-        >
-          Toggle depth <ChevronRight className="w-3 h-3" />
-        </button>
+        <div className="flex items-center gap-3 shrink-0 ml-auto">
+          <div className="hidden lg:flex items-center gap-1.5 text-[10px] text-slate-500 dark:text-slate-400 font-mono">
+            <span className="bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded border border-slate-200 dark:border-slate-700">↑ / ↓</span>
+            <span>jump sections</span>
+            <span className="text-slate-300 dark:text-slate-600">•</span>
+            <span className="bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded border border-slate-200 dark:border-slate-700">D</span>
+            <span>PDF</span>
+          </div>
+          <button
+            onClick={() => setReadingDepth(readingDepth === '7m' ? '30s' : readingDepth === '30s' ? '2m' : '7m')}
+            className="text-[#316BEA] dark:text-blue-400 hover:underline font-medium flex items-center gap-1 cursor-pointer whitespace-nowrap"
+          >
+            Toggle depth <ChevronRight className="w-3 h-3" />
+          </button>
+        </div>
       </div>
 
       {/* Search Modal */}
