@@ -232,7 +232,7 @@ cp .env.example .env
 npm run dev
 ```
 
-The app will be available at **http://localhost:3000**.
+
 
 ### Build for production
 
